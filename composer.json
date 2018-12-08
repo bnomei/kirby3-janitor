@@ -25,6 +25,7 @@
         }
       ],
     "require": {
+        "getkirby/cms": "dev-master as 3.0.0"
     },
     "scripts": {
         "build": "composer update; composer dumpautoload -o; yarn run build;",
