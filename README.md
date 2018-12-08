@@ -5,6 +5,7 @@
 Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob.
 
 > *TIP 1:* The Janitor plugin can also perform other *jobs* than the build-in _cache jobs_. 
+  
 > *TIP 2:* It can also create logs of what it did.
 
 ## Commerical Usage
@@ -22,6 +23,7 @@ This plugin is free but if you use it in a commercial project please consider to
 ## Usage Examples
 
 **PHP code**
+
 ```php
 $success = janitor('clean'); // boolean
 // or
@@ -29,6 +31,7 @@ $json = janitor('clean', true); // array
 ```
 
 **Panel Field will create a clickable button**
+
 ```yaml
   janitor:
     type: janitor
@@ -43,6 +46,7 @@ $json = janitor('clean', true); // array
 ```
 
 **Kirby API (post Authentification)**
+
 ```js
 let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/clean')
   .then(response => response.json())
@@ -52,6 +56,7 @@ let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/clean')
 ```
 
 **Kirby Vue**
+
 ```vue
 this.$api.get('plugin-janitor/clean')
   .then(response => {
@@ -60,6 +65,7 @@ this.$api.get('plugin-janitor/clean')
 ```
 
 **Cronjob**
+
 Set a `secret` in your config.php file and call the janitor api with secret in a crobjob like this. This way you do not need the Kirby API to authentificate.
 ```php
 wget https://devkit.bnomei.com/plugin-janitor/clean/e9fe51f94eadabf54dbf2fbbd57188b9abee436e --delete-after
