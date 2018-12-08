@@ -2,9 +2,7 @@
 
 namespace Bnomei;
 
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
+use \Kirby\Toolkit;
 
 class Janitor
 {
@@ -13,13 +11,13 @@ class Janitor
         $exclude = option('bnomei.janitor.exclude');
         $c = 0;
         foreach (static::cacheFolders() as $folder) {
-            $cache = kirby()->cache(str_replace(DIRECTORY_SEPARATOR, '.', $folder));
-            foreach (Dir::files($krc.DIRECTORY_SEPARATOR.$folder) as $file) {
+            $cache = kirby()->cache(\str_replace(DIRECTORY_SEPARATOR, '.', $folder));
+            foreach (\Kirby\Toolkit\Dir::files($krc.DIRECTORY_SEPARATOR.$folder) as $file) {
                 if(!$cache->get($file)) { // expired
                     $fpath = $krc.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$file;
                     $success = true;
-                    if (!option('bnomei.janitor.simulate') && F::exists($fpath)) {
-                        $success = F::remove($fpath);
+                    if (!option('bnomei.janitor.simulate') && \Kirby\Toolkit\F::exists($fpath)) {
+                        $success = \Kirby\Toolkit\F::remove($fpath);
                     }
                     if($success) {
                         $c++;
@@ -37,12 +35,12 @@ class Janitor
         $c = 0;
         foreach (static::cacheFolders() as $folder) {
             $f = $krc.DIRECTORY_SEPARATOR.$folder;
-            if (!is_dir($f)) {
+            if (!\is_dir($f)) {
                 continue;
             }
             $success = true;
             if (!option('bnomei.janitor.simulate')) {
-                $success = Dir::remove($f);
+                $success = \Kirby\Toolkit\Dir::remove($f);
             }
             if ($success) {
                 $c++;
@@ -59,7 +57,7 @@ class Janitor
         $exclude = option('bnomei.janitor.exclude');
         $c = 0;
         foreach (static::cacheFolders() as $folder) {
-            $cacheName = str_replace(DIRECTORY_SEPARATOR, '.', $folder);
+            $cacheName = \str_replace(DIRECTORY_SEPARATOR, '.', $folder);
             if ($cache = kirby()->cache($cacheName)) {
                 if (!option('bnomei.janitor.simulate')) {
                     $cache->flush();
@@ -73,8 +71,8 @@ class Janitor
 
     public static function cacheRepair() {
         $krc = kirby()->roots()->cache();
-        if (!is_dir($krc)) {
-            if(Dir::make($krc)) {
+        if (!\is_dir($krc)) {
+            if(\Kirby\Toolkit\Dir::make($krc)) {
                 static::log('#janitor recreated the root cache folder', 'warning');
             } else {
                 static::log('#janitor failed to create the root cache folder', 'error');
@@ -88,7 +86,7 @@ class Janitor
     public static function lootTheSafe(): int {
         // NOTE: used to test the api $_$
         $loot = random_int(1, 9);
-        sleep(1);
+        \sleep(1);
         return $loot;
     }
 
@@ -97,13 +95,13 @@ class Janitor
         $exclude = option('bnomei.janitor.exclude');
 
         $folders = [];
-        foreach(Dir::index($krc, true) as $file) {
+        foreach(\Kirby\Toolkit\Dir::index($krc, true) as $file) {
             $skip = false;
             $path = $krc . DIRECTORY_SEPARATOR . $file;
-            if (is_dir($path) && count(Dir::dirs($path)) == 0) {
+            if (\is_dir($path) && count(\Kirby\Toolkit\Dir::dirs($path)) == 0) {
                 if (!$all) {
                     foreach ($exclude as $e) {
-                        if (Str::contains($file, trim($e, DIRECTORY_SEPARATOR))) {
+                        if (\Kirby\Toolkit\Str::contains($file, \trim($e, DIRECTORY_SEPARATOR))) {
                             $skip = true;
                             break;
                         }
@@ -114,33 +112,34 @@ class Janitor
                 }
             }
         }
-        return array_keys($folders);
+        return \array_keys($folders);
     }
 
     public static function api(string $job, bool $remote = false, string $secret = null): array {
         if(!$remote || ($secret && $secret == option('bnomei.janitor.secret'))) {
-            $job = Str::slug($job);
+            $job = \Kirby\Toolkit\Str::slug($job);
 
             $defaults = option('bnomei.janitor.jobs.defaults', []);
-            $jobs = array_merge($defaults, option('bnomei.janitor.jobs', []));
+            $jobs = \array_merge($defaults, option('bnomei.janitor.jobs', []));
             foreach(option('bnomei.janitor.jobs.extends', []) as $optionID) {
-                $jobs = array_merge($jobs, option($optionID, []));
+                $jobs = \array_merge($jobs, option($optionID, []));
             }
             
-            $before = time();
+            $before = \time();
             $data = [];
             $success = false;
 
-            if(array_key_exists($job, $jobs)) {
+            if(\array_key_exists($job, $jobs)) {
                 $c = $jobs[$job];
-                if (is_callable($c)) {
+                if (\is_callable($c)) {
                     static::log('@' . $job . ' started');
                     $r = $c();
-                    if(is_array($r)) {
+                    if(\is_array($r)) {
                         $data = $r;
-                        $success = boolval(\Kirby\Toolkit\A::get($data, 'status', 404) == 200);
+                        $v = \Kirby\Toolkit\A::get($data, 'status', 404);
+                        $success = \intval($v) == 200;
                     } else {
-                        $success = boolval($r);
+                        $success = \boolval($r);
                     }
                     static::log('@' . $job . ' finished');
                 } else {
@@ -150,8 +149,8 @@ class Janitor
                 static::log('@' . $job . ' not found', 'warning');
             }
 
-            $after = time();
-            return array_merge([
+            $after = \time();
+            return \array_merge([
                 'job' => $job,
                 'started' => $before,
                 'finished' => $after,
@@ -165,7 +164,7 @@ class Janitor
     public static function log(string $msg = '', string $level = 'info', array $context = []):bool
     {
         $log = option('bnomei.janitor.log');
-        if ($log && is_callable($log)) {
+        if ($log && \is_callable($log)) {
             if (!option('debug') && $level == 'debug') {
                 // skip but...
                 return true;

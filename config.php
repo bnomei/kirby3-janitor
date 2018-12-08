@@ -64,7 +64,7 @@ Kirby::plugin('bnomei/janitor', [
             'action' => function(string $job, string $secret) {
                 \Bnomei\Janitor::log('janitor-api-secret', 'debug');
                 $api = \Bnomei\Janitor::api($job, true, $secret);
-                return \Kirby\Http\Response::json($api, $api['status']);
+                return Kirby\Http\Response::json($api, $api['status']);
             }
         ]
     ],
@@ -82,6 +82,10 @@ Kirby::plugin('bnomei/janitor', [
     ]
 
 ]);
+
+if (!class_exists('Bnomei\Janitor')) {
+    require_once __DIR__ . '/classes/janitor.php';
+}
 
 if(!function_exists('janitor')) {
     function janitor(string $job, bool $dump = false) {
