@@ -1,7 +1,7 @@
 {
     "name": "bnomei/kirby3-janitor",
     "type": "plugin",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "MIT",
     "description": "Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob",
     "autoload": {
@@ -25,7 +25,6 @@
         }
       ],
     "require": {
-        "getkirby/cms": "dev-master as 3.0.0"
     },
     "scripts": {
         "build": "composer update; composer dumpautoload -o; yarn run build;",

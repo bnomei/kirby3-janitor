@@ -56,7 +56,7 @@ class Janitor
         $krc = kirby()->roots()->cache();
         $exclude = option('bnomei.janitor.exclude');
         $c = 0;
-        foreach (static::cacheFolders() as $folder) {
+        foreach (static::cacheFolders(true) as $folder) {
             $cacheName = \str_replace(DIRECTORY_SEPARATOR, '.', $folder);
             if ($cache = kirby()->cache($cacheName)) {
                 if (!option('bnomei.janitor.simulate')) {
