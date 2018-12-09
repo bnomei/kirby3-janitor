@@ -27,7 +27,7 @@ Kirby::plugin('bnomei/janitor', [
             }
         ],
         'jobs.extends' => [],
-        'exclude' => [], //['bnomei/autoid', 'bnomei/fingerprint'],
+        'exclude' => ['bnomei/autoid', 'bnomei/fingerprint'],
         'label.cooldown' => 2000, // ms
         'secret' => 'null',
         'simulate' => false, 

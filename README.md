@@ -100,10 +100,10 @@ Go build your own jobs. Trigger APIs, create ZIPs, rename Files, ...
 
 ## Predefined Jobs
 
-- **tend** removes cache-files that have expired from all but not in excluded folders.
-- **clean** removes all but excluded cache-folders.
-- **flush** calls `flush()` on *all* folders. Dangerous!
-- **repair** creates the cache folder if its missing.
+- **tend** removes cache-files *that have expired* from all but excluded cache-folders.
+- **clean** removes cache-files from all but excluded cache-folders.
+- **flush** calls `flush()` on *all* cache-folders. Dangerous!
+- **repair** creates the root cache folder if it is missing.
 
 ## Settings
 
