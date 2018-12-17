@@ -13,7 +13,8 @@ class Janitor
         foreach (static::cacheFolders() as $folder) {
             $cache = kirby()->cache(\str_replace(DIRECTORY_SEPARATOR, '.', $folder));
             foreach (\Kirby\Toolkit\Dir::files($krc.DIRECTORY_SEPARATOR.$folder) as $file) {
-                if(!$cache->get($file)) { // expired
+                $cn = basename($file, '.cache');
+                if(!$cache->get($cn)) { // expired
                     $fpath = $krc.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$file;
                     $success = true;
                     if (!option('bnomei.janitor.simulate') && \Kirby\Toolkit\F::exists($fpath)) {
