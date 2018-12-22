@@ -1,9 +1,29 @@
 {
     "name": "bnomei/kirby3-janitor",
     "type": "plugin",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "license": "MIT",
     "description": "Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob",
+    "authors": [
+        {
+            "name": "Bruno Meilick",
+            "email": "b@bnomei.com"
+        }
+    ],
+    "keywords": [
+        "kirby3",
+        "kirby3-cms",
+        "kirby3-plugin",
+        "cache",
+        "clean",
+        "janitor",
+        "job-runner",
+        "cronjob",
+        "ajax",
+        "button"
+    ],
+    "suggest": {
+    },
     "autoload": {
         "files": [
             "config.php"
@@ -12,24 +32,33 @@
             "Bnomei\\": "classes/"
         }
     },
-    "authors": [
-        {
-            "name": "Bruno Meilick",
-            "email": "b@bnomei.com"
-        }
-    ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
     "repositories": [
         {
-          "type": "vcs",
-          "url": "https://github.com/k-next/kirby"
+            "type": "vcs",
+            "url": "https://github.com/k-next/kirby"
         }
-      ],
+    ],
     "require": {
-        "getkirby/cms": "dev-master as 3.0.0"
+        "php": ">=7.1.0",
+        "getkirby/cms": "^3.0.0-RC-2.0"
+    },
+    "conflict": {
+        "getkirby/kirby": "<3.0"
     },
     "scripts": {
-        "build": "composer update; composer dumpautoload -o; yarn run build;",
-        "zip": "rm kirby3-janitor.zip; composer update; composer remove getkirby/cms; composer dumpautoload -o; yarn run build; zip -r kirby3-janitor.zip . -x *.git* -x *.gif* -x node_modules/\\*; composer require getkirby/cms:'dev-master as 3.0.0'; composer dumpautoload -o;"
-    },
-    "minimum-stability": "beta"
+        "zip": [
+            "rm kirby3-janitor.zip",
+            "composer install --no-dev",
+            "composer remove getkirby/cms",
+            "composer dumpautoload -o",
+            "yarn",
+            "yarn run build",
+            "zip -r kirby3-janitor.zip . -x *.git* -x *.gif* -x 'node_modules/*'",
+            "composer require getkirby/cms:'^3.0.0-RC-2.0'"
+        ]
+    }
 }

@@ -84,7 +84,7 @@ Kirby::plugin('bnomei/janitor', [
 ]);
 
 if (!class_exists('Bnomei\Janitor')) {
-    require_once __DIR__ . '/classes/janitor.php';
+    require_once __DIR__ . '/classes/Janitor.php';
 }
 
 if(!function_exists('janitor')) {
