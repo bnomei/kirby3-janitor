@@ -50,7 +50,7 @@ Kirby::plugin('bnomei/janitor', [
                     return $progress;
                 },
                 'job' => function (string $job = null) {
-                    return '/plugin-janitor/' . $job;
+                    return 'plugin-janitor/' . $job;
                 },
                 'cooldown' => function(int $cooldownMilliseconds = 2000) {
                     return intval(option('bnomei.janitor.label.cooldown', $cooldownMilliseconds));
