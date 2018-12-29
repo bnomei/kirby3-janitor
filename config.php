@@ -53,7 +53,7 @@ Kirby::plugin('bnomei/janitor', [
                     return '/plugin-janitor/' . $job;
                 },
                 'cooldown' => function(int $cooldownMilliseconds = 2000) {
-                    return 2000; intval(option('bnomei.janitor.label.cooldown', $cooldownMilliseconds));
+                    return intval(option('bnomei.janitor.label.cooldown', $cooldownMilliseconds));
                 }
             ]
         ]
