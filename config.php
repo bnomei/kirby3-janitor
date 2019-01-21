@@ -43,11 +43,11 @@ Kirby::plugin('bnomei/janitor', [
     'fields' => [
         'janitor' => [
             'props' => [
-                'label' => function (string $label = null) {
-                    return $label;
+                'label' => function ($label = null) {
+                    return \Kirby\Toolkit\I18n::translate($label, $label);
                 },
-                'progress' => function (string $progress = null) {
-                    return $progress;
+                'progress' => function ($progress = null) {
+                    return \Kirby\Toolkit\I18n::translate($progress, $progress);
                 },
                 'job' => function (string $job = null) {
                     return 'plugin-janitor/' . $job;

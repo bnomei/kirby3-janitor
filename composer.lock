@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8689a4b48426cd2e3abe41feba2fdb8a",
+    "content-hash": "76cc18b72f1e5ff7b0ebb588dc099809",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -108,96 +108,49 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "3.0.0-RC-2.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/k-next/kirby.git",
-                "reference": "0d24600687e74ed74a9005e80d8ac740400c420b"
+                "url": "https://github.com/getkirby/kirby.git",
+                "reference": "72f01eac0a7db59360894e0cfb44680276260174"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/k-next/kirby/zipball/0d24600687e74ed74a9005e80d8ac740400c420b",
-                "reference": "0d24600687e74ed74a9005e80d8ac740400c420b",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/72f01eac0a7db59360894e0cfb44680276260174",
+                "reference": "72f01eac0a7db59360894e0cfb44680276260174",
                 "shasum": ""
             },
-            "archive": {
-                "exclude": [
-                    ".*",
-                    "/*.dist",
-                    "/*.md",
-                    "test.php",
-                    "/scripts",
-                    "/panel/*",
-                    "!/panel/dist/*",
-                    "/panel/dist/index.html",
-                    "/tests/*",
-                    "!/vendor/*",
-                    "/vendor/*/*/.*",
-                    "/vendor/*/*/*.json",
-                    "/vendor/*/*/*.txt",
-                    "/vendor/*/*/*.md",
-                    "/vendor/*/*/*.yml",
-                    "/vendor/*/*/*.yaml",
-                    "/vendor/*/*/*.xml",
-                    "/vendor/*/*/*.dist",
-                    "/vendor/*/*/LICENSE",
-                    "/vendor/*/*/COPYING",
-                    "/vendor/*/*/docs/*",
-                    "/vendor/*/*/example/*",
-                    "/vendor/*/*/examples/*",
-                    "/vendor/*/*/test/*",
-                    "/vendor/*/*/tests/*",
-                    "/vendor/*/*/php4/*"
-                ]
-            },
             "require": {
-                "claviska/simpleimage": "3.3.*",
+                "claviska/simpleimage": "3.3.3",
+                "ext-ctype": "*",
                 "ext-mbstring": "*",
-                "filp/whoops": "2.3.*",
+                "filp/whoops": "2.3.1",
                 "getkirby/composer-installer": "*",
-                "michelf/php-smartypants": "1.8.*",
-                "mustangostang/spyc": "0.6.*",
+                "michelf/php-smartypants": "1.8.1",
+                "mustangostang/spyc": "0.6.2",
                 "php": ">=7.1.0",
-                "phpmailer/phpmailer": "6.0.*",
-                "true/punycode": "2.1.*",
-                "zendframework/zend-escaper": "2.6.*"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.11.1",
-                "phpunit/phpunit": "^6.0"
+                "phpmailer/phpmailer": "6.0.6",
+                "true/punycode": "2.1.1",
+                "zendframework/zend-escaper": "2.6.0"
             },
             "type": "kirby-cms",
             "autoload": {
                 "files": [
                     "config/helpers.php",
-                    "config/aliases.php"
+                    "config/aliases.php",
+                    "config/tests.php"
                 ],
-                "psr-0": {
-                    "Parsedown": "dependencies/"
-                },
+                "classmap": [
+                    "dependencies/"
+                ],
                 "psr-4": {
                     "Kirby\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Kirby\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "./vendor/bin/phpunit --stderr --coverage-html=tests/coverage"
-                ],
-                "zip": [
-                    "composer archive --format=zip --file=dist"
-                ],
-                "build": [
-                    "./scripts/build"
-                ],
-                "fix": [
-                    "./vendor/bin/php-cs-fixer fix ."
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
             "authors": [
                 {
                     "name": "Kirby Team",
@@ -205,19 +158,14 @@
                     "homepage": "https://getkirby.com"
                 }
             ],
-            "description": "Kirby CMS",
+            "description": "The Kirby 3 core",
             "homepage": "https://getkirby.com",
             "keywords": [
                 "cms",
+                "core",
                 "kirby"
             ],
-            "support": {
-                "email": "support@getkirby.com",
-                "issues": "https://github.com/getkirby/kirby/issues",
-                "forum": "https://forum.getkirby.com",
-                "source": "https://github.com/getkirby/kirby"
-            },
-            "time": "2018-12-21T11:50:32+00:00"
+            "time": "2019-01-15T08:15:26+00:00"
         },
         {
             "name": "getkirby/composer-installer",

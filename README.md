@@ -18,7 +18,7 @@ This plugin is free but if you use it in a commercial project please consider to
 ## Installation
 
 - for devkit-setup use `composer require bnomei/kirby3-janitor` or
-- extract latest release of [kirby3-janitor.zip](https://github.com/bnomei/kirby3-janitor/releases/download/v1.0.9/kirby3-janitor.zip) as folder `site/plugins/kirby3-janitor`
+- extract latest release of [kirby3-janitor.zip](https://github.com/bnomei/kirby3-janitor/releases/download/v1.1.0/kirby3-janitor.zip) as folder `site/plugins/kirby3-janitor`
 
 > Installation as a gitsubmodule is *not* supported.
 

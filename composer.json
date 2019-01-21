@@ -1,7 +1,7 @@
 {
     "name": "bnomei/kirby3-janitor",
     "type": "plugin",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "license": "MIT",
     "description": "Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob",
     "authors": [
@@ -36,12 +36,6 @@
         "optimize-autoloader": true,
         "sort-packages": true
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/k-next/kirby"
-        }
-    ],
     "require": {
         "php": ">=7.1.0",
         "getkirby/cms": "^3.0.0-RC-2.0"
@@ -51,6 +45,7 @@
     },
     "scripts": {
         "zip": [
+            "touch kirby3-janitor.zip",
             "rm kirby3-janitor.zip",
             "composer install --no-dev",
             "composer remove getkirby/cms",
