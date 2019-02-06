@@ -1,6 +1,6 @@
 # Kirby 3 Janitor
 
-![GitHub release](https://img.shields.io/github/release/bnomei/kirby3-janitor.svg?maxAge=1800) ![License](https://img.shields.io/github/license/mashape/apistatus.svg) ![Kirby Version](https://img.shields.io/badge/Kirby-3%2B-black.svg)
+![GitHub release](https://img.shields.io/github/release/bnomei/kirby3-janitor.svg?maxAge=1800) ![License](https://img.shields.io/github/license/mashape/apistatus.svg) ![Kirby Version](https://img.shields.io/badge/Kirby-3%2B-black.svg) ![Kirby 3 Pluginkit](https://img.shields.io/badge/Pluginkit-YES-cca000.svg)
 
 Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob.
 
@@ -17,16 +17,13 @@ This plugin is free but if you use it in a commercial project please consider to
 
 ## Installation
 
-- for devkit-setup use `composer require bnomei/kirby3-janitor` or
-- extract latest release of [kirby3-janitor.zip](https://github.com/bnomei/kirby3-janitor/releases/download/v1.1.0/kirby3-janitor.zip) as folder `site/plugins/kirby3-janitor`
-
-> Installation as a gitsubmodule is *not* supported.
-
+- unzip [master.zip](https://github.com/bnomei/kirby3-janitor/archive/master.zip) as folder `site/plugins/kirby3-janitor` or
+- `git submodule add https://github.com/bnomei/kirby3-janitor.git site/plugins/kirby3-janitor` or
+- `composer require bnomei/kirby3-janitor`
 
 ## Screenshots
 
 ![clean & loot](https://raw.githubusercontent.com/bnomei/kirby3-janitor/master/kirby3-janitor-screenshot-1.gif)
-
 
 ## Usage Examples
 

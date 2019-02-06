@@ -1,7 +1,7 @@
 {
     "name": "bnomei/kirby3-janitor",
-    "type": "plugin",
-    "version": "1.1.0",
+    "type": "kirby-plugin",
+    "version": "1.2.0",
     "license": "MIT",
     "description": "Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob",
     "authors": [
@@ -22,12 +22,7 @@
         "ajax",
         "button"
     ],
-    "suggest": {
-    },
     "autoload": {
-        "files": [
-            "config.php"
-        ],
         "psr-4": {
             "Bnomei\\": "classes/"
         }
@@ -38,22 +33,12 @@
     },
     "require": {
         "php": ">=7.1.0",
-        "getkirby/cms": "^3.0.0-RC-2.0"
-    },
-    "conflict": {
-        "getkirby/kirby": "<3.0"
+        "getkirby/composer-installer": "^1.1"
     },
     "scripts": {
-        "zip": [
-            "touch kirby3-janitor.zip",
-            "rm kirby3-janitor.zip",
-            "composer install --no-dev",
-            "composer remove getkirby/cms",
-            "composer dumpautoload -o",
+        "build": [
             "yarn",
-            "yarn run build",
-            "zip -r kirby3-janitor.zip . -x *.git* -x *.gif* -x 'node_modules/*'",
-            "composer require getkirby/cms:'^3.0.0-RC-2.0'"
+            "yarn run build"
         ]
     }
 }
