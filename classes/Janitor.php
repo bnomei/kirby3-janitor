@@ -125,8 +125,6 @@ class Janitor
     public static function api(string $job, bool $remote = false, string $secret = null): array
     {
         if (!$remote || ($secret && $secret == option('bnomei.janitor.secret'))) {
-            $job = \Kirby\Toolkit\Str::slug($job);
-
             $defaults = option('bnomei.janitor.jobs.defaults', []);
             $jobs = \array_merge($defaults, option('bnomei.janitor.jobs', []));
             foreach (option('bnomei.janitor.jobs.extends', []) as $optionID) {
