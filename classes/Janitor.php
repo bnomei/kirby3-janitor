@@ -2,6 +2,7 @@
 
 namespace Bnomei;
 
+use Kirby\Exception\Exception;
 use \Kirby\Toolkit;
 
 class Janitor
@@ -122,7 +123,7 @@ class Janitor
         return \array_keys($folders);
     }
 
-    public static function api(string $job, bool $remote = false, string $secret = null): array
+    public static function api(string $job, bool $remote = false, string $secret = null, string $context = null, string $contextData = null): array
     {
         if (!$remote || ($secret && $secret == option('bnomei.janitor.secret'))) {
             $defaults = option('bnomei.janitor.jobs.defaults', []);
@@ -130,7 +131,7 @@ class Janitor
             foreach (option('bnomei.janitor.jobs.extends', []) as $optionID) {
                 $jobs = \array_merge($jobs, option($optionID, []));
             }
-            
+
             $before = \time();
             $data = [];
             $success = false;
@@ -138,8 +139,18 @@ class Janitor
             if (\array_key_exists($job, $jobs)) {
                 $c = $jobs[$job];
                 if (\is_callable($c)) {
+                    $r = null;
                     static::log('@' . $job . ' started');
-                    $r = $c();
+                    try {
+                        if($context) {
+                            $r = $c(kirby()->page(urldecode($context)), urldecode($contextData));
+                        }
+                        if( ! $r) {
+                            $r = $c();
+                        }
+                    } catch (Exception $ex) {
+                        $success = false;
+                    }
                     if (\is_array($r)) {
                         $data = $r;
                         $v = \Kirby\Toolkit\A::get($data, 'status', 404);

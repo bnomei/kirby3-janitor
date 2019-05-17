@@ -56,6 +56,12 @@ Kirby::plugin('bnomei/janitor', [
                 },
                 'cooldown' => function (int $cooldownMilliseconds = 2000) {
                     return intval(option('bnomei.janitor.label.cooldown', $cooldownMilliseconds));
+                },
+                'data' => function (string $data = null) {
+                  return \Kirby\Toolkit\I18n::translate($data, $data);
+                },
+                'pageURI' => function () {
+                    return $this->model()->uri();
                 }
             ]
         ]
@@ -73,10 +79,26 @@ Kirby::plugin('bnomei/janitor', [
     'api' => [
         'routes' => [
             [
+                'pattern' => 'plugin-janitor/(:any)/(:any)/(:any)',
+                'action' => function (string $job, string $context, string $data) {
+                    \Bnomei\Janitor::log('janitor-api-auth', 'debug');
+                    $api = \Bnomei\Janitor::api($job, false, null, $context, $data);
+                    return $api;
+                }
+            ],
+            [
+              'pattern' => 'plugin-janitor/(:any)/(:any)',
+              'action' => function (string $job, string $context) {
+                \Bnomei\Janitor::log('janitor-api-auth', 'debug');
+                $api = \Bnomei\Janitor::api($job, false, null, $context);
+                return $api;
+              }
+            ],
+            [
                 'pattern' => 'plugin-janitor/(:any)',
                 'action' => function (string $job) {
                     \Bnomei\Janitor::log('janitor-api-auth', 'debug');
-                    $api = \Bnomei\Janitor::api($job);
+                    $api = \Bnomei\Janitor::api($job, false, null);
                     return $api;
                 }
             ]

@@ -10,11 +10,20 @@ export default {
     progress: String,
     job: String,
     cooldown: Number,
-    status: String
+    status: String,
+    data: String,
+    pageURI: String,
   },
   methods: {
     janitor() {
-      this.getRequest(this.job)
+      let url = this.job
+      if(true) {
+        url = url + '/' + encodeURIComponent(this.pageURI)
+      }
+      if(this.data != undefined) {
+        url = url + '/' + encodeURIComponent(this.data)
+      }
+      this.getRequest(url)
     },
     getRequest (url) {
       let that = this

@@ -48,6 +48,7 @@ $json = janitor('clean', true); // array
     label: Enter Bank
     progress: Performing Heist...
     job: heist
+    data: Grand # (string) forwarded to job context
 ```
 
 **Kirby API (post Authentification)**
@@ -87,15 +88,23 @@ Go build your own jobs. Trigger APIs, create ZIPs, rename Files, ...
 <?php
     return [
         'bnomei.janitor.jobs' => [
-            'heist' => function() {
+            'heist' => function(Kirby\Cms\Page $page = null, string $data = null) {
                 \Bnomei\Janitor::log('heist.mask '.time());
+                
                 $grand = \Bnomei\Janitor::lootTheSafe();
                 // or trigger a snippet like this:
                 // snippet('call-police');
+                
+                // $page is Kirby Page Object if job issued by Panel
+                $location = $page ? $page->title() : 'Bank';
+                
+                // $data is optional [data] prop from the Janitor Panel Field
+                $currency = $data ? $data : 'Coins';
+                
                 \Bnomei\Janitor::log('heist.exit '.time());
                 return [
                     'status' => $grand > 0 ? 200 : 404,
-                    'label' => $grand . ' Grand looted!'
+                    'label' => $grand . ' ' . $currency . '  looted at ' . $location . '!'
                 ];
             }
         ],
@@ -109,6 +118,27 @@ Go build your own jobs. Trigger APIs, create ZIPs, rename Files, ...
 - **clean** removes cache-files from all but excluded cache-folders.
 - **flush** calls `flush()` on *all* cache-folders. Dangerous!
 - **repair** creates the root cache folder if it is missing.
+
+
+## Panel context page and data
+
+Since 1.3.0 you can access the Page-Object the Panel-Field was called at and the forwarded custom data prop.
+
+
+```yaml
+  myjob:
+    type: janitor
+    label: Perform Job
+    progress: Performing Job...
+    job: myjob
+    data: my custom data
+```
+
+```php
+'myjob' => function(Kirby\Cms\Page $page = null, string $data = null) {
+    // $data == 'my custom data'
+}
+```
 
 ## Settings
 
