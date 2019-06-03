@@ -4,6 +4,8 @@
 
 /node_modules
 
+.cache
+
 # files of Composer dependencies that are not needed for the plugin
 /vendor/**/.*
 /vendor/**/*.json
