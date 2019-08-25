@@ -8,3 +8,4 @@ use PHPUnit\Framework\TestCase;
 final class JanitorTest extends TestCase
 {
 }
+
