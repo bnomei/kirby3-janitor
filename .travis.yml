@@ -1,0 +1,14 @@
+language: php
+php: 7.2
+matrix:
+  fast_finish: true
+install: composer install --no-interaction
+script: composer test
+after_success: travis_retry php vendor/bin/php-coveralls -v
+notifications:
+  webhooks:
+    on_success: change
+    on_failure: always
+    on_start: never
+    urls:
+      - https://webhooks.gitter.im/e/77d9949056dc0462d25d

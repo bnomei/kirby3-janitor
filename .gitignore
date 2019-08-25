@@ -1,16 +1,21 @@
 # OS files
 .DS_Store
-.php_cs.cache
+.idea
+*.cache
 
-/node_modules
+node_modules
 
-.cache
+/tests/kirby
+/tests/logs
+/tests/media
+/tests/site/accounts
+/tests/site/cache
 
 # files of Composer dependencies that are not needed for the plugin
 /vendor/**/.*
 /vendor/**/*.json
 /vendor/**/*.txt
-/vendor/**/*.md
+/vendor/**/*.md``
 /vendor/**/*.yml
 /vendor/**/*.yaml
 /vendor/**/*.xml
@@ -26,3 +31,4 @@
 /vendor/**/tests/*
 /vendor/**/php4/*
 /vendor/getkirby/composer-installer
+coverage.xml
