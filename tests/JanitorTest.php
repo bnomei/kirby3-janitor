@@ -2,9 +2,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Bnomei\Instagram;
+use Bnomei\Janitor;
 use PHPUnit\Framework\TestCase;
 
-final class InstagramTest extends TestCase
+final class JanitorTest extends TestCase
 {
 }
