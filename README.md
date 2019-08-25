@@ -151,29 +151,15 @@ Since 1.3.0 you can access the Page-Object the Panel-Field was called at and the
 
 ## Settings
 
-All settings must be prefixed with `bnomei.janitor.`.
-
-**jobs**
-- default: `[]` array of keys => callbacks:bool|array
-
-**jobs.extends**
-- default: `[]` array of names to other keys => callbacks:bool|array options
-- example: `['bvdputte.kirbyqueue.queues']`
-
-**label.cooldown**
-- default: `2000`ms. the field allow you to override this as well. 
-
-**exclude**
-- default: `['bnomei/autoid', 'bnomei/fingerprint']` array of foldernames to exclude. 
-
-**secret**
-- default: `null`, any string
-
-**log.enabled**
-- default: `false`, if enabled it try to call [Kirby-log Plugin](https://github.com/bvdputte/kirby-log)
-
-**simulate**
-- default: `false`, will not remove any files if enabled. You could check this option in your customs jobs as well if you want to support simulating the job.
+| bnomei.janitor.           | Default        | Description               |            
+|---------------------------|----------------|---------------------------|
+| jobs | `array of callbacks` | array of `['key' => function() { return (bool or array); } ]` |
+| jobs.extends | `[]` | array of names to other job definitions. example: `['bvdputte.kirbyqueue.queues']` |
+| label.cooldown | `2000` | in millisecondss. the field allow you to override this as well. | 
+| exclude | `['bnomei/autoid', 'bnomei/fingerprint']` | array of foldernames to exclude. | 
+| secret | `null` | any string |
+| log.enabled | `false` | if enabled it try to call [Kirby-log Plugin](https://github.com/bvdputte/kirby-log) |
+| simulate | `false` | will not remove any files if enabled. You could check this option in your customs jobs as well if you want to support simulating the job. |
 
 ## Disclaimer
 

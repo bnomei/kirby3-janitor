@@ -21,6 +21,8 @@ use function str_replace;
 use function time;
 use function trim;
 
+// TODO: split in core logic and cache cleaning logic
+
 class Janitor
 {
     public static function cacheRemoveUnusedFiles()
