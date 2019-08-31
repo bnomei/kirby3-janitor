@@ -24,6 +24,11 @@ This plugin is free but if you use it in a commercial project please consider to
 - [buy me ☕](https://buymeacoff.ee/bnomei) or
 - [buy a Kirby license using this affiliate link](https://a.paddle.com/v2/click/1129/35731?link=1170)
 
+## Similar plugins
+
+- [Kirby Terminal](https://github.com/lukaskleinschmidt/kirby-terminal) if you need to execute longer running processes on the terminal
+- [Kirby Queque](https://github.com/bvdputte/kirby-queue) if you want to add scheduled jobs to queque which get trigged by a cron job
+
 ## Installation
 
 - unzip [master.zip](https://github.com/bnomei/kirby3-janitor/archive/master.zip) as folder `site/plugins/kirby3-janitor` or
