@@ -49,6 +49,9 @@ export default {
               that.label = oldlabel
               that.status = ''
             }, that.cooldown)
+            if(response.reload !== undefined && response.reload === true) {
+              location.reload()
+            }
         })
     }
   }
