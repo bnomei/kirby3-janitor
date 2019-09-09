@@ -4,7 +4,6 @@
   "description": "Kirby 3 Plugin Janitor",
   "author": "Bruno Meilick <b@bnomei.com>",
   "scripts": {
-    "preinstall": "mkdir -p ./node_modules && touch ./node_modules/.metadata_never_index",
     "dev": "parcel watch src/index.js --no-source-maps -d ./",
     "build": "parcel build src/index.js --no-source-maps --experimental-scope-hoisting -d ./"
   },

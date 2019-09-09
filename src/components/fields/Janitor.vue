@@ -13,6 +13,7 @@ export default {
     status: String,
     data: String,
     pageURI: String,
+    user: Object,
   },
   methods: {
     janitor() {
@@ -21,7 +22,11 @@ export default {
         url = url + '/' + encodeURIComponent(this.pageURI)
       }
       if(this.data != undefined) {
-        url = url + '/' + encodeURIComponent(this.data)
+        let data = this.data
+        if (data === '{{ user.email }}') {
+          data = this.user.email
+        }
+        url = url + '/' + encodeURIComponent(data)
       }
       this.getRequest(url)
     },
@@ -32,7 +37,6 @@ export default {
       this.status = 'doing-job'
       this.$api.get(url)
         .then(response => {
-            // console.log(response)
             if(response.label !== undefined) {
               that.label = response.label
             }

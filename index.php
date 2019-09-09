@@ -26,7 +26,7 @@ Kirby::plugin('bnomei/janitor', [
             },
             'repair' => function () {
                 return \Bnomei\Janitor::cacheRepair();
-            },
+            }
         ],
         'jobs.extends' => [],
         'exclude' => ['bnomei/autoid', 'bnomei/fingerprint'],
@@ -34,7 +34,7 @@ Kirby::plugin('bnomei/janitor', [
         'secret' => 'null',
         'simulate' => false,
         'log.enabled' => false,
-        'log' => function (string $msg, string $level = 'info', array $context = []): bool {
+        'log' => function (string $msg, string $level = 'info', array $context = []):bool {
             if (option('bnomei.janitor.log.enabled') && function_exists('kirbyLog')) {
                 kirbyLog('bnomei.janitor.log')->log($msg, $level, $context);
                 return true;
@@ -58,13 +58,16 @@ Kirby::plugin('bnomei/janitor', [
                     return intval(option('bnomei.janitor.label.cooldown', $cooldownMilliseconds));
                 },
                 'data' => function (string $data = null) {
-                    return \Kirby\Toolkit\I18n::translate($data, $data);
+                  return \Kirby\Toolkit\I18n::translate($data, $data);
                 },
                 'pageURI' => function () {
                     return $this->model()->uri();
                 },
+                'user' => function () {
+                    return kirby()->user()->toArray();
+                }
             ],
-        ],
+        ]
     ],
     'routes' => [
         [
@@ -73,8 +76,8 @@ Kirby::plugin('bnomei/janitor', [
                 \Bnomei\Janitor::log('janitor-api-secret', 'debug');
                 $api = \Bnomei\Janitor::api($job, true, $secret);
                 return Kirby\Http\Response::json($api, $api['status']);
-            },
-        ],
+            }
+        ]
     ],
     'api' => [
         'routes' => [
@@ -84,15 +87,15 @@ Kirby::plugin('bnomei/janitor', [
                     \Bnomei\Janitor::log('janitor-api-auth', 'debug');
                     $api = \Bnomei\Janitor::api($job, false, null, $context, $data);
                     return $api;
-                },
+                }
             ],
             [
-                'pattern' => 'plugin-janitor/(:any)/(:any)',
-                'action' => function (string $job, string $context) {
-                    \Bnomei\Janitor::log('janitor-api-auth', 'debug');
-                    $api = \Bnomei\Janitor::api($job, false, null, $context);
-                    return $api;
-                },
+              'pattern' => 'plugin-janitor/(:any)/(:any)',
+              'action' => function (string $job, string $context) {
+                \Bnomei\Janitor::log('janitor-api-auth', 'debug');
+                $api = \Bnomei\Janitor::api($job, false, null, $context);
+                return $api;
+              }
             ],
             [
                 'pattern' => 'plugin-janitor/(:any)',
@@ -100,14 +103,14 @@ Kirby::plugin('bnomei/janitor', [
                     \Bnomei\Janitor::log('janitor-api-auth', 'debug');
                     $api = \Bnomei\Janitor::api($job, false, null);
                     return $api;
-                },
-            ],
-        ],
-    ],
+                }
+            ]
+        ]
+    ]
+
 ]);
 
 if (!class_exists('Bnomei\Janitor')) {
-    // TODO: refactor to kirby loader for classes dir
     require_once __DIR__ . '/classes/Janitor.php';
 }
 
