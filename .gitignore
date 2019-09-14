@@ -16,7 +16,7 @@ node_modules
 /vendor/**/.*
 /vendor/**/*.json
 /vendor/**/*.txt
-/vendor/**/*.md``
+/vendor/**/*.md
 /vendor/**/*.yml
 /vendor/**/*.yaml
 /vendor/**/*.xml
