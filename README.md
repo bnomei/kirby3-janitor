@@ -130,7 +130,7 @@ janitor_query:
     // $data => 'my custom data'
     return [
         'status' => 200,
-        'label' => $page.title() . ' ' . $data,
+        'label' => $page->title() . ' ' . $data,
     ];
 }
 ```
