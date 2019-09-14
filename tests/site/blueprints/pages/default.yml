@@ -1,0 +1,61 @@
+title: Default Page
+preset: page
+fields:
+
+  text:
+    type: text
+
+  janitor_clean:
+    type: janitor
+    label: Clean Cache Files
+    progress: Cleaning Cache Files...
+    job: clean
+
+  janitor_flush:
+    type: janitor
+    label: Flush Pages Cache
+    progress: Flushing Pages Cache...
+    job: flush
+
+  janitor_clipboarddata:
+    type: janitor
+    label: Data Clipboard
+    progress: Copied!
+    clipboard: true
+    data: '{{ page.title }}'
+
+  janitor_clipboardfetch:
+    type: janitor
+    label: Fetch Clipboard
+    job: clipboard
+
+  janitor_reload:
+    type: janitor
+    label: Reload
+    job: reload
+
+  janitor_href:
+    type: janitor
+    label: Open URL
+    job: openurl
+
+  janitor_download:
+    type: janitor
+    label: Download File
+    job: download
+
+  janitor_minimal:
+    type: janitor
+    label: Minimal (boolean callback)
+    job: minimal
+
+  janitor_whistle:
+    type: janitor
+    label: Whistle (external Class)
+    job: whistle
+
+  janitor_query:
+    type: janitor
+    label: Query '{{ user.email }}'
+    job: query
+    data: '{{ user.email }}'

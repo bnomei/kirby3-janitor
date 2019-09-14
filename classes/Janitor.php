@@ -1,206 +1,170 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bnomei;
 
-use Kirby\Exception\Exception;
-use \Kirby\Toolkit;
+use Exception;
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
-use function array_key_exists;
-use function array_keys;
-use function array_merge;
-use function boolval;
-use function intval;
-use function is_array;
-use function is_callable;
-use function is_dir;
-use function sleep;
-use function str_replace;
-use function time;
-use function trim;
 
-// TODO: split in core logic and cache cleaning logic
-
-class Janitor
+final class Janitor
 {
-    public static function cacheRemoveUnusedFiles()
+    /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * Janitor constructor.
+     * @param array $options
+     */
+    public function __construct(array $options = [])
     {
-        $krc = kirby()->roots()->cache();
-        $exclude = option('bnomei.janitor.exclude'); // TODO: unused !?
-        $c = 0;
-        foreach (static::cacheFolders() as $folder) {
-            $cache = kirby()->cache(str_replace(DIRECTORY_SEPARATOR, '.', $folder));
-            foreach (Dir::files($krc.DIRECTORY_SEPARATOR.$folder) as $file) {
-                $cn = basename($file, '.cache');
-                if (!$cache->get($cn)) { // expired
-                    $fpath = $krc.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$file;
-                    $success = true;
-                    if (!option('bnomei.janitor.simulate') && F::exists($fpath)) {
-                        $success = F::remove($fpath);
-                    }
-                    if ($success) {
-                        $c++;
-                        static::log('#janitor removed expired cache-file [' . $folder.DIRECTORY_SEPARATOR.$file . ']', 'warning');
-                    }
-                }
+        $defaults = [
+            'debug' => option('debug'),
+            'log' => option('bnomei.janitor.log'),
+            'jobs' => option('bnomei.janitor.jobs'),
+            'jobs.defaults' => ['bnomei.janitor.jobs.defaults'],
+            'jobs.extends' => option('bnomei.janitor.jobs.extends'),
+            'secret' => option('bnomei.janitor.secret'),
+        ];
+        $this->options = array_merge($defaults, $options);
+
+        $extends = array_merge($this->options['jobs.defaults'], $this->options['jobs.extends']);
+        foreach ($extends as $extend) {
+            // NOTE: it is intended that jobs override merged not other way around
+            $this->options['jobs'] = array_merge(option($extend), $this->options['jobs']);
+        }
+
+        foreach ($this->options as $key => $call) {
+            if (is_callable($call) && in_array($key, ['secret'])) {
+                $this->options[$key] = $call();
             }
         }
-        return $c > 0;
     }
 
-    public static function cacheClearFolders()
+    /**
+     * @param string|null $key
+     * @return array
+     */
+    public function option(?string $key = null)
     {
-        $krc = kirby()->roots()->cache();
-
-        $c = 0;
-        foreach (static::cacheFolders() as $folder) {
-            $f = $krc.DIRECTORY_SEPARATOR.$folder;
-            if (!is_dir($f)) {
-                continue;
-            }
-            $success = true;
-            if (!option('bnomei.janitor.simulate')) {
-                $success = Dir::remove($f);
-            }
-            if ($success) {
-                $c++;
-                static::log('#janitor removed cache folder [' . $folder . ']', 'warning');
-            } else {
-                static::log('#janitor failed to remove cache-folder [' . $folder . ']', 'error');
-            }
+        if ($key) {
+            return A::get($this->options, $key);
         }
-        return $c > 0;
+        return $this->options;
     }
 
-    public static function cacheFlush()
+    /**
+     * @param string $secret
+     * @param string $name
+     * @param array $data
+     * @return array
+     */
+    public function jobWithSecret(string $secret, string $name, array $data = []): array
     {
-        $krc = kirby()->roots()->cache(); // TOOD: unused ?!
-        $exclude = option('bnomei.janitor.exclude');  // TOOD: unused ?!
-        $c = 0;
-        foreach (static::cacheFolders(true) as $folder) {
-            $cacheName = str_replace(DIRECTORY_SEPARATOR, '.', $folder);
-            if ($cache = kirby()->cache($cacheName)) {
-                if (!option('bnomei.janitor.simulate')) {
-                    $cache->flush();
-                }
-                $c++;
-                static::log('#janitor flushed cache [' . $cacheName . ']', 'warning');
-            }
+        if ($secret === $this->option('secret')) {
+            return $this->job($name, $data);
         }
-        return $c > 0;
+        return [
+            'status' => 401,
+        ];
     }
 
-    public static function cacheRepair()
+    /**
+     * @param string $name
+     * @param array $data
+     * @return array
+     */
+    public function job(string $name, array $data = []): array
     {
-        $krc = kirby()->roots()->cache();
-        if (!is_dir($krc)) {
-            if (Dir::make($krc)) {
-                static::log('#janitor recreated the root cache folder', 'warning');
-            } else {
-                static::log('#janitor failed to create the root cache folder', 'error');
-            }
-        } else {
-            static::log('#janitor found nothing in need of reparation');
+        $job = $this->findJob($name);
+
+        if (is_callable($job)) {
+            return $this->jobFromCallable($job, $data);
+        } elseif (class_exists($job)) {
+            return $this->jobFromClass($job, $data);
         }
-        return true;
+
+        return [
+            'status' => 404,
+        ];
     }
 
-    public static function lootTheSafe(): int
+    /**
+     * @param string $name
+     * @return mixed|string
+     */
+    public function findJob(string $name)
     {
-        // NOTE: used to test the api $_$
-        $loot = random_int(1, 9);
-        sleep(1);
-        return $loot;
-    }
-
-    public static function cacheFolders(bool $all = false): array
-    {
-        $krc = kirby()->roots()->cache();
-        $exclude = option('bnomei.janitor.exclude');
-
-        $folders = [];
-        foreach (Dir::index($krc, true) as $file) {
-            $skip = false;
-            $path = $krc . DIRECTORY_SEPARATOR . $file;
-            if (is_dir($path) && count(Dir::dirs($path)) == 0) {
-                if (!$all) {
-                    foreach ($exclude as $e) {
-                        if (Str::contains($file, trim($e, DIRECTORY_SEPARATOR))) {
-                            $skip = true;
-                            break;
-                        }
-                    }
-                }
-                if (!$skip) {
-                    $folders[$file] = true;
-                }
-            }
+        // find in jobs config
+        $jobInConfig = A::get($this->option('jobs'), $name);
+        if ($jobInConfig) {
+            return $jobInConfig;
         }
-        return array_keys($folders);
+
+        // could be a class
+        return $name;
     }
 
-    public static function api(string $job, bool $remote = false, string $secret = null, string $context = null, string $contextData = null): array
+    /**
+     * @param $job
+     * @param array $data
+     * @return array
+     */
+    public function jobFromCallable($job, array $data): array
     {
-        if (!$remote || ($secret && $secret == option('bnomei.janitor.secret'))) {
-            $defaults = option('bnomei.janitor.jobs.defaults', []);
-            $jobs = array_merge($defaults, option('bnomei.janitor.jobs', []));
-            foreach (option('bnomei.janitor.jobs.extends', []) as $optionID) {
-                $jobs = array_merge($jobs, option($optionID, []));
-            }
-
-            $before = time();
-            $data = [];
-            $success = false;
-
-            if (array_key_exists($job, $jobs)) {
-                $c = $jobs[$job];
-                if (is_callable($c)) {
-                    $r = null;
-                    static::log('@' . $job . ' started');
-                    try {
-                        if($context) {
-                            $r = $c(kirby()->page(urldecode($context)), urldecode($contextData));
-                        }
-                        if( ! $r) {
-                            $r = $c();
-                        }
-                    } catch (Exception $ex) {
-                        $success = false;  // TOOD: default ?!
-                    }
-                    if (is_array($r)) {
-                        $data = $r;
-                        $v = A::get($data, 'status', 404);
-                        $success = intval($v) == 200;
-                    } else {
-                        $success = boolval($r);
-                    }
-                    static::log('@' . $job . ' finished');
-                } else {
-                    static::log('@' . $job . ' not callable', 'warning');
-                }
-            } else {
-                static::log('@' . $job . ' not found', 'warning');
-            }
-
-            $after = time();
-            return array_merge([
-                'job' => $job,
-                'started' => $before,
-                'finished' => $after,
-                'status' => $success ? 200 : 404,
-                // 'label' => $job, // custom jobs only
-            ], $data);
+        $return = false;
+        try {
+            $return = $job(
+                page(urldecode(A::get($data, 'contextPage', ''))),
+                urldecode(A::get($data, 'contextData', ''))
+            );
+        } catch (Exception $ex) {
+            $return = $job();
         }
-        return [];
+        if (is_array($return)) {
+            return $return;
+        }
+        return [
+            'status' => $return ? 200 : 404,
+        ];
     }
 
-    public static function log(string $msg = '', string $level = 'info', array $context = []):bool
+    /**
+     * @param string $job
+     * @param array $data
+     * @return array
+     */
+    public function jobFromClass(string $job, array $data): array
     {
-        $log = option('bnomei.janitor.log');
+        $object = new $job(
+            page(urldecode(A::get($data, 'contextPage', ''))),
+            urldecode(A::get($data, 'contextData', ''))
+        );
+
+        if (method_exists($object, 'job')) {
+            return $object->job();
+        }
+        return [
+            'status' => 400,
+        ];
+    }
+
+    /**
+     * @param string $msg
+     * @param string $level
+     * @param array $context
+     * @return bool
+     */
+    public function log(string $msg = '', string $level = 'info', array $context = []): bool
+    {
+        $log = $this->option('log');
         if ($log && is_callable($log)) {
-            if (!option('debug') && $level == 'debug') {
+            if (!$this->option('debug') && $level == 'debug') {
                 // skip but...
                 return true;
             } else {
@@ -208,5 +172,59 @@ class Janitor
             }
         }
         return false;
+    }
+
+    /*
+     * @var Janitor
+     */
+    private static $singleton;
+
+    /**
+     * @param array $options
+     * @return Janitor
+     */
+    public static function singleton(array $options = []): Janitor
+    {
+        if (self::$singleton) {
+            return self::$singleton;
+        }
+
+        self::$singleton = new Janitor($options);
+        return self::$singleton;
+    }
+
+    /**
+     * @param string|null $template
+     * @param mixed|null $model
+     * @return string
+     */
+    public static function query(string $template = null, $model = null): string
+    {
+        $page = null;
+        $file = null;
+        if ($model && $model instanceof Page) {
+            $page = $model;
+        } elseif ($model && $model instanceof File) {
+            $file = $model;
+        }
+        return Str::template($template, [
+            'kirby' => kirby(),
+            'site' => kirby()->site(),
+            'page' => $page,
+            'file' => $file,
+            'user' => kirby()->user(),
+        ]);
+    }
+
+    /**
+     * @param $val
+     * @param bool $return_null
+     * @return bool
+     */
+    public static function isTrue($val, $return_null = false): bool
+    {
+        $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
+        $boolval = ($boolval === null && !$return_null ? false : $boolval);
+        return $boolval;
     }
 }

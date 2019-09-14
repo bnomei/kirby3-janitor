@@ -18,6 +18,13 @@ Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, P
   
 > *TIP 2:* It can also create logs of what it did.
 
+1. [Custom Jobs](https://github.com/bnomei/kirby3-janitor#custom-jobs)
+1. [Query Language](https://github.com/bnomei/kirby3-janitor#queries)
+1. [Reload Panel](https://github.com/bnomei/kirby3-janitor#reload-panel-view)
+1. [Copy to Clipboard](https://github.com/bnomei/kirby3-janitor#copy-to-clipboard)
+1. [Open URL](https://github.com/bnomei/kirby3-janitor#open-url)
+1. [Download File](https://github.com/bnomei/kirby3-janitor#download-file)
+
 ## Commerical Usage
 
 This plugin is free but if you use it in a commercial project please consider to 
@@ -28,7 +35,7 @@ This plugin is free but if you use it in a commercial project please consider to
 ## Similar plugins
 
 - [Kirby Terminal](https://github.com/lukaskleinschmidt/kirby-terminal) if you need to execute longer running processes on the terminal
-- [Kirby Queque](https://github.com/bvdputte/kirby-queue) if you want to add scheduled jobs to queque which get trigged by a cron job
+- [Kirby Queue](https://github.com/bvdputte/kirby-queue) if you want to add scheduled jobs to queque which get trigged by a cron job
 
 ## Installation
 
@@ -36,7 +43,7 @@ This plugin is free but if you use it in a commercial project please consider to
 - `git submodule add https://github.com/bnomei/kirby3-janitor.git site/plugins/kirby3-janitor` or
 - `composer require bnomei/kirby3-janitor`
 
-## Screenshots
+## Screenshot
 
 ![clean & loot](https://raw.githubusercontent.com/bnomei/kirby3-janitor/master/kirby3-janitor-screenshot-1.gif)
 
@@ -66,6 +73,126 @@ $json = janitor('clean', true); // array
     data: Grand # (string) forwarded to job context
 ```
 
+## Jobs
+
+### Predefined Jobs
+
+- **flush** calls `flush()` on kirbys core pages cache.
+- **clean** removes all cache-files from custom caches or plugins.
+
+### Custom Jobs
+
+Go build your own jobs. Trigger APIs, create ZIPs, rename Files, ... check out the [examples created for the unittests]().
+
+### Extend with existing Jobs
+
+Example: `'bnomei.janitor.jobs.extends' => ['bvdputte.kirbyqueue.queues']` will load all classnames or callbacks defined in `option('bvdputte.kirbyqueue.queues')` as well.
+
+### Queries
+
+The `data` properties will be parsed for queries. You can use that to for example forward the current panel users email to your custom job.
+
+```yaml
+janitor_query:
+  type: janitor
+  label: Query '{{ user.email }}'
+  job: query
+  data: '{{ user.email }}'
+```
+
+```php
+'query' => function (Kirby\Cms\Page $page = null, string $data = null) {
+    return [
+        'status' => 200,
+        'label' => $data, // this is the email
+    ];
+},
+```
+
+
+
+## Panel Features
+
+### Context page and data
+
+```yaml
+  myjob:
+    type: janitor
+    label: Perform Job
+    progress: Performing Job...
+    job: myjob
+    data: my custom data
+```
+
+```php
+'page' => function(Kirby\Cms\Page $page = null, string $data = null) {
+    // $page => page object where the button as pressed
+    // $data => 'my custom data'
+    return [
+        'status' => 200,
+        'label' => $page.title() . ' ' . $data,
+    ];
+}
+```
+
+### Reload Panel View
+
+```php
+'reload' => function(Kirby\Cms\Page $page = null, string $data = null) {
+    return [
+        'status' => 200,
+        'reload' => true, // will trigger JS location.reload in panel
+    ];
+}
+```
+
+### Copy to Clipboard
+
+```php
+'clipboard' => function(Kirby\Cms\Page $page = null, string $data = null) {
+    return [
+        'status' => 200,
+        'clipboard' => 'Janitor',
+    ];
+}
+```
+
+### Open URL
+
+```php
+'openurl' => function(Kirby\Cms\Page $page = null, string $data = null) {
+    return [
+        'status' => 200,
+        'href' => 'https://github.com/bnomei/kirby3-janitor',
+    ];
+}
+```
+
+### Download File
+
+```php
+'download' => function(Kirby\Cms\Page $page = null, string $data = null) {
+    return [
+        'status' => 200,
+        'download' => 'https://raw.githubusercontent.com/bnomei/kirby3-janitor/master/kirby3-janitor-screenshot-1.gif',
+    ];
+}
+```
+
+> ATTENTION: The download dialog will only appear at [same origin](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#Attributes) otherwise it will behave like opening an url.
+
+## Settings
+
+| bnomei.janitor.           | Default        | Description               |            
+|---------------------------|----------------|---------------------------|
+| jobs | `array of classnames or callbacks` | array of `['key' => function() { return []; } ]` |
+| jobs.extends | `[]` | array of names to other job definitions. example: `['bvdputte.kirbyqueue.queues']` |
+| label.cooldown | `2000` | in millisecondss. the field allow you to override this as well. | 
+| secret | `null` | any string or callback |
+| log.enabled | `false` | if enabled it try to call [Kirby-log Plugin](https://github.com/bvdputte/kirby-log) |
+
+## Usage in JS, Vue and as a Cronjob
+
 **Kirby API (post Authentification)**
 
 ```js
@@ -94,87 +221,14 @@ wget https://devkit.bnomei.com/plugin-janitor/clean/e9fe51f94eadabf54dbf2fbbd571
 curl -s https://devkit.bnomei.com/plugin-janitor/clean/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
 ```
 
-## Custom Jobs
-
-Go build your own jobs. Trigger APIs, create ZIPs, rename Files, ...
-
-**site/config.php**
-```php
-<?php
-    return [
-        'bnomei.janitor.jobs' => [
-            'heist' => function(Kirby\Cms\Page $page = null, string $data = null) {
-                \Bnomei\Janitor::log('heist.mask '.time());
-                
-                $grand = \Bnomei\Janitor::lootTheSafe();
-                // or trigger a snippet like this:
-                // snippet('call-police');
-                
-                // $page is Kirby Page Object if job issued by Panel
-                $location = $page ? $page->title() : 'Bank';
-                
-                // $data is optional [data] prop from the Janitor Panel Field
-                $currency = $data ? $data : 'Coins';
-                
-                \Bnomei\Janitor::log('heist.exit '.time());
-                return [
-                    'status' => $grand > 0 ? 200 : 404,
-                    'label' => $grand . ' ' . $currency . '  looted at ' . $location . '!'
-                ];
-            }
-        ],
-        // ... other configs
-    ];
-```
-
-## Predefined Jobs
-
-- **tend** removes cache-files *that have expired* from all but excluded cache-folders.
-- **clean** removes cache-files from all but excluded cache-folders.
-- **flush** calls `flush()` on *all* cache-folders. Dangerous!
-- **repair** creates the root cache folder if it is missing.
-
-
-## Panel context page and data
-
-Since 1.3.0 you can access the Page-Object the Panel-Field was called at and the forwarded custom data prop.
-
-
-```yaml
-  myjob:
-    type: janitor
-    label: Perform Job
-    progress: Performing Job...
-    job: myjob
-    data: my custom data
-```
-
-```php
-'myjob' => function(Kirby\Cms\Page $page = null, string $data = null) {
-    // $data == 'my custom data'
-}
-```
-
-## Settings
-
-| bnomei.janitor.           | Default        | Description               |            
-|---------------------------|----------------|---------------------------|
-| jobs | `array of callbacks` | array of `['key' => function() { return (bool or array); } ]` |
-| jobs.extends | `[]` | array of names to other job definitions. example: `['bvdputte.kirbyqueue.queues']` |
-| label.cooldown | `2000` | in millisecondss. the field allow you to override this as well. | 
-| exclude | `['bnomei/autoid', 'bnomei/fingerprint']` | array of foldernames to exclude. | 
-| secret | `null` | any string |
-| log.enabled | `false` | if enabled it try to call [Kirby-log Plugin](https://github.com/bvdputte/kirby-log) |
-| simulate | `false` | will not remove any files if enabled. You could check this option in your customs jobs as well if you want to support simulating the job. |
-
 ## Disclaimer
 
 This plugin is provided "as is" with no guarantee. Use it at your own risk and always test it yourself before using it in a production environment. If you find any issues, please [create a new issue](https://github.com/bnomei/kirby3-janitor/issues/new).
 
 ## Credits
 
-- [@robinscholz](https://github.com/robinscholz) helped me a great deal with the panel field code. Thanks again!
-- Kirby 2 https://github.com/bnomei/kirby-opener. Maybe the janitor plugin will be able to do all this again someday.
+- [@robinscholz](https://github.com/robinscholz) helped me a great deal with the panel field code. Thanks again! And again for v2!
+- Kirby 2 https://github.com/bnomei/kirby-opener
 
 ## License
 

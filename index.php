@@ -12,29 +12,16 @@ Kirby::plugin('bnomei/janitor', [
     'options' => [
         'jobs' => [],
         'jobs.defaults' => [
-            'tend' => function () {
-                return \Bnomei\Janitor::cacheRemoveUnusedFiles();
-            },
-            'clean' => function () {
-                return \Bnomei\Janitor::cacheClearFolders();
-            },
-            'clear' => function () {
-                return \Bnomei\Janitor::cacheClearFolders();
-            },
-            'flush' => function () {
-                return \Bnomei\Janitor::cacheFlush();
-            },
-            'repair' => function () {
-                return \Bnomei\Janitor::cacheRepair();
-            }
+            'clean' => 'Bnomei\\CleanCacheFilesJob',
+            'flush' => 'Bnomei\\FlushPagesCacheJob',
         ],
         'jobs.extends' => [],
-        'exclude' => ['bnomei/autoid', 'bnomei/fingerprint'],
+
         'label.cooldown' => 2000, // ms
-        'secret' => 'null',
-        'simulate' => false,
+        'secret' => null,
+
         'log.enabled' => false,
-        'log' => function (string $msg, string $level = 'info', array $context = []):bool {
+        'log' => function (string $msg, string $level = 'info', array $context = []): bool {
             if (option('bnomei.janitor.log.enabled') && function_exists('kirbyLog')) {
                 kirbyLog('bnomei.janitor.log')->log($msg, $level, $context);
                 return true;
@@ -51,63 +38,69 @@ Kirby::plugin('bnomei/janitor', [
                 'progress' => function ($progress = null) {
                     return \Kirby\Toolkit\I18n::translate($progress, $progress);
                 },
-                'job' => function (string $job = null) {
+                'job' => function (?string $job = null) {
                     return 'plugin-janitor/' . $job;
                 },
                 'cooldown' => function (int $cooldownMilliseconds = 2000) {
                     return intval(option('bnomei.janitor.label.cooldown', $cooldownMilliseconds));
                 },
-                'data' => function (string $data = null) {
-                  return \Kirby\Toolkit\I18n::translate($data, $data);
+                'data' => function (?string $data = null) {
+                    $data = \Bnomei\Janitor::query($data, $this->model());
+                    return \Kirby\Toolkit\I18n::translate($data, $data);
+                },
+                'clipboard' => function ($clipboard = null) {
+                    return \Bnomei\Janitor::isTrue($clipboard);
                 },
                 'pageURI' => function () {
                     return $this->model()->uri();
                 },
-                'user' => function () {
-                    return kirby()->user()->toArray();
-                }
             ],
-        ]
+        ],
     ],
     'routes' => [
         [
             'pattern' => 'plugin-janitor/(:any)/(:any)',
             'action' => function (string $job, string $secret) {
-                \Bnomei\Janitor::log('janitor-api-secret', 'debug');
-                $api = \Bnomei\Janitor::api($job, true, $secret);
-                return Kirby\Http\Response::json($api, $api['status']);
-            }
-        ]
+                $janitor = new \Bnomei\Janitor();
+                $janitor->log('janitor-api-secret', 'debug');
+                $response = $janitor->jobWithSecret($secret, $job);
+                return Kirby\Http\Response::json($response, A::get($response, 'status', 400));
+            },
+        ],
     ],
     'api' => [
         'routes' => [
             [
                 'pattern' => 'plugin-janitor/(:any)/(:any)/(:any)',
-                'action' => function (string $job, string $context, string $data) {
-                    \Bnomei\Janitor::log('janitor-api-auth', 'debug');
-                    $api = \Bnomei\Janitor::api($job, false, null, $context, $data);
-                    return $api;
-                }
+                'action' => function (string $job, string $page, string $data) {
+                    $janitor = \Bnomei\Janitor::singleton();
+                    $janitor->log('janitor-api-auth', 'debug');
+                    return $janitor->job($job, [
+                        'contextPage' => $page,
+                        'contextData' => $data,
+                    ]);
+                },
             ],
             [
-              'pattern' => 'plugin-janitor/(:any)/(:any)',
-              'action' => function (string $job, string $context) {
-                \Bnomei\Janitor::log('janitor-api-auth', 'debug');
-                $api = \Bnomei\Janitor::api($job, false, null, $context);
-                return $api;
-              }
+                'pattern' => 'plugin-janitor/(:any)/(:any)',
+                'action' => function (string $job, string $page) {
+                    $janitor = \Bnomei\Janitor::singleton();
+                    $janitor->log('janitor-api-auth', 'debug');
+                    return $janitor->job($job, [
+                        'contextPage' => $page,
+                    ]);
+                },
             ],
             [
                 'pattern' => 'plugin-janitor/(:any)',
                 'action' => function (string $job) {
-                    \Bnomei\Janitor::log('janitor-api-auth', 'debug');
-                    $api = \Bnomei\Janitor::api($job, false, null);
-                    return $api;
+                    $janitor = \Bnomei\Janitor::singleton();
+                    $janitor->log('janitor-api-auth', 'debug');
+                    return $janitor->job($job);
                 }
-            ]
-        ]
-    ]
-
+            ],
+        ],
+    ],
 ]);
 
 if (!class_exists('Bnomei\Janitor')) {
@@ -117,12 +110,12 @@ if (!class_exists('Bnomei\Janitor')) {
 if (!function_exists('janitor')) {
     function janitor(string $job, bool $dump = false)
     {
-        \Bnomei\Janitor::log('janitor()', 'debug');
-        $api = \Bnomei\Janitor::api($job);
+        $janitor = \Bnomei\Janitor::singleton();
+        $janitor->log('janitor()', 'debug');
+        $response = $janitor->job($job);
         if ($dump) {
-            return $api;
-        } else {
-            return intval($api['status']) == 200;
+            return $response;
         }
+        return intval(A::get($response, 'status')) === 200;
     }
 }
