@@ -82,7 +82,7 @@ $json = janitor('clean', true); // array
 
 ### Custom Jobs
 
-Go build your own jobs. Trigger APIs, create ZIPs, rename Files, ... check out the [examples created for the unittests]().
+Go build your own jobs. Trigger APIs, create ZIPs, rename Files, ... check out the [examples created for the unittests](https://github.com/bnomei/kirby3-janitor/blob/master/tests/site/config/config.php).
 
 ### Extend with existing Jobs
 
