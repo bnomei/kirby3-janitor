@@ -10,7 +10,7 @@ use Symfony\Component\Finder\Finder;
 final class CleanCacheFilesJob extends JanitorJob
 {
     /**
-     * @return bool
+     * @return array
      */
     public function job(): array
     {
