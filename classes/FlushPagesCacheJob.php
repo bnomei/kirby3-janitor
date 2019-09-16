@@ -7,7 +7,7 @@ namespace Bnomei;
 final class FlushPagesCacheJob extends JanitorJob
 {
     /**
-     * @return bool
+     * @return array
      */
     public function job(): array
     {
