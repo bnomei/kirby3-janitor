@@ -5,7 +5,8 @@
   "author": "Bruno Meilick <b@bnomei.com>",
   "scripts": {
     "dev": "parcel watch src/index.js --no-source-maps -d ./",
-    "build": "parcel build src/index.js --no-source-maps --experimental-scope-hoisting -d ./"
+    "build": "parcel build src/index.js --no-source-maps -d ./",
+    "build-exp": "parcel build src/index.js --no-source-maps --experimental-scope-hoisting -d ./"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.0.0",
@@ -17,5 +18,8 @@
   "dependencies": {
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.3"
-  }
+  },
+  "posthtml": {
+    "recognizeSelfClosing": true
+  } 
 }
