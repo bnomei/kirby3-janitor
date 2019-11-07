@@ -24,8 +24,13 @@ Kirby::plugin('bnomei/janitor', [
 
         'log.enabled' => false,
         'log' => function (string $msg, string $level = 'info', array $context = []): bool {
-            if (option('bnomei.janitor.log.enabled') && function_exists('kirbyLog')) {
-                kirbyLog('bnomei.janitor.log')->log($msg, $level, $context);
+            if (option('bnomei.janitor.log.enabled')) {
+                if (function_exists('monolog')) {
+                    monolog()->{$level}($msg, $context);
+                }
+                else if (function_exists('kirbyLog')) {
+                    kirbyLog('bnomei.janitor.log')->log($msg, $level, $context);
+                }
                 return true;
             }
             return false;
