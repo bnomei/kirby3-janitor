@@ -52,7 +52,7 @@ final class JanitorTest extends TestCase
     public function testFindJob()
     {
         $janitor = new Janitor([
-            'jobs.extends' => ['another.plugin.jobs'],
+            'jobs.extends' => ['another.plugin.jobs', 'doesnotexist.plugin.jobs'],
         ]);
 
         $this->assertTrue(class_exists($janitor->findJob('clean')));

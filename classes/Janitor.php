@@ -36,7 +36,7 @@ final class Janitor
         $extends = array_merge($this->options['jobs.defaults'], $this->options['jobs.extends']);
         foreach ($extends as $extend) {
             // NOTE: it is intended that jobs override merged not other way around
-            $this->options['jobs'] = array_merge(option($extend), $this->options['jobs']);
+            $this->options['jobs'] = array_merge(option($extend, []), $this->options['jobs']);
         }
 
         foreach ($this->options as $key => $call) {
@@ -142,7 +142,7 @@ final class Janitor
     public function jobFromClass(string $job, array $data): array
     {
         $object = new $job(
-            page(urldecode(A::get($data, 'contextPage', ''))),
+            page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
             urldecode(A::get($data, 'contextData', ''))
         );
 
