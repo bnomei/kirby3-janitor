@@ -9,6 +9,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use League\CLImate\CLImate;
 
 final class Janitor
 {
@@ -92,6 +93,15 @@ final class Janitor
         return [
             'status' => 404,
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function listJobs()
+    {
+        // find in jobs config
+        return array_keys($this->option('jobs'));
     }
 
     /**
@@ -226,5 +236,22 @@ final class Janitor
         $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
         $boolval = ($boolval === null && !$return_null ? false : $boolval);
         return $boolval;
+    }
+
+    /**
+     * @var \League\CLImate\CLImate
+     */
+    private static $climate;
+
+    /**
+     * @param CLImate|null $climate
+     * @return CLImate|null
+     */
+    public static function climate(?CLImate $climate = null): ?CLImate
+    {
+        if ($climate && !self::$climate) {
+            self::$climate = $climate;
+        }
+        return self::$climate;
     }
 }

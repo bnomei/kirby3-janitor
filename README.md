@@ -18,12 +18,15 @@ Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, P
   
 > *TIP 2:* It can also create logs of what it did.
 
+> *TIP 3:* I can also be used as an CLI.
+
 1. [Custom Jobs](https://github.com/bnomei/kirby3-janitor#custom-jobs)
 1. [Query Language](https://github.com/bnomei/kirby3-janitor#queries)
 1. [Reload Panel](https://github.com/bnomei/kirby3-janitor#reload-panel-view)
 1. [Copy to Clipboard](https://github.com/bnomei/kirby3-janitor#copy-to-clipboard)
 1. [Open URL](https://github.com/bnomei/kirby3-janitor#open-url)
 1. [Download File](https://github.com/bnomei/kirby3-janitor#download-file)
+1. [CLI](https://github.com/bnomei/kirby3-janitor#cli)
 
 ## Commerical Usage
 
@@ -109,8 +112,6 @@ janitor_query:
 },
 ```
 
-
-
 ## Panel Features
 
 ### Context page and data
@@ -181,6 +182,68 @@ janitor_query:
 
 > ATTENTION: The download dialog will only appear at [same origin](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#Attributes) otherwise it will behave like opening an url.
 
+## CLI
+
+This plugin comes with an executable php script called `janitor` to use in the terminal/console. You can use it with an *alias* like this:
+
+```
+cd your/project/folder/root
+alias janitor='php site/plugins/kirby3-janitor/janitor'
+janitor --help
+```
+
+> TIP: Depending on your OS you might need to make the script executable with `chmod 0755 site/plugins/kirby3-janitor/janitor` first.
+
+> TIP: If you are using a custom folder setup you need to tell the janitor where to get the kirby instance from like this `janitor -kirby /public myJob`. See **Arguments** below. 
+
+### CLI Arguments
+ ```
+janitor --help
+
+Usage: janitor [-f format, --format format (default: label)] [-h, --help] [-k kirby, --kirby kirby (default: /)] [-l, --list] [-v, --verbose] [job]
+...
+ ```
+
+### Kirby Instance Loader
+
+The CLI needs to load the same Kirby Instance you website does. To achieve this the CLI attempts to create a special file named `janitor-{HASH}.php` based on your public `index.php`. It only comments out the `echo` statement.
+
+### CLI Examples 
+
+Examples based on the test from this plugin:
+
+**clean with dynamic progressbar**
+```
+janitor --verbose clean
+
+Using Kirby instance from: {PROJECT}/janitor-7848cb3c7677f4ff109682b2d9cd9978d46f7de8.php
+======================================================================> 100%
+200
+```
+
+**print as table**
+```
+janitor -format table whistle
+
+----------------
+| status | 200 |
+----------------
+| label  | ♫   |
+----------------
+```
+
+**print as json and store as file**
+```
+janitor -format json heist | cat > heist-$(date +%s).json
+cat heist-1573147345.json
+
+{
+    "status": 200,
+    "label": "7 Coins looted at Bank!"
+}
+
+```
+
 ## Settings
 
 | bnomei.janitor.           | Default        | Description               |            
@@ -220,6 +283,11 @@ wget https://devkit.bnomei.com/plugin-janitor/clean/e9fe51f94eadabf54dbf2fbbd571
 // or
 curl -s https://devkit.bnomei.com/plugin-janitor/clean/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
 ```
+
+## Dependencies
+
+- [Symfony Finder](https://symfony.com/doc/current/components/finder.html)
+- [CLIMate](https://github.com/thephpleague/climate)
 
 ## Disclaimer
 

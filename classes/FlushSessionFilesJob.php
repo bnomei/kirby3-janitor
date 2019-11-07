@@ -18,9 +18,18 @@ final class FlushSessionFilesJob extends JanitorJob
         $removed = 0;
         $finder = new Finder();
         $finder->files()->name('*.sess')->in($dir);
+        $count = iterator_count($finder);
+        $climate = \Bnomei\Janitor::climate();
+        $progress = null;
+        if ($count && $climate) {
+            $progress = $climate->progress()->total($count);
+        }
         foreach ($finder as $cacheFile) {
             if (F::remove($cacheFile->getRealPath())) {
                 $removed++;
+                if ($progress && $climate) {
+                    $progress->current($removed);
+                }
             }
         }
         return [

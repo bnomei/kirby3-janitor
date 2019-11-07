@@ -1,0 +1,115 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+ini_set('display_errors', '1');
+
+$climate = new \League\CLImate\CLImate();
+
+$climate->arguments->add([
+    'help' => [
+        'prefix' => 'h',
+        'longPrefix' => 'help',
+        'description' => 'Display the help',
+        'noValue' => true,
+    ],
+    'list' => [
+        'prefix' => 'l',
+        'longPrefix' => 'list',
+        'description' => 'List all registered jobs',
+        'noValue' => true,
+    ],
+    'format' => [
+        'prefix' => 'f',
+        'longPrefix' => 'format',
+        'description' => 'Format the output as "label", "table" or "json"',
+        'defaultValue' => 'label',
+    ],
+    'kirby' => [
+        'prefix' => 'k',
+        'longPrefix' => 'kirby',
+        'description' => 'Relative path to Kirbys public folder',
+        'defaultValue' => '/',
+    ],
+    'verbose' => [
+        'prefix' => 'v',
+        'longPrefix' => 'verbose',
+        'description' => 'Show debug info',
+        'noValue' => true,
+    ],
+    'job' => [
+        'description' => 'Run a job',
+    ],
+]);
+$climate->arguments->parse();
+$verbose = $climate->arguments->defined('verbose');
+
+// COMMAND: kirby
+$kirbyPublicFolder = realpath(__DIR__ . DIRECTORY_SEPARATOR . ltrim($climate->arguments->get('kirby'), DIRECTORY_SEPARATOR));
+if ($kirbyPublicFolder) {
+    $kirbyLoader = $kirbyPublicFolder . DIRECTORY_SEPARATOR . 'janitor-' . sha1(__DIR__) . '.php';
+    if (! file_exists($kirbyLoader)) {
+        file_put_contents(
+            $kirbyLoader,
+            str_replace('echo ', '// echo ',
+                file_get_contents($kirbyPublicFolder . DIRECTORY_SEPARATOR . 'index.php')
+            )
+        );
+        if ($verbose) {
+            $climate->backgroundYellow()->out('ATTENTION! Janitor created this file to load the Kirby instance: ' . $kirbyLoader);
+        }
+    }
+    include $kirbyLoader;
+    if ($verbose) {
+        $climate->backgroundCyan()->out('Using Kirby instance from: ' . $kirbyLoader);
+    }
+}
+
+\Bnomei\Janitor::climate($climate);
+$janitor = new \Bnomei\Janitor();
+
+// COMMAND: help
+$command = $climate->arguments->defined('help');
+if ($command) {
+    $climate->usage();
+}
+
+// COMMAND: list
+$command = $climate->arguments->defined('list');
+if ($command) {
+    foreach ($janitor->listJobs() as $key) {
+        $climate->out($key);
+    }
+}
+
+// COMMAND: job
+$job = $climate->arguments->get('job');
+if ($job) {
+    $format = $climate->arguments->get('format');
+    if ($format === 'class') {
+        $janitor->job($job, [], $climate);
+    } elseif ($format === 'json') {
+        $climate->json($janitor->job($job));
+    } elseif ($format === 'table') {
+        $table = [];
+        foreach ($janitor->job($job) as $key => $value) {
+            $table[] = [$key, $value];
+        }
+        $climate->table($table);
+    } else {
+        $data = $janitor->job($job);
+        $status = $data['status'];
+        $label = array_key_exists('label', $data) ? $data['label'] : $status;
+        if ($status === 200) {
+            $climate->lightGreen($label);
+        } elseif ($status === 204) {
+            $climate->lightRed($label);
+        } elseif ($status === 404) {
+            $climate->backgroundRed($label);
+        } else {
+            $climate->out($label);
+        }
+    }
+}

@@ -11,6 +11,7 @@ node_modules
 /tests/site/accounts
 /tests/site/cache
 /tests/site/sessions
+/tests/janitor-*.php
 
 # files of Composer dependencies that are not needed for the plugin
 /vendor/**/.*
@@ -32,3 +33,4 @@ node_modules
 /vendor/**/tests/*
 /vendor/**/php4/*
 /vendor/getkirby/composer-installer
+
