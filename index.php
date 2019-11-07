@@ -52,7 +52,7 @@ Kirby::plugin('bnomei/janitor', [
                     return \Bnomei\Janitor::isTrue($clipboard);
                 },
                 'pageURI' => function () {
-                    return $this->model()->uri();
+                    return str_replace('/','+', $this->model()->uri());
                 },
             ],
         ],

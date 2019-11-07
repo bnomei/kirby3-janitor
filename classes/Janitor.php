@@ -120,7 +120,7 @@ final class Janitor
         $return = false;
         try {
             $return = $job(
-                page(urldecode(A::get($data, 'contextPage', ''))),
+                page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
                 urldecode(A::get($data, 'contextData', ''))
             );
         } catch (Exception $ex) {
