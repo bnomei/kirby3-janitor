@@ -7,7 +7,7 @@ namespace Bnomei;
 final class WhistleJob extends JanitorJob
 {
     /**
-     * @return bool
+     * @return array
      */
     public function job(): array
     {

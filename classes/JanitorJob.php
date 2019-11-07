@@ -41,7 +41,7 @@ abstract class JanitorJob implements Job
     }
 
     /**
-     * @return bool
+     * @return array
      */
     abstract public function job(): array;
 }
