@@ -15,7 +15,9 @@ Kirby::plugin('bnomei/janitor', [
             'clean' => 'Bnomei\\CleanCacheFilesJob',
             'flush' => 'Bnomei\\FlushPagesCacheJob',
         ],
-        'jobs.extends' => [],
+        'jobs.extends' => [
+            'bnomei.lapse.jobs', // https://github.com/bnomei/kirby3-lapse/blob/master/index.php#L10
+        ],
 
         'label.cooldown' => 2000, // ms
         'secret' => null,
