@@ -223,7 +223,7 @@ Using Kirby instance from: {PROJECT}/janitor-7848cb3c7677f4ff109682b2d9cd9978d46
 
 **print as table**
 ```
-janitor -format table whistle
+janitor --format table whistle
 
 ----------------
 | status | 200 |
@@ -234,7 +234,7 @@ janitor -format table whistle
 
 **print as json and store as file**
 ```
-janitor -format json heist | cat > heist-$(date +%s).json
+janitor --format json heist | cat > heist-$(date +%s).json
 cat heist-1573147345.json
 
 {
