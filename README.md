@@ -194,7 +194,7 @@ janitor --help
 
 > TIP: Depending on your OS you might need to make the script executable with `chmod 0755 site/plugins/kirby3-janitor/janitor` first.
 
-> TIP: If you are using a custom folder setup you need to tell the janitor where to get the kirby instance from like this `janitor -kirby /public myJob`. See **Arguments** below. 
+> TIP: If you are using a custom folder setup you need to tell the janitor where to get the kirby instance from like this `janitor --kirby /public myJob`. See **Arguments** below. 
 
 ### CLI Arguments
  ```
