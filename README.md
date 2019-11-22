@@ -194,7 +194,7 @@ janitor --help
 
 > TIP: Depending on your OS you might need to make the script executable with `chmod 0755 site/plugins/kirby3-janitor/janitor` first.
 
-> TIP: If you are using a custom folder setup you need to tell the janitor where to get the kirby instance from like this `janitor -kirby /public myJob`. See **Arguments** below. 
+> TIP: If you are using a custom folder setup you need to tell the janitor where to get the kirby instance from like this `janitor --kirby /public myJob`. See **Arguments** below. 
 
 ### CLI Arguments
  ```
@@ -223,7 +223,7 @@ Using Kirby instance from: {PROJECT}/janitor-7848cb3c7677f4ff109682b2d9cd9978d46
 
 **print as table**
 ```
-janitor -format table whistle
+janitor --format table whistle
 
 ----------------
 | status | 200 |
@@ -234,7 +234,7 @@ janitor -format table whistle
 
 **print as json and store as file**
 ```
-janitor -format json heist | cat > heist-$(date +%s).json
+janitor --format json heist | cat > heist-$(date +%s).json
 cat heist-1573147345.json
 
 {
