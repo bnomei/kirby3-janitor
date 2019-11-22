@@ -133,7 +133,7 @@ final class Janitor
                 page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
                 urldecode(A::get($data, 'contextData', ''))
             );
-        } catch (Exception $ex) {
+        } catch (\BadMethodCallException $ex) {
             $return = $job();
         }
         if (is_array($return)) {
