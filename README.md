@@ -5,17 +5,17 @@
 ![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-janitor?color=272822)
 ![Issues](https://flat.badgen.net/packagist/ghi/bnomei/kirby3-janitor?color=e6db74)
 [![Build Status](https://flat.badgen.net/travis/bnomei/kirby3-janitor)](https://travis-ci.com/bnomei/kirby3-janitor)
-[![Coverage Status](https://flat.badgen.net/coveralls/c/github/bnomei/kirby3-janitor)](https://coveralls.io/github/bnomei/kirby3-janitor) 
-[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor)](https://codeclimate.com/github/bnomei/kirby3-janitor) 
-[![Demo](https://flat.badgen.net/badge/website/examples?color=f92672)](https://kirby3-plugins.bnomei.com/janitor) 
-[![Gitter](https://flat.badgen.net/badge/gitter/chat?color=982ab3)](https://gitter.im/bnomei-kirby-3-plugins/community) 
+[![Coverage Status](https://flat.badgen.net/coveralls/c/github/bnomei/kirby3-janitor)](https://coveralls.io/github/bnomei/kirby3-janitor)
+[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor)](https://codeclimate.com/github/bnomei/kirby3-janitor)
+[![Demo](https://flat.badgen.net/badge/website/examples?color=f92672)](https://kirby3-plugins.bnomei.com/janitor)
+[![Gitter](https://flat.badgen.net/badge/gitter/chat?color=982ab3)](https://gitter.im/bnomei-kirby-3-plugins/community)
 [![Twitter](https://flat.badgen.net/badge/twitter/bnomei?color=66d9ef)](https://twitter.com/bnomei)
 
 
 Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob.
 
-> *TIP 1:* The Janitor plugin can also perform other *jobs* than the build-in _cache jobs_. 
-  
+> *TIP 1:* The Janitor plugin can also perform other *jobs* than the build-in _cache jobs_.
+
 > *TIP 2:* It can also create logs of what it did.
 
 > *TIP 3:* I can also be used as an CLI.
@@ -30,7 +30,7 @@ Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, P
 
 ## Commerical Usage
 
-This plugin is free but if you use it in a commercial project please consider to 
+This plugin is free but if you use it in a commercial project please consider to
 - [make a donation 🍻](https://www.paypal.me/bnomei/5) or
 - [buy me ☕](https://buymeacoff.ee/bnomei) or
 - [buy a Kirby license using this affiliate link](https://a.paddle.com/v2/click/1129/35731?link=1170)
@@ -56,8 +56,8 @@ This plugin is free but if you use it in a commercial project please consider to
 
 ```php
 $success = janitor('clean'); // boolean
-// or
-$json = janitor('clean', true); // array
+// or with context page and data
+$json = janitor('clean', $page, 'ルパン三世', true); // array
 ```
 
 **Panel Field will create a clickable button**
@@ -194,7 +194,7 @@ janitor --help
 
 > TIP: Depending on your OS you might need to make the script executable with `chmod 0755 site/plugins/kirby3-janitor/janitor` first.
 
-> TIP: If you are using a custom folder setup you need to tell the janitor where to get the kirby instance from like this `janitor --kirby /public myJob`. See **Arguments** below. 
+> TIP: If you are using a custom folder setup you need to tell the janitor where to get the kirby instance from like this `janitor --kirby /public myJob`. See **Arguments** below.
 
 ### CLI Arguments
  ```
@@ -208,7 +208,7 @@ Usage: janitor [-f format, --format format (default: label)] [-h, --help] [-k ki
 
 The CLI needs to load the same Kirby Instance you website does. To achieve this the CLI attempts to create a special file named `janitor-{HASH}.php` based on your public `index.php`. It only comments out the `echo` statement.
 
-### CLI Examples 
+### CLI Examples
 
 Examples based on the test from this plugin:
 
@@ -246,11 +246,11 @@ cat heist-1573147345.json
 
 ## Settings
 
-| bnomei.janitor.           | Default        | Description               |            
+| bnomei.janitor.           | Default        | Description               |
 |---------------------------|----------------|---------------------------|
 | jobs | `array of classnames or callbacks` | array of `['key' => function() { return []; } ]` |
 | jobs.extends | `[]` | array of names to other job definitions. example: `['bvdputte.kirbyqueue.queues']` |
-| label.cooldown | `2000` | in millisecondss. the field allow you to override this as well. | 
+| label.cooldown | `2000` | in millisecondss. the field allow you to override this as well. |
 | secret | `null` | any string or callback |
 | log.enabled | `false` | if enabled it try to call [Kirby-log Plugin](https://github.com/bvdputte/kirby-log) |
 

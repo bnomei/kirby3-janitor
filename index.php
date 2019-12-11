@@ -117,11 +117,14 @@ if (!class_exists('Bnomei\Janitor')) {
 }
 
 if (!function_exists('janitor')) {
-    function janitor(string $job, bool $dump = false)
+    function janitor(string $job, ?\Kirby\Cms\Page $contextPage = null, ?string $contextData = null, bool $dump = false)
     {
         $janitor = \Bnomei\Janitor::singleton();
         $janitor->log('janitor()', 'debug');
-        $response = $janitor->job($job);
+        $response = $janitor->job($job, [
+            'contextPage' => $contextPage ? urlencode(str_replace('/' ,'+', $contextPage->uri())) : '',
+            'contextData' => $contextData ? urlencode($contextData) : '',
+        ]);
         if ($dump) {
             return $response;
         }
