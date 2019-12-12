@@ -77,6 +77,7 @@ return [
 
     'another.plugin.jobs' => [
         'whistle' => 'Bnomei\\WhistleJob',
+        'context' => 'Bnomei\\ContextJob',
     ],
     'bnomei.janitor.jobs.extends' => [
         'another.plugin.jobs',

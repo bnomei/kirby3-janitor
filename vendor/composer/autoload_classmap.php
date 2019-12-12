@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Bnomei\\CleanCacheFilesJob' => $baseDir . '/classes/CleanCacheFilesJob.php',
     'Bnomei\\CleanSessionsJob' => $baseDir . '/classes/CleanSessionsJob.php',
+    'Bnomei\\ContextJob' => $baseDir . '/classes/ContextJob.php',
     'Bnomei\\FlushPagesCacheJob' => $baseDir . '/classes/FlushPagesCacheJob.php',
     'Bnomei\\FlushSessionFilesJob' => $baseDir . '/classes/FlushSessionFilesJob.php',
     'Bnomei\\Janitor' => $baseDir . '/classes/Janitor.php',

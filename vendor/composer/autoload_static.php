@@ -60,6 +60,7 @@ class ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27
     public static $classMap = array (
         'Bnomei\\CleanCacheFilesJob' => __DIR__ . '/../..' . '/classes/CleanCacheFilesJob.php',
         'Bnomei\\CleanSessionsJob' => __DIR__ . '/../..' . '/classes/CleanSessionsJob.php',
+        'Bnomei\\ContextJob' => __DIR__ . '/../..' . '/classes/ContextJob.php',
         'Bnomei\\FlushPagesCacheJob' => __DIR__ . '/../..' . '/classes/FlushPagesCacheJob.php',
         'Bnomei\\FlushSessionFilesJob' => __DIR__ . '/../..' . '/classes/FlushSessionFilesJob.php',
         'Bnomei\\Janitor' => __DIR__ . '/../..' . '/classes/Janitor.php',

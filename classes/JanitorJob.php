@@ -25,9 +25,9 @@ abstract class JanitorJob implements Job
     }
 
     /**
-     * @return array|null
+     * @return string|null
      */
-    public function data(): ?array
+    public function data(): ?string
     {
         return $this->data;
     }

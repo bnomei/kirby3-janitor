@@ -26,6 +26,7 @@ Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, P
 1. [Copy to Clipboard](https://github.com/bnomei/kirby3-janitor#copy-to-clipboard)
 1. [Open URL](https://github.com/bnomei/kirby3-janitor#open-url)
 1. [Download File](https://github.com/bnomei/kirby3-janitor#download-file)
+1. [Jobs from Classes](https://github.com/bnomei/kirby3-janitor#jobs-from-classes)
 1. [CLI](https://github.com/bnomei/kirby3-janitor#cli)
 
 ## Commerical Usage
@@ -181,6 +182,90 @@ janitor_query:
 ```
 
 > ATTENTION: The download dialog will only appear at [same origin](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#Attributes) otherwise it will behave like opening an url.
+
+## Jobs from Classes
+
+**site/blueprints/pages/default.yml**
+```yaml
+fields:
+  aliens:
+    type: number
+    default: 1
+    min: 1
+  janitor_cheat:
+    type: janitor
+    label: Apply Cheat
+    progress: Applying Cheat...
+    job: cheat
+    data: 5
+  janitor_invaders:
+    type: janitor
+    label: Start Invasion
+    progress: Invading...
+    job: invasion
+    data: '{{ page.aliens.toInt }}'
+```
+
+**site/config/config.php**
+```php
+return [
+    'bnomei.janitor.jobs.extends' => [
+        'space.invaders.jobs', // name of plugin option
+    ],
+    // rest of config
+];
+```
+
+**site/plugins/space-invaders/index.php**
+```php
+// use kirby load()-helper or composer to load you custom class
+load([
+    'Space\\Invaders\\InvasionJob.php' => __DIR__ . '/classes/space/invaders/InvasionJob.php',
+]);
+
+Kirby::plugin('space/invaders', [
+   'options' => [
+        'jobs' => [ // you custom jobs
+            'cheat' => function(Kirby\Cms\Page $page = null, string $data = null) {
+                // update add more aliens based on data
+                kirby()->impersonate();
+                $page->increment('aliens', intval($data));
+
+                // then reload
+                return [
+                    'status' => 200,
+                    'reload' => true, // will trigger JS location.reload in panel
+                ];
+            },
+            'invasion' => 'Space\\Invaders\\InvasionJob',
+        ],
+   ],
+   // ... rest of your plugin
+]);
+```
+
+**site/plugins/space-invaders/classes/space/invaders/InvasionJob.php**
+```php
+<?php
+
+namespace Space\Invaders;
+
+class InvasionJob extends \Bnomei\JanitorJob
+{
+    /**
+     * @return array
+     */
+    public function job(): array
+    {
+        $page = $this->page();
+        $data = $this->data();
+        return [
+            'status' => 200,
+            'label' =>  $page->title()->value() . ' vs. ' . str_repeat('👾', intval($data)),
+        ];
+    }
+}
+```
 
 ## CLI
 

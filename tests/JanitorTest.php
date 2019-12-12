@@ -118,6 +118,11 @@ final class JanitorTest extends TestCase
             $janitor->job('whistle')['label']
         );
 
+        $this->assertEquals(
+            'Home Base',
+            janitor('context', site()->homepage(), 'Base', true)['label']
+        );
+
         // class exists but has no method job()
         $this->expectExceptionMessageRegExp('/Argument 1 passed/');
         $this->assertIsArray(
