@@ -301,7 +301,7 @@ Examples based on the test from this plugin:
 
 **clean with dynamic progressbar**
 ```
-janitor --verbose clean
+janitor --verbose cleanPages
 
 Using Kirby instance from: {PROJECT}/janitor-7848cb3c7677f4ff109682b2d9cd9978d46f7de8.php
 ======================================================================> 100%
@@ -346,7 +346,7 @@ cat heist-1573147345.json
 **Kirby API (post Authentification)**
 
 ```js
-let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/clean')
+let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/cleanpages')
   .then(response => response.json())
   .then(json => {
       console.log(json);
@@ -356,7 +356,7 @@ let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/clean')
 **Kirby Vue**
 
 ```vue
-this.$api.get('plugin-janitor/clean')
+this.$api.get('plugin-janitor/cleanpages')
   .then(response => {
     console.log(response)
   })
@@ -366,9 +366,9 @@ this.$api.get('plugin-janitor/clean')
 
 Set a `secret` in your config.php file and call the janitor api with secret in a crobjob like this. This way you do not need the Kirby API to authentificate.
 ```php
-wget https://devkit.bnomei.com/plugin-janitor/clean/e9fe51f94eadabf54dbf2fbbd57188b9abee436e --delete-after
+wget https://devkit.bnomei.com/plugin-janitor/cleanpages/e9fe51f94eadabf54dbf2fbbd57188b9abee436e --delete-after
 // or
-curl -s https://devkit.bnomei.com/plugin-janitor/clean/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
+curl -s https://devkit.bnomei.com/plugin-janitor/cleanpages/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
 ```
 
 ## Dependencies

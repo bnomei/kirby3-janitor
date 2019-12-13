@@ -89,6 +89,11 @@ final class JanitorTest extends TestCase
         );
 
         $this->assertEquals(
+            200,
+            $janitor->job('flushpAges')['status']
+        );
+
+        $this->assertEquals(
             404,
             $janitor->job('invalidjob')['status']
         );

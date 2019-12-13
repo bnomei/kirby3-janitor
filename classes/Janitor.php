@@ -37,7 +37,9 @@ final class Janitor
         $extends = array_merge($this->options['jobs.defaults'], $this->options['jobs.extends']);
         foreach ($extends as $extend) {
             // NOTE: it is intended that jobs override merged not other way around
-            $this->options['jobs'] = array_merge(option($extend, []), $this->options['jobs']);
+            $this->options['jobs'] = array_change_key_case(
+                array_merge(option($extend, []), $this->options['jobs'])
+            );
         }
 
         foreach ($this->options as $key => $call) {
@@ -111,7 +113,7 @@ final class Janitor
     public function findJob(string $name)
     {
         // find in jobs config
-        $jobInConfig = A::get($this->option('jobs'), $name);
+        $jobInConfig = A::get($this->option('jobs'), strtolower($name));
         if ($jobInConfig) {
             return $jobInConfig;
         }

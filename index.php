@@ -12,7 +12,9 @@ Kirby::plugin('bnomei/janitor', [
     'options' => [
         'jobs' => [],
         'jobs.defaults' => [
+            'clean' => 'Bnomei\\CleanCacheFilesJob', // legacy
             'cleanCache' => 'Bnomei\\CleanCacheFilesJob',
+            'flush' => 'Bnomei\\FlushPagesCacheJob', // legacy
             'flushPages' => 'Bnomei\\FlushPagesCacheJob',
             'cleanSessions' => 'Bnomei\\CleanSessionsJob',
             'flushSessions' => 'Bnomei\\FlushSessionFilesJob',
