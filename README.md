@@ -82,7 +82,7 @@ $json = janitor('clean', $page, 'ルパン三世', true); // array
 ### Predefined Jobs
 
 - **flushPages** calls `flush()` on kirbys core pages cache.
-- **flushCache** removes all cache-files from custom caches or plugins.
+- **cleanCache** removes all cache-files from custom caches or plugins.
 - **cleanSessions** triggers garbage collection for Sessions.
 - **flushSessions** removes all session-files.
 

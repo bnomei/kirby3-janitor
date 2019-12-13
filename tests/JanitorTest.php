@@ -55,7 +55,7 @@ final class JanitorTest extends TestCase
             'jobs.extends' => ['another.plugin.jobs', 'doesnotexist.plugin.jobs'],
         ]);
 
-        $this->assertTrue(class_exists($janitor->findJob('clean')));
+        $this->assertTrue(class_exists($janitor->findJob('cleanCache')));
         $this->assertTrue(class_exists($janitor->findJob('whistle')));
         $this->assertTrue(is_callable($janitor->findJob('heist')));
 
@@ -68,7 +68,7 @@ final class JanitorTest extends TestCase
         $janitor = new Janitor();
         $this->assertEquals(
             401,
-            $janitor->jobWithSecret('secret', 'flush')['status']
+            $janitor->jobWithSecret('secret', 'flushPages')['status']
         );
 
         $janitor = new Janitor([
@@ -76,7 +76,7 @@ final class JanitorTest extends TestCase
         ]);
         $this->assertEquals(
             200,
-            $janitor->jobWithSecret('secret', 'flush')['status']
+            $janitor->jobWithSecret('secret', 'flushPages')['status']
         );
     }
 
@@ -85,7 +85,7 @@ final class JanitorTest extends TestCase
         $janitor = new Janitor();
         $this->assertEquals(
             200,
-            $janitor->job('flush')['status']
+            $janitor->job('flushPages')['status']
         );
 
         $this->assertEquals(
@@ -140,12 +140,12 @@ final class JanitorTest extends TestCase
         // one single file to remove
         $this->assertEquals(
             200,
-            $janitor->job('clean')['status']
+            $janitor->job('cleanCache')['status']
         );
         // none to remove
         $this->assertEquals(
             204,
-            $janitor->job('clean')['status']
+            $janitor->job('cleanCache')['status']
         );
 
         $this->assertFalse(F::exists($file));
