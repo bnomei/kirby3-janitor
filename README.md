@@ -220,7 +220,7 @@ return [
 
 **site/plugins/space-invaders/index.php**
 ```php
-// use kirby load()-helper or composer to load you custom class
+// use kirby load()-helper or composer to load your custom class
 load([
     'Space\\Invaders\\InvasionJob.php' => __DIR__ . '/classes/space/invaders/InvasionJob.php',
 ]);
@@ -293,7 +293,7 @@ Usage: janitor [-f format, --format format (default: label)] [-h, --help] [-k ki
 
 ### Kirby Instance Loader
 
-The CLI needs to load the same Kirby Instance you website does. To achieve this the CLI attempts to create a special file named `janitor-{HASH}.php` based on your public `index.php`. It only comments out the `echo` statement.
+The CLI needs to load the same Kirby Instance your website does. To achieve this the CLI attempts to create a special file named `janitor-{HASH}.php` based on your public `index.php`. It only comments out the `echo` statement.
 
 ### CLI Examples
 
@@ -301,7 +301,7 @@ Examples based on the test from this plugin:
 
 **clean with dynamic progressbar**
 ```
-janitor --verbose cleanPages
+janitor --verbose cleanCache
 
 Using Kirby instance from: {PROJECT}/janitor-7848cb3c7677f4ff109682b2d9cd9978d46f7de8.php
 ======================================================================> 100%
