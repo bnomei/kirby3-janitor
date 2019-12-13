@@ -68,7 +68,7 @@ $json = janitor('clean', $page, 'ルパン三世', true); // array
     type: janitor
     label: Clean Cache
     progress: Cleaning Cache...
-    job: clean
+    job: cleanCache
   heist:
     type: janitor
     label: Enter Bank
@@ -346,7 +346,7 @@ cat heist-1573147345.json
 **Kirby API (post Authentification)**
 
 ```js
-let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/cleanpages')
+let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/cleancache')
   .then(response => response.json())
   .then(json => {
       console.log(json);
@@ -356,7 +356,7 @@ let janitor = fetch('https://devkit.bnomei.com/api/plugin-janitor/cleanpages')
 **Kirby Vue**
 
 ```vue
-this.$api.get('plugin-janitor/cleanpages')
+this.$api.get('plugin-janitor/cleancache')
   .then(response => {
     console.log(response)
   })
@@ -366,9 +366,9 @@ this.$api.get('plugin-janitor/cleanpages')
 
 Set a `secret` in your config.php file and call the janitor api with secret in a crobjob like this. This way you do not need the Kirby API to authentificate.
 ```php
-wget https://devkit.bnomei.com/plugin-janitor/cleanpages/e9fe51f94eadabf54dbf2fbbd57188b9abee436e --delete-after
+wget https://devkit.bnomei.com/plugin-janitor/cleancache/e9fe51f94eadabf54dbf2fbbd57188b9abee436e --delete-after
 // or
-curl -s https://devkit.bnomei.com/plugin-janitor/cleanpages/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
+curl -s https://devkit.bnomei.com/plugin-janitor/cleancache/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
 ```
 
 ## Dependencies
