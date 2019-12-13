@@ -76,7 +76,7 @@ final class JanitorTest extends TestCase
         ]);
         $this->assertEquals(
             200,
-            $janitor->jobWithSecret('secret', 'flush')['status']
+            $janitor->jobWithSecret('secret', 'flushPages')['status']
         );
     }
 
@@ -85,7 +85,7 @@ final class JanitorTest extends TestCase
         $janitor = new Janitor();
         $this->assertEquals(
             200,
-            $janitor->job('flush')['status']
+            $janitor->job('flushPages')['status']
         );
 
         $this->assertEquals(
