@@ -366,9 +366,9 @@ this.$api.get('plugin-janitor/cleancache')
 
 Set a `secret` in your config.php file and call the janitor api with secret in a crobjob like this. This way you do not need the Kirby API to authentificate.
 ```php
-wget https://devkit.bnomei.com/plugin-janitor/cleancache/e9fe51f94eadabf54dbf2fbbd57188b9abee436e --delete-after
+wget https://devkit.bnomei.com/plugin-janitor/clear/e9fe51f94eadabf54dbf2fbbd57188b9abee436e --delete-after
 // or
-curl -s https://devkit.bnomei.com/plugin-janitor/cleancache/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
+curl -s https://devkit.bnomei.com/plugin-janitor/clear/e9fe51f94eadabf54dbf2fbbd57188b9abee436e > /dev/null
 ```
 
 ## Dependencies
