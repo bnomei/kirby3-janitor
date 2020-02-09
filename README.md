@@ -85,6 +85,8 @@ $json = janitor('clean', $page, 'ルパン三世', true); // array
 - **cleanCache** removes all cache-files from custom caches or plugins.
 - **cleanSessions** triggers garbage collection for Sessions.
 - **flushSessions** removes all session-files.
+- **flushLapse** flushes cache used by [lapse plugin](https://github.com/bnomei/kirby3-lapse).
+- **flushRedisDB** flushes DB used by [redis cache driver plugin](https://github.com/bnomei/kirby3-redis-cachedriver).
 
 ### Custom Jobs
 

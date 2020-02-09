@@ -18,6 +18,8 @@ Kirby::plugin('bnomei/janitor', [
             'flushPages' => 'Bnomei\\FlushPagesCacheJob',
             'cleanSessions' => 'Bnomei\\CleanSessionsJob',
             'flushSessions' => 'Bnomei\\FlushSessionFilesJob',
+            'flushLapse' => 'Bnomei\\FlushLapseJob',
+            'flushRedisDB' => 'Bnomei\\FlushRedisDBJob',
         ],
         'jobs.extends' => [
             'bnomei.lapse.jobs', // https://github.com/bnomei/kirby3-lapse/blob/master/index.php#L10
