@@ -68,6 +68,7 @@ class ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27
         'Bnomei\\Janitor' => __DIR__ . '/../..' . '/classes/Janitor.php',
         'Bnomei\\JanitorJob' => __DIR__ . '/../..' . '/classes/JanitorJob.php',
         'Bnomei\\Job' => __DIR__ . '/../..' . '/classes/Job.php',
+        'Bnomei\\ReindexAutoIDJob' => __DIR__ . '/../..' . '/classes/ReindexAutoIDJob.php',
         'Bnomei\\WhistleJob' => __DIR__ . '/../..' . '/classes/WhistleJob.php',
         'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
         'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
