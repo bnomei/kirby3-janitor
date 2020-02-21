@@ -5,6 +5,7 @@
             :class="status"
             @click="janitor()"
             :job="job"
+            :disabled="this.pageHasChanges"
         >{{ label }}
         </k-button>
         <a ref="download" class="hidden" :href="downloadRequest" download></a>
@@ -32,8 +33,14 @@
                 clipboardRequest: '',
             }
         },
+        computed: {
+            pageHasChanges: function() {
+                return this.$store.getters['content/hasChanges']();
+            }
+        },
         methods: {
             janitor() {
+                console.log(this.pageHasChanges);
                 if (this.clipboard === true) {
                     // console.log(this.data)
                     this.clipboardRequest = this.data
