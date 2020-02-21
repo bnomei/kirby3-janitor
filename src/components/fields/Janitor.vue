@@ -5,7 +5,7 @@
             :class="status"
             @click="janitor()"
             :job="job"
-            :disabled="this.pageHasChanges"
+            :disabled="!this.unsaved && this.pageHasChanges"
         >{{ label }}
         </k-button>
         <a ref="download" class="hidden" :href="downloadRequest" download></a>
@@ -25,6 +25,7 @@
             data: String,
             pageURI: String,
             clipboard: Boolean,
+            unsaved: Boolean,
         },
         data() {
             return {

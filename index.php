@@ -65,6 +65,9 @@ Kirby::plugin('bnomei/janitor', [
                 'clipboard' => function ($clipboard = null) {
                     return \Bnomei\Janitor::isTrue($clipboard);
                 },
+                'unsaved' => function ($allowUnsaved = true) {
+                    return \Bnomei\Janitor::isTrue($allowUnsaved);
+                },
                 'pageURI' => function () {
                     return str_replace('/','+', $this->model()->uri());
                 },

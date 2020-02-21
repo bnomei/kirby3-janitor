@@ -18,7 +18,7 @@ Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, P
 
 > *TIP 2:* It can also create logs of what it did.
 
-> *TIP 3:* I can also be used as an CLI.
+> *TIP 3:* It can also be used as an CLI.
 
 1. [Custom Jobs](https://github.com/bnomei/kirby3-janitor#custom-jobs)
 1. [Query Language](https://github.com/bnomei/kirby3-janitor#queries)
@@ -75,6 +75,7 @@ $json = janitor('clean', $page, 'ルパン三世', true); // array
     progress: Performing Heist...
     job: heist
     data: Grand # (string) forwarded to job context
+    unsaved: false # button will be disabled if current page has unsaved changes
 ```
 
 ## Jobs
