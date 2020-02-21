@@ -41,9 +41,7 @@
         },
         methods: {
             janitor() {
-                console.log(this.pageHasChanges);
                 if (this.clipboard === true) {
-                    // console.log(this.data)
                     this.clipboardRequest = this.data
                     this.oldlabel = this.label
                     this.label = this.progress
