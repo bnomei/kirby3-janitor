@@ -86,7 +86,7 @@ final class Janitor
     {
         $job = $this->findJob($name);
 
-        if (is_callable($job)) {
+        if (!is_string($job) && is_callable($job)) {
             return $this->jobFromCallable($job, $data);
         } elseif (class_exists($job)) {
             return $this->jobFromClass($job, $data);
