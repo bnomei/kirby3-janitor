@@ -3,7 +3,17 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/vendor/autoload.php';
+foreach([// janitor from zip with vendor
+         __DIR__ . '/vendor/autoload.php',
+         // janitor from composer in site/plugins/kirby3-janitor
+         realpath(__DIR__ . '/../../../') . '/vendor/autoload.php',
+        ] as $file) {
+    if (file_exists($file)) {
+        require $file;
+        break;
+    }
+}
+
 ini_set('display_errors', '1');
 
 $climate = new \League\CLImate\CLImate();
@@ -47,7 +57,20 @@ $climate->arguments->parse();
 $verbose = $climate->arguments->defined('verbose');
 
 // COMMAND: kirby
-$kirbyPublicFolder = realpath(__DIR__ . DIRECTORY_SEPARATOR . ltrim($climate->arguments->get('kirby'), DIRECTORY_SEPARATOR));
+$kirbyPublicFolder = null;
+foreach([   // site/plugins/kirby3-janitor => /index.php
+            realpath(__DIR__ . '/../../../'),
+            // site/plugins/kirby3-janitor => /public/index.php
+            realpath(__DIR__ . '/../../../public'),
+        ] as $dir) {
+    if ($dir !== false && file_exists($dir . '/index.php')) {
+        $kirbyPublicFolder = $dir;
+        break;
+    }
+}
+if ($climate->arguments->defined('kirby')) {
+    $kirbyPublicFolder = realpath(__DIR__ . DIRECTORY_SEPARATOR . ltrim($climate->arguments->get('kirby'), DIRECTORY_SEPARATOR));
+}
 if ($kirbyPublicFolder) {
     $kirbyLoader = $kirbyPublicFolder . DIRECTORY_SEPARATOR . 'janitor-' . sha1(__DIR__) . '.php';
     if (! file_exists($kirbyLoader)) {

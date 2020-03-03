@@ -225,7 +225,7 @@ return [
 ```php
 // use kirby load()-helper or composer to load your custom class
 load([
-    'Space\\Invaders\\InvasionJob.php' => __DIR__ . '/classes/space/invaders/InvasionJob.php',
+    'Space\\Invaders\\InvasionJob' => __DIR__ . '/classes/space/invaders/InvasionJob.php',
 ]);
 
 Kirby::plugin('space/invaders', [

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27
+class ComposerStaticInitbb3ff2edee354a5fc968a3ec648322da
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -58,6 +58,7 @@ class ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27
     );
 
     public static $classMap = array (
+        'Bnomei\\BackupZipJob' => __DIR__ . '/../..' . '/classes/BackupZipJob.php',
         'Bnomei\\CleanCacheFilesJob' => __DIR__ . '/../..' . '/classes/CleanCacheFilesJob.php',
         'Bnomei\\CleanSessionsJob' => __DIR__ . '/../..' . '/classes/CleanSessionsJob.php',
         'Bnomei\\ContextJob' => __DIR__ . '/../..' . '/classes/ContextJob.php',
@@ -199,9 +200,9 @@ class ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitecc75d7ab6c53d359d65b61c0ce5cb27::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbb3ff2edee354a5fc968a3ec648322da::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbb3ff2edee354a5fc968a3ec648322da::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitbb3ff2edee354a5fc968a3ec648322da::$classMap;
 
         }, null, ClassLoader::class);
     }

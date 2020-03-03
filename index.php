@@ -21,6 +21,7 @@ Kirby::plugin('bnomei/janitor', [
             'flushLapse' => 'Bnomei\\FlushLapseJob',
             'flushRedisDB' => 'Bnomei\\FlushRedisDBJob',
             'reindexAutoID' => 'Bnomei\\ReindexAutoIDJob',
+            'backupZip' => 'Bnomei\\BackupZipJob',
         ],
         'jobs.extends' => [
             'bnomei.lapse.jobs', // https://github.com/bnomei/kirby3-lapse/blob/master/index.php#L10

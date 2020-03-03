@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Bnomei\\BackupZipJob' => $baseDir . '/classes/BackupZipJob.php',
     'Bnomei\\CleanCacheFilesJob' => $baseDir . '/classes/CleanCacheFilesJob.php',
     'Bnomei\\CleanSessionsJob' => $baseDir . '/classes/CleanSessionsJob.php',
     'Bnomei\\ContextJob' => $baseDir . '/classes/ContextJob.php',
