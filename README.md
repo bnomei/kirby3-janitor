@@ -299,6 +299,19 @@ Usage: janitor [-f format, --format format (default: label)] [-h, --help] [-k ki
 
 The CLI needs to load the same Kirby Instance your website does. To achieve this the CLI attempts to create a special file named `janitor-{HASH}.php` based on your public `index.php`. It only comments out the `echo` statement.
 
+### CLI as composer script
+
+**composer.json**
+```json
+{
+  "scripts": {
+    "backup": [
+      "php site/plugins/kirby3-janitor/janitor backupzip"
+    ]
+  }
+}
+```
+
 ### CLI Examples
 
 Examples based on the test from this plugin:
