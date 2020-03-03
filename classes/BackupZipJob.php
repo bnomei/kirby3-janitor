@@ -21,15 +21,15 @@ final class BackupZipJob extends JanitorJob
         parent::__construct($page, $data);
 
         $this->options = [
-            'ulimit' => 512, // 1024 seems to be unix default
-            'date' => null, // null to disable, 'since 1 day ago'
-            'roots' => option('janitor.backupzip.roots', function() {
+            'ulimit' => option('bnomei.janitor.backupzip.ulimit', 512), // 1024 seems to be unix default
+            'date' => option('bnomei.janitor.backupzip.date', null), // null to disable, 'since 1 day ago'
+            'roots' => option('bnomei.janitor.backupzip.roots', function() {
                 return [
                     kirby()->roots()->accounts(),
                     kirby()->roots()->content(),
                 ];
             }),
-            'target' => option('janitor.backupzip.target', function() {
+            'target' => option('bnomei.janitor.backupzip.target', function() {
                 $dir = realpath(kirby()->roots()->accounts() . '/../') . '/backups';
                 Dir::make($dir);
                 return $dir . '/' . time() . '.zip'; // date('Y-m-d')

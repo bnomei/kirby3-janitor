@@ -88,6 +88,7 @@ $json = janitor('clean', $page, 'ルパン三世', true); // array
 - **flushSessions** removes all session-files.
 - **flushLapse** flushes cache used by [lapse plugin](https://github.com/bnomei/kirby3-lapse).
 - **flushRedisDB** flushes DB used by [redis cache driver plugin](https://github.com/bnomei/kirby3-redis-cachedriver).
+- **backupZip** saves `content` and `site/accounts` to a zip at `site/backups/{TIMESTAMP}.zip` [options](https://github.com/bnomei/kirby3-janitor/blob/master/classes/BackupZipJob.php#L23)
 
 ### Custom Jobs
 
