@@ -122,6 +122,7 @@ final class BackupZipJob extends JanitorJob
                     $zip->close();
                     if ($zip->open($zipPath) === false) {
                         @unlink($zipPath);
+                        $climate->red('Hit ulimit but failed to reopen zip: ' . $zipPath);
                         return [
                             'status' => 500,
                         ];
