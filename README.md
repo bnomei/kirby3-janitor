@@ -21,11 +21,6 @@ Kirby 3 Plugin for running jobs.
 
 Continue to the [Janitor Wiki](https://github.com/bnomei/kirby3-janitor/wiki) to read more on how to install, setup and use this plugin.
 
-## Screenshot
-
-![clean & loot](https://raw.githubusercontent.com/bnomei/kirby3-janitor/master/kirby3-janitor-screenshot-1.gif)
-
-
 ## Dependencies
 
 - [Symfony Finder](https://symfony.com/doc/current/components/finder.html)
