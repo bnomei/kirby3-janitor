@@ -10,7 +10,7 @@
 Kirby 3 Plugin for running jobs.
 
 - It is a Panel Button!
-- It has jobs build-in for cleaning the cache, sessions, create zip-backup, open URLs, refresh the current Panel page and more.
+- It has jobs build-in for cleaning the cache, sessions, create zip-backup, pre-generate thumbs, open URLs, refresh the current Panel page and more.
 - You can define your own jobs (call API hooks, play a game, hack a server, ...)
 - It can be triggered in your frontend code and with CRON.
 - It can also be used as a CLI with fancy output.
