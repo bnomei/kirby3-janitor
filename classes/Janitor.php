@@ -130,6 +130,8 @@ final class Janitor
     public function jobFromCallable($job, array $data): array
     {
         $return = false;
+        set_time_limit(0);
+
         try {
             $return = $job(
                 page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
@@ -159,6 +161,7 @@ final class Janitor
         );
 
         if (method_exists($object, 'job')) {
+            set_time_limit(0);
             return $object->job();
         }
         return [

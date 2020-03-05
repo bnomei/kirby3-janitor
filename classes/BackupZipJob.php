@@ -65,7 +65,9 @@ final class BackupZipJob extends JanitorJob
         $zipPath = (string) $this->option('target');
         $zip = new ZipArchive();
         if($zip->open($zipPath,ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) !== true) {
-            $climate->red('Failed to create: ' . $zipPath);
+            if ($climate) {
+                $climate->red('Failed to create: ' . $zipPath);
+            }
             return [
                 'status' => 500,
             ];
@@ -81,7 +83,9 @@ final class BackupZipJob extends JanitorJob
 
         $ulimit = $this->option('ulimit');
         $zipped = 0;
-        $climate->out('Files: ' . $count);
+        if ($climate) {
+            $climate->out('Files: ' . $count);
+        }
 
         $progress = null;
         if ($count && $climate) {
@@ -122,7 +126,9 @@ final class BackupZipJob extends JanitorJob
                     $zip->close();
                     if ($zip->open($zipPath) === false) {
                         @unlink($zipPath);
-                        $climate->red('Hit ulimit but failed to reopen zip: ' . $zipPath);
+                        if ($climate) {
+                            $climate->red('Hit ulimit but failed to reopen zip: ' . $zipPath);
+                        }
                         return [
                             'status' => 500,
                         ];
@@ -131,9 +137,13 @@ final class BackupZipJob extends JanitorJob
             }
         }
 
-        $climate->out('Closing zip...');
+        if ($climate) {
+            $climate->out('Closing zip...');
+        }
         $zip->close();
-        $climate->out($zipPath);
+        if ($climate) {
+            $climate->out($zipPath);
+        }
 
         return [
             'status' => $zipped > 0 ? 200 : 204,
