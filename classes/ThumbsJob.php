@@ -22,6 +22,7 @@ final class ThumbsJob extends JanitorJob
     public function job(): array
     {
         $climate = \Bnomei\Janitor::climate();
+        $progress = null;
         $verbose = $climate ? $climate->arguments->defined('verbose') : false;
         $time = time();
 
@@ -90,9 +91,10 @@ final class ThumbsJob extends JanitorJob
             }
         }
 
+        $root = realpath(kirby()->roots()->index() . '/media/') . '/pages';
+        Dir::make($root);
+
         if ($verbose) {
-            $root = realpath(kirby()->roots()->index() . '/media/') . '/pages';
-            Dir::make($root);
             $finder = new Finder();
             $finder->files()
                 ->in($root)
@@ -115,7 +117,6 @@ final class ThumbsJob extends JanitorJob
             $climate->out('Jobs found: ' . $countJobs);
         }
 
-        $progress = null;
         if ($countJobs && $climate) {
             $progress = $climate->progress()->total($countJobs);
         }

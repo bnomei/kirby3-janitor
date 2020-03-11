@@ -65,3 +65,11 @@ fields:
     label: Disable when Page has Changes
     job: minimal
     unsaved: false
+
+  # NOTE: Is better to generate thumbs via CLI / SSH / CRON
+  # since most servers have 30sec php timeout for web
+  janitor_thumbs:
+    type: janitor
+    label: Generate Thumbs
+    process: Generating Thumbs...
+    job: thumbs
