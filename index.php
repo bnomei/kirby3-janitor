@@ -31,6 +31,8 @@ Kirby::plugin('bnomei/janitor', [
         'label.cooldown' => 2000, // ms
         'secret' => null,
 
+        'thumbsOnUpload' => false,
+
         'log.enabled' => false,
         'log' => function (string $msg, string $level = 'info', array $context = []): bool {
             if (option('bnomei.janitor.log.enabled')) {
@@ -86,6 +88,13 @@ Kirby::plugin('bnomei/janitor', [
                 return Kirby\Http\Response::json($response, A::get($response, 'status', 400));
             },
         ],
+    ],
+    'hooks' => [
+        'file.create:after' => function ($file) {
+            if (option('bnomei.janitor.thumbsOnUpload')) {
+                janitor('thumbs', $file->page(), 'page');
+            }
+        },
     ],
     'api' => [
         'routes' => [

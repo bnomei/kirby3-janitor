@@ -73,3 +73,4 @@ fields:
     label: Generate Thumbs
     process: Generating Thumbs...
     job: thumbs
+    data: 'page' # 'page' means only this page. could be 'site.index' or other querys without {{}}.

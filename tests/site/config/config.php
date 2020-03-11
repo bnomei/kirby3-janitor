@@ -3,6 +3,8 @@
 use Bnomei\Janitor;
 
 return [
+    'bnomei.janitor.thumbs' => true,
+
     'bnomei.janitor.jobs' => [
         'page' => function (Kirby\Cms\Page $page = null, string $data = null) {
             // $page => page object where the button as pressed
@@ -82,4 +84,6 @@ return [
     'bnomei.janitor.jobs.extends' => [
         'another.plugin.jobs',
     ],
+
+
 ];

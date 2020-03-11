@@ -6,11 +6,13 @@ namespace Bnomei;
 
 use Kirby\Cms\Media;
 use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
 use Kirby\Data\Data;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 use Symfony\Component\Finder\Finder;
 
@@ -33,7 +35,22 @@ final class ThumbsJob extends JanitorJob
         }
 
         // visit all pages to generate media/*.job files
-        $allPages = kirby()->site()->index();
+        $allPages = null;
+        if ($this->data()) {
+            $allPages = (new Query(
+                $this->data(), [
+                    'kirby' => kirby(),
+                    'site' => site(),
+                    'page' => $this->page(),
+                ]
+            ))->result();
+            if (is_a($allPages, Page::class)) {
+                $allPages = new Pages([$allPages]);
+            }
+        }
+        if (! $allPages) {
+            $allPages = kirby()->site()->index();
+        }
         $countPages = $allPages->count();
         $countLanguages = kirby()->languages() ? kirby()->languages()->count() : 1;
         $visited = 0;
@@ -92,6 +109,9 @@ final class ThumbsJob extends JanitorJob
         }
 
         $root = realpath(kirby()->roots()->index() . '/media/') . '/pages';
+        if ($this->page() && $this->data()) {
+            $root = $this->page()->mediaRoot();
+        }
         Dir::make($root);
 
         if ($verbose) {
@@ -124,8 +144,13 @@ final class ThumbsJob extends JanitorJob
         foreach ($finder as $file) {
             $jobs++;
 
-            $parentID = str_replace($root, '', dirname($file->getPath(), 2));
-            $page = page($parentID);
+            $parentID = null;
+            $page = null;
+
+            $page = null;
+            if (preg_match('/.*\/media\/pages\/(.*)\/[-\d]*\/\.jobs/', $file->getPath(), $matches)) {
+                $page = page($matches[1]);
+            }
             if (! $page) {
                 $jobsSkipped[] = 'Page not found: ' . $parentID;
                 continue;

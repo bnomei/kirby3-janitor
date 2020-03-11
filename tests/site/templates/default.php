@@ -1,6 +1,6 @@
 <?php
 
 // show image to generate thumb
-if ($img = $page->file('test.jpg')) {
-    echo $img->thumb(['width' => 128]);
+foreach($page->images() as $image) {
+    echo $image->thumb(['width' => 128]);
 }
