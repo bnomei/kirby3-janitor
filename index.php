@@ -91,7 +91,7 @@ Kirby::plugin('bnomei/janitor', [
     ],
     'hooks' => [
         'file.create:after' => function ($file) {
-            if (option('bnomei.janitor.thumbsOnUpload')) {
+            if (option('bnomei.janitor.thumbsOnUpload') && $file->isResizable()) {
                 janitor('thumbs', $file->page(), 'page');
             }
         },
