@@ -37,6 +37,13 @@ return [
             ];
         },
 
+        'openurlfromdata' => function (Kirby\Cms\Page $page = null, string $data = null) {
+            return [
+                'status' => 200,
+                'href' => $data,
+            ];
+        },
+
         'download' => function (Kirby\Cms\Page $page = null, string $data = null) {
             return [
                 'status' => 200,

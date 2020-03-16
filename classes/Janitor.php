@@ -135,7 +135,7 @@ final class Janitor
         try {
             $return = $job(
                 page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
-                urldecode(A::get($data, 'contextData', ''))
+                str_replace('+S_L_A_S_H+', '/', urldecode(A::get($data, 'contextData', '')))
             );
         } catch (\BadMethodCallException $ex) {
             $return = $job();

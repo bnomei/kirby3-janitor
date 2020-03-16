@@ -39,6 +39,12 @@ fields:
     label: Open URL
     job: openurl
 
+  janitor_hrefdata:
+    type: janitor
+    label: Open URL from Data
+    job: openurlfromdata
+    data: "{{ page.url }}"
+
   janitor_download:
     type: janitor
     label: Download File

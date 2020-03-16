@@ -64,7 +64,9 @@ Kirby::plugin('bnomei/janitor', [
                 },
                 'data' => function (?string $data = null) {
                     $data = \Bnomei\Janitor::query($data, $this->model());
-                    return \Kirby\Toolkit\I18n::translate($data, $data);
+                    return str_replace('/','+S_L_A_S_H+',
+                        \Kirby\Toolkit\I18n::translate($data, $data)
+                    );
                 },
                 'clipboard' => function ($clipboard = null) {
                     return \Bnomei\Janitor::isTrue($clipboard);
