@@ -74,6 +74,9 @@ Kirby::plugin('bnomei/janitor', [
                 'unsaved' => function ($allowUnsaved = true) {
                     return \Bnomei\Janitor::isTrue($allowUnsaved);
                 },
+                'intab' => function ($intab = false) {
+                    return \Bnomei\Janitor::isTrue($intab);
+                },
                 'pageURI' => function () {
                     return str_replace('/','+', $this->model()->uri());
                 },

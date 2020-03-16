@@ -38,6 +38,7 @@ fields:
     type: janitor
     label: Open URL
     job: openurl
+    intab: true
 
   janitor_hrefdata:
     type: janitor

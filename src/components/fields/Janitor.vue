@@ -9,6 +9,7 @@
         >{{ label }}
         </k-button>
         <a ref="download" class="hidden" :href="downloadRequest" download></a>
+        <a ref="openintab" class="hidden" :href="urlRequest" target="_blank"></a>
         <textarea class="hidden" ref="clipboard">{{ clipboardRequest }}</textarea>
     </div>
 </template>
@@ -26,12 +27,14 @@
             pageURI: String,
             clipboard: Boolean,
             unsaved: Boolean,
+            intab: Boolean,
         },
         data() {
             return {
                 oldlabel: '',
                 downloadRequest: '',
                 clipboardRequest: '',
+                urlRequest: '',
             }
         },
         computed: {
@@ -95,7 +98,15 @@
                                 location.reload()
                             }
                             if (response.href !== undefined) {
-                                location.href = response.href
+                                if (this.intab) {
+                                    this.urlRequest = response.href
+                                    let vm = this
+                                    this.$nextTick(function () {
+                                        vm.simulateClick(vm.$refs.openintab)
+                                    })
+                                } else {
+                                    location.href = response.href
+                                }
                             }
                             if (response.download !== undefined) {
                                 this.downloadRequest = response.download
