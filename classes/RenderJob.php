@@ -17,7 +17,7 @@ use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 use Symfony\Component\Finder\Finder;
 
-final class ThumbsJob extends JanitorJob
+final class RenderJob extends JanitorJob
 {
     /**
      * @return array
