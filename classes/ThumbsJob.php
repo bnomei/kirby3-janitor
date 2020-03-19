@@ -23,90 +23,10 @@ final class ThumbsJob extends JanitorJob
      */
     public function job(): array
     {
-        $climate = \Bnomei\Janitor::climate();
+        $climate = Janitor::climate();
         $progress = null;
         $verbose = $climate ? $climate->arguments->defined('verbose') : false;
         $time = time();
-
-        // make sure the thumbs are triggered
-        kirby()->cache('pages')->flush();
-        if (class_exists('\Bnomei\Lapse')) {
-            \Bnomei\Lapse::singleton()->flush();
-        }
-
-        // visit all pages to generate media/*.job files
-        $allPages = null;
-        if ($this->data()) {
-            $allPages = (new Query(
-                $this->data(), [
-                    'kirby' => kirby(),
-                    'site' => site(),
-                    'page' => $this->page(),
-                ]
-            ))->result();
-            if (is_a($allPages, Page::class)) {
-                $allPages = new Pages([$allPages]);
-            }
-        }
-        if (! $allPages) {
-            $allPages = kirby()->site()->index();
-        }
-        $countPages = $allPages->count();
-        $countLanguages = kirby()->languages() ? kirby()->languages()->count() : 1;
-        $visited = 0;
-
-        if ($climate) {
-            $climate->out('Pages: ' . $countPages);
-            $climate->out('Languages: ' . $countLanguages);
-            $climate->out('Rendering...');
-        }
-        if ($countPages && $climate) {
-            $progress = $climate->progress()->total($countPages);
-        }
-        $failed = [];
-        $found = [];
-        foreach($allPages as $page) {
-            try {
-                $content = '';
-                if ($countLanguages) {
-                    $content = $page->render();
-                    foreach (kirby()->languages() as $lang) {
-                        site()->visit($page, $lang->code());
-                        $content .= $page->render();
-                    }
-                } else {
-                    site()->visit($page);
-                    $content = $page->render();
-                }
-                if ($verbose && strlen($content) > 0) {
-                    preg_match_all('/\/media\/pages\/([\w-_\.\/]+\.(?:png|jpg|jpeg|webp|gif))/', $content, $matches);
-                    if ($matches && count($matches) > 1) {
-                        $found = array_merge($found, $matches[1]);
-                    }
-                }
-            } catch (\Exception $ex) {
-                $failed[] = $page->id() . ': ' . $ex->getMessage();
-            }
-
-            $visited++;
-            if ($progress && $climate) {
-                $progress->current($visited);
-            }
-        }
-
-
-        if ($climate) {
-            if ($verbose) {
-                $found = array_unique($found);
-                $climate->out('Found images with media/pages/* : ' . count($found));
-            }
-            if (count($failed)) {
-                $climate->out('Render failed: ' . count($failed));
-                foreach ($failed as $fail) {
-                    $climate->red($fail);
-                }
-            }
-        }
 
         $root = realpath(kirby()->roots()->index() . '/media/') . '/pages';
         if ($this->page() && $this->data()) {
@@ -151,7 +71,7 @@ final class ThumbsJob extends JanitorJob
             if (preg_match('/.*\/media\/pages\/(.*)\/[-\d]*\/\.jobs/', $file->getPath(), $matches)) {
                 $page = page($matches[1]);
             }
-            if (! $page) {
+            if (!$page) {
                 $jobsSkipped[] = 'Page not found: ' . $parentID;
                 continue;
             }
@@ -162,14 +82,14 @@ final class ThumbsJob extends JanitorJob
             $filename = A::get($options, 'filename');
 
             $pageFile = $page->file($filename);
-            if (! $pageFile) {
+            if (!$pageFile) {
                 $jobsSkipped[] = 'File not found: ' . $parentID . '/' . $filename;
                 continue;
             }
 
             $hash = basename(str_replace('/.jobs', '', $file->getPath()));
 
-            if ( Media::link($page, $hash, $jobFilename) !== false) {
+            if (Media::link($page, $hash, $jobFilename) !== false) {
                 $created++;
             }
 
@@ -193,10 +113,10 @@ final class ThumbsJob extends JanitorJob
 
         return [
             'status' => $created > 0 ? 200 : 204,
+            'duration' => $duration,
             'thumbs' => [
                 'jobs' => $countJobs,
                 'created' => $created,
-                'duration' => $duration,
             ],
         ];
     }

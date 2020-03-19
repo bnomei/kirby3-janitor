@@ -18,7 +18,7 @@ return array(
     'Bnomei\\JanitorJob' => $baseDir . '/classes/JanitorJob.php',
     'Bnomei\\Job' => $baseDir . '/classes/Job.php',
     'Bnomei\\ReindexAutoIDJob' => $baseDir . '/classes/ReindexAutoIDJob.php',
-    'Bnomei\\ThumbsJob' => $baseDir . '/classes/ThumbsJob.php',
+    'Bnomei\\ThumbsJob' => $baseDir . '/classes/RenderJob.php',
     'Bnomei\\WhistleJob' => $baseDir . '/classes/WhistleJob.php',
     'Kirby\\ComposerInstaller\\CmsInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
     'Kirby\\ComposerInstaller\\Installer' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',

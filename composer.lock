@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3c8c415ba497ceee8217ca780664bd9",
+    "content-hash": "f05d573b753d460923136d68691f0b2a",
     "packages": [
         {
             "name": "getkirby/composer-installer",
@@ -929,16 +929,16 @@
         },
         {
             "name": "getkirby/cms",
-            "version": "3.3.4",
+            "version": "3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getkirby/kirby.git",
-                "reference": "0330c0ae4214cde349710b099a770fffd0971b4e"
+                "reference": "a7f2f9695509ad6f7e407c5214b0a7aff0b99039"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getkirby/kirby/zipball/0330c0ae4214cde349710b099a770fffd0971b4e",
-                "reference": "0330c0ae4214cde349710b099a770fffd0971b4e",
+                "url": "https://api.github.com/repos/getkirby/kirby/zipball/a7f2f9695509ad6f7e407c5214b0a7aff0b99039",
+                "reference": "a7f2f9695509ad6f7e407c5214b0a7aff0b99039",
                 "shasum": ""
             },
             "require": {
@@ -984,7 +984,7 @@
                 "core",
                 "kirby"
             ],
-            "time": "2020-02-18T08:42:36+00:00"
+            "time": "2020-03-17T13:15:27+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

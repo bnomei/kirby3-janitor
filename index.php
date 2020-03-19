@@ -22,6 +22,7 @@ Kirby::plugin('bnomei/janitor', [
             'flushRedisDB' => 'Bnomei\\FlushRedisDBJob',
             'reindexAutoID' => 'Bnomei\\ReindexAutoIDJob',
             'backupZip' => 'Bnomei\\BackupZipJob',
+            'render' => 'Bnomei\\RenderJob',
             'thumbs' => 'Bnomei\\ThumbsJob',
         ],
         'jobs.extends' => [
@@ -97,6 +98,7 @@ Kirby::plugin('bnomei/janitor', [
     'hooks' => [
         'file.create:after' => function ($file) {
             if (option('bnomei.janitor.thumbsOnUpload') && $file->isResizable()) {
+                janitor('render', $file->page(), 'page');
                 janitor('thumbs', $file->page(), 'page');
             }
         },
