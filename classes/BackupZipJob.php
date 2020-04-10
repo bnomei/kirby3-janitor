@@ -32,7 +32,8 @@ final class BackupZipJob extends JanitorJob
             'target' => option('bnomei.janitor.backupzip.target', function() {
                 $dir = realpath(kirby()->roots()->accounts() . '/../') . '/backups';
                 Dir::make($dir);
-                return $dir . '/' . time() . '.zip'; // date('Y-m-d')
+                $prefix = option('bnomei.janitor.backupzip.prefix', '');
+                return $dir . '/' . $prefix . time() . '.zip'; // date('Y-m-d')
             }),
         ];
 
