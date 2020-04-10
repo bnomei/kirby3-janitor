@@ -56,11 +56,17 @@ final class BackupZipJob extends JanitorJob
         return $this->options;
     }
 
+    public static function directory(): string
+    {
+        return \dirname((string) (new self())->option('target'));
+    }
+
     /**
      * @return array
      */
     public function job(): array
     {
+        $time = time();
         $climate = \Bnomei\Janitor::climate();
 
         $zipPath = (string) $this->option('target');
@@ -132,6 +138,7 @@ final class BackupZipJob extends JanitorJob
                         }
                         return [
                             'status' => 500,
+                            'error' => 'Hit ulimit but failed to reopen zip: ' . $zipPath,
                         ];
                     }
                 }
@@ -148,6 +155,10 @@ final class BackupZipJob extends JanitorJob
 
         return [
             'status' => $zipped > 0 ? 200 : 204,
+            'duration' => time() - $time,
+            'filename' => \basename($zipPath, '.zip'),
+            'files' => $zipped,
+            'nicesize' => \Kirby\Toolkit\F::niceSize($zipPath),
         ];
     }
 }
