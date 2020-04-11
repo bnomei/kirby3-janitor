@@ -159,6 +159,7 @@ final class BackupZipJob extends JanitorJob
             'filename' => \basename($zipPath, '.zip'),
             'files' => $zipped,
             'nicesize' => \Kirby\Toolkit\F::niceSize($zipPath),
+            'modified' => date('d/m/Y, H:i:s', \Kirby\Toolkit\F::modified($zipPath)),
         ];
     }
 }
