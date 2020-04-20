@@ -2,6 +2,7 @@
     <div class="janitor-wrapper">
         <k-button
             class="janitor"
+            :icon="currentIcon"
             :class="status"
             @click="janitor()"
             :job="job"
@@ -28,6 +29,7 @@
             clipboard: Boolean,
             unsaved: Boolean,
             intab: Boolean,
+            icon: [Boolean, String],
         },
         data() {
             return {
@@ -40,6 +42,12 @@
         computed: {
             pageHasChanges: function() {
                 return this.$store.getters['content/hasChanges']();
+            },
+            currentIcon: function() {
+                if(!this.status) return this.icon
+                else if(this.status == 'doing-job') return 'janitorLoader'
+                else if(this.status == 'is-success') return 'check'
+                else if(this.status == 'has-error') return 'alert'
             }
         },
         methods: {
@@ -187,22 +195,26 @@
     .janitor {
         background-color: black;
         color: white;
-        font-weight: bold;
-        border-radius: 5px;
-        padding: 5px 10px 7px 10px;
+        border-radius: 3px;
+        padding: 0.5rem 1rem;
+        line-height: 1.25rem;
         min-width: 200px;
+        text-align: left;
     }
 
     .janitor:hover {
-        opacity: 0.75;
+        background-color: #1e1e1e;
     }
 
-    .janitor .k-button-text {
+    .janitor >>> .k-button-text {
         opacity: 1;
     }
 
     .janitor.doing-job {
-        background-color: #444;
+        background-color: #dcdcdc;
+    }
+    .janitor.doing-job >>> .k-button-text {
+        color: black;
     }
 
     .janitor.has-response {
