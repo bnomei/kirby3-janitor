@@ -1,6 +1,6 @@
 {
   "name": "kirby-field-janitor",
-  "version": "1.4.1",
+  "version": "2.5.0",
   "description": "Kirby 3 Plugin Janitor",
   "author": "Bruno Meilick <b@bnomei.com>",
   "scripts": {
