@@ -47,6 +47,7 @@ Kirby::plugin('bnomei/janitor', [
             }
             return false;
         },
+        'icon' => false,
     ],
     'fields' => [
         'janitor' => [
@@ -80,6 +81,9 @@ Kirby::plugin('bnomei/janitor', [
                 },
                 'pageURI' => function () {
                     return str_replace('/','+', $this->model()->uri());
+                },
+                'icon' => function ($icon = false) {
+                    return $icon ?? option('bnomei.janitor.icon');
                 },
             ],
         ],
