@@ -191,14 +191,14 @@
     }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
     .janitor {
         background-color: black;
         color: white;
         border-radius: 3px;
         padding: 0.5rem 1rem;
         line-height: 1.25rem;
-        min-width: 200px;
+        /*min-width: 200px;*/
         text-align: left;
     }
 
