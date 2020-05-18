@@ -157,7 +157,7 @@ final class Janitor
     {
         $object = new $job(
             page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
-            urldecode(A::get($data, 'contextData', ''))
+            str_replace('+S_L_A_S_H+', '/', urldecode(A::get($data, 'contextData', '')))
         );
 
         if (method_exists($object, 'job')) {
