@@ -80,7 +80,14 @@ Kirby::plugin('bnomei/janitor', [
                     return \Bnomei\Janitor::isTrue($intab);
                 },
                 'pageURI' => function () {
-                    return str_replace('/','+', $this->model()->uri());
+                    $uri = null;
+                    if (is_a($this->model(), \Kirby\Cms\Page::class)) {
+                        $uri = $this->model()->uri();
+                    }
+                    if (is_a($this->model(), \Kirby\Cms\File::class)) {
+                        $uri = $this->model()->parent()->uri();
+                    }
+                    return str_replace('/','+', $uri);
                 },
                 'icon' => function ($icon = false) {
                     return $icon ?? option('bnomei.janitor.icon');

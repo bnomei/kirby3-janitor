@@ -1,0 +1,9 @@
+title: Touch File
+
+fields:
+  janitor_touchfile:
+    type: janitor
+    label: Touch Job
+    process: Touch Job...
+    job: touchfile
+    data: '{{ file.filename }}'

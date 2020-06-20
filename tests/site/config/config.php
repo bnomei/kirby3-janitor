@@ -81,7 +81,18 @@ return [
                 'status' => $grand > 0 ? 200 : 404,
                 'label' => $grand . ' ' . $currency . ' looted at ' . $location . '!'
             ];
-        }
+        },
+
+        'touchfile' => function (Kirby\Cms\Page $page = null, string $data = null) {
+            $file = $page->file($data);
+            if ($file) {
+                touch($file->root());
+            }
+            return [
+                'status' => $file ? 200 : 404,
+                'label' => $file ? $file->modified() : $data,
+            ];
+        },
     ],
 
     'another.plugin.jobs' => [
