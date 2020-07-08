@@ -11,7 +11,7 @@ office) clean, tends the heating system, and makes minor repairs
 Kirby::plugin('bnomei/janitor', [
     'options' => [
         'jobs' => [],
-        'jobs.defaults' => [
+        'jobs-defaults' => [
             'clean' => 'Bnomei\\CleanCacheFilesJob', // legacy
             'cleanCache' => 'Bnomei\\CleanCacheFilesJob',
             'flush' => 'Bnomei\\FlushPagesCacheJob', // legacy
@@ -25,7 +25,7 @@ Kirby::plugin('bnomei/janitor', [
             'render' => 'Bnomei\\RenderJob',
             'thumbs' => 'Bnomei\\ThumbsJob',
         ],
-        'jobs.extends' => [
+        'jobs-extends' => [
             'bnomei.lapse.jobs', // https://github.com/bnomei/kirby3-lapse/blob/master/index.php#L10
         ],
 
@@ -35,7 +35,7 @@ Kirby::plugin('bnomei/janitor', [
         'thumbsOnUpload' => false,
 
         'log.enabled' => false,
-        'log' => function (string $msg, string $level = 'info', array $context = []): bool {
+        'log.fn' => function (string $msg, string $level = 'info', array $context = []): bool {
             if (option('bnomei.janitor.log.enabled')) {
                 if (function_exists('monolog')) {
                     monolog()->{$level}($msg, $context);

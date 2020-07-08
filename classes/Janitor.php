@@ -26,15 +26,15 @@ final class Janitor
     {
         $defaults = [
             'debug' => option('debug'),
-            'log' => option('bnomei.janitor.log'),
+            'log' => option('bnomei.janitor.log.fn'),
             'jobs' => option('bnomei.janitor.jobs'),
-            'jobs.defaults' => ['bnomei.janitor.jobs.defaults'],
-            'jobs.extends' => option('bnomei.janitor.jobs.extends'),
+            'jobs-defaults' => ['bnomei.janitor.jobs-defaults'],
+            'jobs-extends' => option('bnomei.janitor.jobs-extends'),
             'secret' => option('bnomei.janitor.secret'),
         ];
         $this->options = array_merge($defaults, $options);
 
-        $extends = array_merge($this->options['jobs.defaults'], $this->options['jobs.extends']);
+        $extends = array_merge($this->options['jobs-defaults'], $this->options['jobs-extends']);
         foreach ($extends as $extend) {
             // NOTE: it is intended that jobs override merged not other way around
             $this->options['jobs'] = array_change_key_case(
