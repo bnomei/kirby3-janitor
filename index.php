@@ -21,6 +21,7 @@ Kirby::plugin('bnomei/janitor', [
             'flushLapse' => 'Bnomei\\FlushLapseJob',
             'flushRedisDB' => 'Bnomei\\FlushRedisDBJob',
             'reindexAutoID' => 'Bnomei\\ReindexAutoIDJob',
+            'reindexSearch' => 'Bnomei\\ReindexSearchForKirbyJob',
             'backupZip' => 'Bnomei\\BackupZipJob',
             'render' => 'Bnomei\\RenderJob',
             'thumbs' => 'Bnomei\\ThumbsJob',

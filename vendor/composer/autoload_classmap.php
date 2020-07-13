@@ -18,6 +18,7 @@ return array(
     'Bnomei\\JanitorJob' => $baseDir . '/classes/JanitorJob.php',
     'Bnomei\\Job' => $baseDir . '/classes/Job.php',
     'Bnomei\\ReindexAutoIDJob' => $baseDir . '/classes/ReindexAutoIDJob.php',
+    'Bnomei\\ReindexSearchForKirbyJob' => $baseDir . '/classes/ReindexSearchForKirbyJob.php',
     'Bnomei\\RenderJob' => $baseDir . '/classes/RenderJob.php',
     'Bnomei\\ThumbsJob' => $baseDir . '/classes/ThumbsJob.php',
     'Bnomei\\WhistleJob' => $baseDir . '/classes/WhistleJob.php',

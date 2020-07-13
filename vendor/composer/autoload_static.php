@@ -70,6 +70,7 @@ class ComposerStaticInitbb3ff2edee354a5fc968a3ec648322da
         'Bnomei\\JanitorJob' => __DIR__ . '/../..' . '/classes/JanitorJob.php',
         'Bnomei\\Job' => __DIR__ . '/../..' . '/classes/Job.php',
         'Bnomei\\ReindexAutoIDJob' => __DIR__ . '/../..' . '/classes/ReindexAutoIDJob.php',
+        'Bnomei\\ReindexSearchForKirbyJob' => __DIR__ . '/../..' . '/classes/ReindexSearchForKirbyJob.php',
         'Bnomei\\RenderJob' => __DIR__ . '/../..' . '/classes/RenderJob.php',
         'Bnomei\\ThumbsJob' => __DIR__ . '/../..' . '/classes/ThumbsJob.php',
         'Bnomei\\WhistleJob' => __DIR__ . '/../..' . '/classes/WhistleJob.php',
