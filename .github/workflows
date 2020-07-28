@@ -1,0 +1,34 @@
+name: Unit Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron:  '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.2'
+          tools: composer
+
+      - name: Install
+        run: composer install
+
+      # update kirby to latest release of version 3 (includes release candidates!)
+      # https://semver.mwl.be/#!?package=getkirby%2Fcms&version=3.*&minimum-stability=RC
+      - name: Update Kirby Core
+        run: composer require getkirby/cms:"3.*@RC"
+
+      - name: Run Tests
+        run: composer test
