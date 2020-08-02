@@ -30,7 +30,7 @@ final class JanitorTest extends TestCase
     {
         $janitor = new Janitor([
             'debug' => true,
-            'jobs.extends' => ['another.plugin.jobs'],
+            'jobs-extends' => ['another.plugin.jobs'],
             'secret' => function () {
                 return 'secret';
             },
@@ -52,11 +52,12 @@ final class JanitorTest extends TestCase
     public function testFindJob()
     {
         $janitor = new Janitor([
-            'jobs.extends' => ['another.plugin.jobs', 'doesnotexist.plugin.jobs'],
+            'jobs-extends' => ['another.plugin.jobs', 'doesnotexist.plugin.jobs'],
         ]);
 
         $this->assertTrue(class_exists($janitor->findJob('cleanCache')));
         $this->assertTrue(class_exists($janitor->findJob('whistle')));
+        $this->assertTrue(class_exists($janitor->findJob('context')));
         $this->assertTrue(is_callable($janitor->findJob('heist')));
 
         $this->assertFalse(class_exists($janitor->findJob('invalidjob')));
@@ -116,7 +117,7 @@ final class JanitorTest extends TestCase
     public function testJobFromClass()
     {
         $janitor = new Janitor([
-            'jobs.extends' => ['another.plugin.jobs'],
+            'jobs-extends' => ['another.plugin.jobs'],
         ]);
         $this->assertEquals(
             '♫',
@@ -125,11 +126,14 @@ final class JanitorTest extends TestCase
 
         $this->assertEquals(
             'Home Base',
-            janitor('context', site()->homepage(), 'Base', true)['label']
+            $janitor->job('context', [
+                'contextPage' => site()->homepage()->id(),
+                'contextData' => 'Base'
+            ])['label']
         );
 
         // class exists but has no method job()
-        $this->expectExceptionMessageRegExp('/Argument 1 passed/');
+        $this->expectErrorMessageMatches('/Argument 1 passed/');
         $this->assertIsArray(
             $janitor->job('Kirby\Cms\Page')['label']
         );
