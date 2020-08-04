@@ -68,7 +68,7 @@ final class ThumbsJob extends JanitorJob
             $page = null;
 
             $page = null;
-            if (preg_match('/.*\/media\/pages\/(.*)\/[-\d]*\/\.jobs/', $file->getPath(), $matches)) {
+            if (preg_match('/.*\/media\/pages\/(.*)-[\d]*\/\.jobs/', $file->getPath(), $matches)) {
                 $page = page($matches[1]);
             }
             if (!$page) {
