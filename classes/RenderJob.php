@@ -80,7 +80,7 @@ final class RenderJob extends JanitorJob
                     $content = $page->render();
                 }
                 if ($verbose && strlen($content) > 0) {
-                    preg_match_all('/\/media\/pages\/([\w-_\.\/]+\.(?:png|jpg|jpeg|webp|gif))/', $content, $matches);
+                    preg_match_all('/\/media\/pages\/([\w\-_\.\/]+\.(?:png|jpg|jpeg|webp|gif))/', $content, $matches);
                     if ($matches && count($matches) > 1) {
                         $found = array_merge($found, $matches[1]);
                     }
