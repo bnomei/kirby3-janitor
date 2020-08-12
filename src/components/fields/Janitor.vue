@@ -52,6 +52,9 @@
         },
         methods: {
             janitor() {
+                if (this.status !== undefined && this.status !== '') {
+                  return;
+                }
                 if (this.clipboard === true) {
                     this.clipboardRequest = this.data
                     this.oldlabel = this.label
