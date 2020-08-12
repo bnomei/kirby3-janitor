@@ -35,6 +35,12 @@ Kirby::plugin('bnomei/janitor', [
 
         'thumbsOnUpload' => false,
 
+        'renderSiteUrl' => function() {
+            $url = site()->url();
+//            $url = 'https://www.example.com/';
+            return php_sapi_name() === 'cli' ? $url : '';
+        },
+
         'log.enabled' => false,
         'log.fn' => function (string $msg, string $level = 'info', array $context = []): bool {
             if (option('bnomei.janitor.log.enabled')) {
