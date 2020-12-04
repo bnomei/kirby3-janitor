@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  webserver:
+    image: webdevops/php-apache:7.4
+    ports:
+      - 8000:80
+    environment:
+      WEB_DOCUMENT_ROOT: /app/tests/
+      WEB_ALIAS_DOMAIN: janitor.test
+    volumes:
+      - .:/app:rw
