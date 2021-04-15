@@ -140,6 +140,7 @@ return array(
     'Symfony\\Component\\Finder\\Iterator\\FileTypeFilterIterator' => $vendorDir . '/symfony/finder/Iterator/FileTypeFilterIterator.php',
     'Symfony\\Component\\Finder\\Iterator\\FilecontentFilterIterator' => $vendorDir . '/symfony/finder/Iterator/FilecontentFilterIterator.php',
     'Symfony\\Component\\Finder\\Iterator\\FilenameFilterIterator' => $vendorDir . '/symfony/finder/Iterator/FilenameFilterIterator.php',
+    'Symfony\\Component\\Finder\\Iterator\\LazyIterator' => $vendorDir . '/symfony/finder/Iterator/LazyIterator.php',
     'Symfony\\Component\\Finder\\Iterator\\MultiplePcreFilterIterator' => $vendorDir . '/symfony/finder/Iterator/MultiplePcreFilterIterator.php',
     'Symfony\\Component\\Finder\\Iterator\\PathFilterIterator' => $vendorDir . '/symfony/finder/Iterator/PathFilterIterator.php',
     'Symfony\\Component\\Finder\\Iterator\\RecursiveDirectoryIterator' => $vendorDir . '/symfony/finder/Iterator/RecursiveDirectoryIterator.php',
