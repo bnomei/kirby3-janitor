@@ -74,6 +74,7 @@ class ComposerStaticInitbb3ff2edee354a5fc968a3ec648322da
         'Bnomei\\RenderJob' => __DIR__ . '/../..' . '/classes/RenderJob.php',
         'Bnomei\\ThumbsJob' => __DIR__ . '/../..' . '/classes/ThumbsJob.php',
         'Bnomei\\WhistleJob' => __DIR__ . '/../..' . '/classes/WhistleJob.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
         'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
         'Kirby\\ComposerInstaller\\Plugin' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',

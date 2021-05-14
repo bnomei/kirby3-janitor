@@ -22,6 +22,7 @@ return array(
     'Bnomei\\RenderJob' => $baseDir . '/classes/RenderJob.php',
     'Bnomei\\ThumbsJob' => $baseDir . '/classes/ThumbsJob.php',
     'Bnomei\\WhistleJob' => $baseDir . '/classes/WhistleJob.php',
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Kirby\\ComposerInstaller\\CmsInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
     'Kirby\\ComposerInstaller\\Installer' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
     'Kirby\\ComposerInstaller\\Plugin' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
