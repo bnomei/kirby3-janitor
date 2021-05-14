@@ -30,4 +30,3 @@ final class ReindexSearchForKirbyJob extends JanitorJob
         ];
     }
 }
-

@@ -17,7 +17,7 @@ final class FlushRedisDBJob extends JanitorJob
             $redis = new \Bnomei\Redis();
             if ($redis->redisClient()->dbsize() > 1) {
                 // DANGER: $this->connection->flushdb()
-		        $redis->flush();
+                $redis->flush();
                 $success = $redis->redisClient()->dbsize() === 0;
             }
         }

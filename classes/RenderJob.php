@@ -170,14 +170,12 @@ final class RenderJob extends JanitorJob
         $page = page($pageId);
         $content = '';
         if ($this->countLanguages > 1) {
-
             $content = $page->render();
             foreach (kirby()->languages() as $lang) {
                 site()->visit($page, $lang->code());
                 $content .= $page->render();
             }
         } else {
-
             site()->visit($page);
             $content = $page->render();
         }

@@ -23,13 +23,13 @@ final class BackupZipJob extends JanitorJob
         $this->options = [
             'ulimit' => option('bnomei.janitor.backupzip.ulimit', 512), // 1024 seems to be unix default
             'date' => option('bnomei.janitor.backupzip.date', null), // null to disable, 'since 1 day ago'
-            'roots' => option('bnomei.janitor.backupzip.roots', function() {
+            'roots' => option('bnomei.janitor.backupzip.roots', function () {
                 return [
                     kirby()->roots()->accounts(),
                     kirby()->roots()->content(),
                 ];
             }),
-            'target' => option('bnomei.janitor.backupzip.target', function() {
+            'target' => option('bnomei.janitor.backupzip.target', function () {
                 $dir = realpath(kirby()->roots()->accounts() . '/../') . '/backups';
                 Dir::make($dir);
                 $prefix = option('bnomei.janitor.backupzip.prefix', '');
@@ -71,7 +71,7 @@ final class BackupZipJob extends JanitorJob
 
         $zipPath = (string) $this->option('target');
         $zip = new ZipArchive();
-        if($zip->open($zipPath,ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) !== true) {
+        if ($zip->open($zipPath, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) !== true) {
             if ($climate) {
                 $climate->red('Failed to create: ' . $zipPath);
             }
@@ -102,7 +102,7 @@ final class BackupZipJob extends JanitorJob
         foreach ($finder as $file) {
             $filePath = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFilename();
             $localFilePath = $filePath;
-            foreach($roots as $root) {
+            foreach ($roots as $root) {
                 $localFilePath = str_replace(dirname($root), '', $localFilePath);
             }
             if ($zip->addFile($filePath, $localFilePath)) {

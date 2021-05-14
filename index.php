@@ -35,7 +35,7 @@ Kirby::plugin('bnomei/janitor', [
 
         'thumbsOnUpload' => false,
 
-        'renderSiteUrl' => function() {
+        'renderSiteUrl' => function () {
             $url = site()->url();
 //            $url = 'https://www.example.com/';
             return php_sapi_name() === 'cli' ? $url : '';
@@ -46,8 +46,7 @@ Kirby::plugin('bnomei/janitor', [
             if (option('bnomei.janitor.log.enabled')) {
                 if (function_exists('monolog')) {
                     monolog()->{$level}($msg, $context);
-                }
-                else if (function_exists('kirbyLog')) {
+                } elseif (function_exists('kirbyLog')) {
                     kirbyLog('bnomei.janitor.log')->log($msg, $level, $context);
                 }
                 return true;
@@ -73,7 +72,9 @@ Kirby::plugin('bnomei/janitor', [
                 },
                 'data' => function (?string $data = null) {
                     $data = \Bnomei\Janitor::query($data, $this->model());
-                    return str_replace('/','+S_L_A_S_H+',
+                    return str_replace(
+                        '/',
+                        '+S_L_A_S_H+',
                         \Kirby\Toolkit\I18n::translate($data, $data)
                     );
                 },
@@ -94,7 +95,7 @@ Kirby::plugin('bnomei/janitor', [
                     if (is_a($this->model(), \Kirby\Cms\File::class)) {
                         $uri = $this->model()->parent()->uri();
                     }
-                    return str_replace('/','+', $uri);
+                    return str_replace('/', '+', $uri);
                 },
                 'icon' => function ($icon = false) {
                     return $icon ?? option('bnomei.janitor.icon');
@@ -166,7 +167,7 @@ if (!function_exists('janitor')) {
         $janitor = \Bnomei\Janitor::singleton();
         $janitor->log('janitor()', 'debug');
         $response = $janitor->job($job, [
-            'contextPage' => $contextPage ? urlencode(str_replace('/' ,'+', $contextPage->uri())) : '',
+            'contextPage' => $contextPage ? urlencode(str_replace('/', '+', $contextPage->uri())) : '',
             'contextData' => $contextData ? urlencode($contextData) : '',
         ]);
         if ($dump) {
