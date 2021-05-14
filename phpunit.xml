@@ -18,7 +18,6 @@
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
-        <env name="XDEBUG_MODE" value="coverage"/>
     </php>
     <coverage>
         <include>
