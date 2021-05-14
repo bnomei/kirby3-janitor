@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '2.6.6',
-    'version' => '2.6.6.0',
+    'pretty_version' => '2.6.8',
+    'version' => '2.6.8.0',
     'aliases' => 
     array (
     ),
@@ -13,8 +13,8 @@
   array (
     'bnomei/kirby3-janitor' => 
     array (
-      'pretty_version' => '2.6.6',
-      'version' => '2.6.6.0',
+      'pretty_version' => '2.6.8',
+      'version' => '2.6.8.0',
       'aliases' => 
       array (
       ),

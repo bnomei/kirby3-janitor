@@ -103,7 +103,7 @@ final class JanitorTest extends TestCase
     public function testJobFromCallable()
     {
         $janitor = new Janitor();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/^(\d){1} Coins looted at Bank/',
             $janitor->job('heist')['label']
         );

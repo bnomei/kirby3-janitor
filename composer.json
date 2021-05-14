@@ -1,7 +1,7 @@
 {
     "name": "bnomei/kirby3-janitor",
     "type": "kirby-plugin",
-    "version": "2.6.7",
+    "version": "2.6.8",
     "license": "MIT",
     "description": "Kirby 3 Plugin for running jobs like cleaning the cache from within the Panel, PHP code or a cronjob",
     "authors": [
@@ -38,9 +38,9 @@
         "symfony/finder": "^4.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5",
         "getkirby/cms": "^3.5",
-        "php-coveralls/php-coveralls": "^2.4"
+        "php-coveralls/php-coveralls": "^2.4",
+        "phpunit/phpunit": "^9.5"
     },
     "scripts": {
         "build": [
