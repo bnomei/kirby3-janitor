@@ -7,6 +7,7 @@ namespace Bnomei;
 use Exception;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Cms\User;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use League\CLImate\CLImate;
@@ -217,17 +218,20 @@ final class Janitor
     {
         $page = null;
         $file = null;
+        $user = kirby()->user();
         if ($model && $model instanceof Page) {
             $page = $model;
         } elseif ($model && $model instanceof File) {
             $file = $model;
+        } elseif ($model && $model instanceof User) {
+            $user = $model;
         }
         return Str::template($template, [
             'kirby' => kirby(),
             'site' => kirby()->site(),
             'page' => $page,
             'file' => $file,
-            'user' => kirby()->user(),
+            'user' => $user,
         ]);
     }
 

@@ -27,8 +27,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '2.6.8',
-    'version' => '2.6.8.0',
+    'pretty_version' => '2.6.9',
+    'version' => '2.6.9.0',
     'aliases' => 
     array (
     ),
@@ -39,8 +39,8 @@ private static $installed = array (
   array (
     'bnomei/kirby3-janitor' => 
     array (
-      'pretty_version' => '2.6.8',
-      'version' => '2.6.8.0',
+      'pretty_version' => '2.6.9',
+      'version' => '2.6.9.0',
       'aliases' => 
       array (
       ),
@@ -84,12 +84,12 @@ private static $installed = array (
     ),
     'symfony/finder' => 
     array (
-      'pretty_version' => 'v4.4.23',
-      'version' => '4.4.23.0',
+      'pretty_version' => 'v4.4.25',
+      'version' => '4.4.25.0',
       'aliases' => 
       array (
       ),
-      'reference' => '67b77716f517e3f864759232e1201e7aa2ab0e82',
+      'reference' => 'ed33314396d968a8936c95f5bd1b88bd3b3e94a3',
     ),
   ),
 );
