@@ -1,0 +1,14 @@
+
+sections:
+    pages:
+        type: pages
+
+    fields:
+        type: fields
+        fields:
+            title:
+                type: text
+            jansite:
+                type: janitor
+                job: 'clipboard'
+                data: '{{ model }} {{ site.title }}'

@@ -232,6 +232,7 @@ final class Janitor
             'page' => $page,
             'file' => $file,
             'user' => $user,
+            'model' => $model ? get_class($model) : null,
         ]);
     }
 

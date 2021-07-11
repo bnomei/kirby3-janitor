@@ -1,0 +1,5 @@
+fields:
+ jancopyid:
+   type: janitor
+   job: clipboard
+   data: '{{ model }} {{ user.id }}'

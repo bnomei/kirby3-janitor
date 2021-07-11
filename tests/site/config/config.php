@@ -25,8 +25,8 @@ return [
         'clipboard' => function (Kirby\Cms\Page $page = null, string $data = null) {
             return [
                 'status' => 200,
-                'label' => 'Fetched. Click to Copy.',
-                'clipboard' => 'Janitor',
+                'label' => 'Fetched. Click to Copy. ' . ($page ? $page->id() : null),
+                'clipboard' => !empty($data) ? $data : 'Janitor',
             ];
         },
 

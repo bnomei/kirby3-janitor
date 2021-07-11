@@ -27,8 +27,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '2.6.9',
-    'version' => '2.6.9.0',
+    'pretty_version' => '2.8.0',
+    'version' => '2.8.0.0',
     'aliases' => 
     array (
     ),
@@ -39,8 +39,8 @@ private static $installed = array (
   array (
     'bnomei/kirby3-janitor' => 
     array (
-      'pretty_version' => '2.6.9',
-      'version' => '2.6.9.0',
+      'pretty_version' => '2.8.0',
+      'version' => '2.8.0.0',
       'aliases' => 
       array (
       ),

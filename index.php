@@ -88,12 +88,18 @@ Kirby::plugin('bnomei/janitor', [
                     return \Bnomei\Janitor::isTrue($intab);
                 },
                 'pageURI' => function () {
-                    $uri = null;
+                    $uri = kirby()->site()->homePageId();
                     if (is_a($this->model(), \Kirby\Cms\Page::class)) {
                         $uri = $this->model()->uri();
                     }
                     if (is_a($this->model(), \Kirby\Cms\File::class)) {
                         $uri = $this->model()->parent()->uri();
+                    }
+                    if (is_a($this->model(), \Kirby\Cms\User::class)) {
+                        $uri = $this->model()->panelPath();
+                    }
+                    if (is_a($this->model(), \Kirby\Cms\Site::class)) {
+                        $uri = '$'; // any not empty string so route /$/DATA is used
                     }
                     return str_replace('/', '+', $uri);
                 },

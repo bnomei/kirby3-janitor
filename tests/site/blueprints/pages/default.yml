@@ -28,6 +28,7 @@ fields:
     type: janitor
     label: Fetch Clipboard
     job: clipboard
+    data: '{{ user.email }}'
 
   janitor_reload:
     type: janitor
