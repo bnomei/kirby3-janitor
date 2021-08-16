@@ -2,6 +2,7 @@
   <div class="janitor-wrapper">
     <k-button
         class="janitor"
+        :id="id"
         :icon="currentIcon"
         :class="status"
         @click="janitor()"
@@ -28,6 +29,7 @@ export default {
     pageURI: String,
     clipboard: Boolean,
     unsaved: Boolean,
+    autosave: Boolean,
     intab: Boolean,
     icon: [Boolean, String],
   },
@@ -39,7 +41,14 @@ export default {
       urlRequest: '',
     }
   },
+  created() {
+    this.$events.$on("model.update", this.modelHasUpdate);
+    this.clickAfterAutosave();
+  },
   computed: {
+    id: function() {
+      return 'janitor-' + this.hashCode(this.job + this.label + this.pageURI);
+    },
     pageHasChanges: function () {
       return this.$store.getters['content/hasChanges']();
     },
@@ -51,7 +60,43 @@ export default {
     }
   },
   methods: {
+    // https://stackoverflow.com/a/8831937
+    hashCode(str) {
+      let hash = 0;
+      if (str.length == 0) {
+          return hash;
+      }
+      for (let i = 0; i < str.length; i++) {
+          let char = str.charCodeAt(i);
+          hash = ((hash<<5)-hash)+char;
+          hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
+    },
+    modelHasUpdate() {
+      if (sessionStorage.getItem('clickAfterAutosave')) {
+        location.reload();
+      }
+    },
+    clickAfterAutosave() {
+      let clickAfterAutosave = sessionStorage.getItem('clickAfterAutosave');
+      if (clickAfterAutosave != undefined && clickAfterAutosave == this.id) {
+        sessionStorage.removeItem('clickAfterAutosave');
+        this.janitor();
+      }
+    },
     janitor() {
+
+      if (this.autosave === true && this.pageHasChanges) {
+        // lock janitor button, press save and listen to model.update event
+        const saveButton = document.querySelector('div.k-panel nav.k-form-buttons div.k-view').lastChild; // revert & save
+        if (saveButton !== undefined) {
+          this.unsaved = false
+          sessionStorage.setItem('clickAfterAutosave', this.id);
+          this.simulateClick(saveButton)
+          return; // do not trigger job now
+        }
+      }
 
       if (this.clipboard === true) {
         this.clipboardRequest = this.data

@@ -84,6 +84,9 @@ Kirby::plugin('bnomei/janitor', [
                 'unsaved' => function ($allowUnsaved = true) {
                     return \Bnomei\Janitor::isTrue($allowUnsaved);
                 },
+                'autosave' => function ($doAutosave = false) {
+                    return \Bnomei\Janitor::isTrue($doAutosave);
+                },
                 'intab' => function ($intab = false) {
                     return \Bnomei\Janitor::isTrue($intab);
                 },
