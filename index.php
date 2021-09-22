@@ -90,6 +90,9 @@ Kirby::plugin('bnomei/janitor', [
                 'intab' => function ($intab = false) {
                     return \Bnomei\Janitor::isTrue($intab);
                 },
+                'confirm' => function ($confirm = '') {
+                    return $confirm;
+                },
                 'pageURI' => function () {
                     $uri = kirby()->site()->homePageId();
                     if (is_a($this->model(), \Kirby\Cms\Page::class)) {

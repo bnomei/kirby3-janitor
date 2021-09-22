@@ -31,6 +31,7 @@ export default {
     unsaved: Boolean,
     autosave: Boolean,
     intab: Boolean,
+    confirm: String,
     icon: [Boolean, String],
   },
   data() {
@@ -39,6 +40,7 @@ export default {
       downloadRequest: '',
       clipboardRequest: '',
       urlRequest: '',
+      confirm: '',
     }
   },
   created() {
@@ -86,6 +88,9 @@ export default {
       }
     },
     janitor() {
+      if (this.confirm !== '' && !window.confirm(this.confirm)) {
+        return;
+      }
 
       if (this.autosave === true && this.pageHasChanges) {
         // lock janitor button, press save and listen to model.update event
