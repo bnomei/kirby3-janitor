@@ -261,7 +261,7 @@ export default {
   background-color: #1e1e1e;
 }
 
-.janitor >>> .k-button-text {
+.janitor .k-button-text {
   opacity: 1;
 }
 
@@ -269,7 +269,7 @@ export default {
   background-color: #dcdcdc;
 }
 
-.janitor.doing-job >>> .k-button-text {
+.janitor.doing-job .k-button-text {
   color: black;
 }
 

@@ -1,25 +1,14 @@
 {
   "name": "kirby-field-janitor",
-  "version": "2.9.0",
+  "version": "2.11.0",
   "description": "Kirby 3 Plugin Janitor",
   "author": "Bruno Meilick <b@bnomei.com>",
   "scripts": {
-    "dev": "parcel watch src/index.js --no-source-maps -d ./",
-    "build": "parcel build src/index.js --no-source-maps -d ./",
-    "build-exp": "parcel build src/index.js --no-source-maps --experimental-scope-hoisting -d ./"
+    "dev": "kirbyup src/index.js --watch",
+    "build": "kirbyup src/index.js"
   },
   "devDependencies": {
-    "@vue/component-compiler-utils": "^3.0.0",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "cssnano": "^4.1.10",
+    "kirbyup": "^0.11.0",
     "vue-template-compiler": "^2.6.14"
-  },
-  "dependencies": {
-    "vue": "^2.6.10",
-    "vue-hot-reload-api": "^2.3.3"
-  },
-  "posthtml": {
-    "recognizeSelfClosing": true
   }
 }
