@@ -131,7 +131,11 @@ final class Janitor
     public function jobFromCallable($job, array $data): array
     {
         $return = false;
-        set_time_limit(0);
+        try {
+            set_time_limit(0);
+        } catch (\Exception $ex) {
+            // ignore
+        }
 
         try {
             $return = $job(
@@ -162,7 +166,11 @@ final class Janitor
         );
 
         if (method_exists($object, 'job')) {
-            set_time_limit(0);
+            try {
+                set_time_limit(0);
+            } catch (\Exception $ex) {
+                // ignore
+            }
             return $object->job();
         }
         return [
