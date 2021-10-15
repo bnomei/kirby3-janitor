@@ -84,16 +84,21 @@ export default {
   },
 
   created() {
-    this.$events.$on("model.update", this.modelHasUpdate);
+    this.$events.$on(
+      "model.update",
+      () => sessionStorage.getItem("clickAfterAutosave") && location.reload()
+    );
     this.clickAfterAutosave();
   },
 
   methods: {
-    // https://stackoverflow.com/a/8831937
+    /**
+     * Source: https://stackoverflow.com/a/8831937
+     */
     hashCode(str) {
       let hash = 0;
 
-      if (str.length == 0) return hash;
+      if (str.length === 0) return hash;
 
       for (let i = 0; i < str.length; i++) {
         let char = str.charCodeAt(i);
@@ -102,12 +107,6 @@ export default {
       }
 
       return hash;
-    },
-
-    modelHasUpdate() {
-      if (sessionStorage.getItem("clickAfterAutosave")) {
-        location.reload();
-      }
     },
 
     clickAfterAutosave() {
@@ -176,8 +175,7 @@ export default {
     },
 
     async getRequest(url) {
-      this.btnLabel =
-        (this.progress?.length ?? 0) > 0 ? this.progress : `${this.label} …`;
+      this.btnLabel = this.progress ?? `${this.label} …`;
       this.btnClass = "is-running";
 
       const { label, status, reload, href, download, clipboard } =
@@ -225,9 +223,6 @@ export default {
       }
     },
 
-    /**
-     * Taken from https://gomakethings.com/how-to-simulate-a-click-event-with-javascript/
-     */
     simulateClick(element) {
       const evt = new MouseEvent("click", {
         bubbles: true,
