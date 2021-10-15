@@ -2,13 +2,13 @@
   <div class="janitor-wrapper">
     <k-button
       :id="id"
-      :class="['janitor', btnClass]"
+      :class="['janitor', button.state]"
       :icon="currentIcon"
       :job="job"
       :disabled="!isUnsaved && hasChanges"
       @click="runJanitor"
     >
-      {{ btnLabel || label }}
+      {{ button.label || label }}
     </k-button>
 
     <a
@@ -53,8 +53,10 @@ export default {
 
   data() {
     return {
-      btnLabel: null,
-      btnClass: null,
+      button: {
+        label: null,
+        state: null,
+      },
       downloadRequest: null,
       clipboardRequest: null,
       urlRequest: null,
@@ -71,7 +73,7 @@ export default {
     id() {
       return (
         "janitor-" +
-        this.hashCode(this.job + (this.btnLabel ?? "") + this.pageURI)
+        this.hashCode(this.job + (this.button.label ?? "") + this.pageURI)
       );
     },
 
@@ -138,10 +140,10 @@ export default {
 
       if (this.clipboard) {
         this.clipboardRequest = this.data;
-        this.btnLabel = this.progress;
-        this.btnClass = "is-success";
+        this.button.label = this.progress;
+        this.button.state = "is-success";
 
-        setTimeout(this.resetBtnState, this.cooldown);
+        setTimeout(this.resetButton, this.cooldown);
 
         this.$nextTick(() => {
           this.copyToClipboard(this.data);
@@ -152,7 +154,7 @@ export default {
 
       if (this.clipboardRequest) {
         await this.copyToClipboard(this.clipboardRequest);
-        this.resetBtnState();
+        this.resetButton();
         this.clipboardRequest = null;
         return;
       }
@@ -171,20 +173,20 @@ export default {
     },
 
     async getRequest(url) {
-      this.btnLabel = this.progress ?? `${this.label} …`;
-      this.btnClass = "is-running";
+      this.button.label = this.progress ?? `${this.label} …`;
+      this.button.state = "is-running";
 
       const { label, status, reload, href, download, clipboard } =
         await this.$api.get(url);
 
       if (label) {
-        this.btnLabel = label;
+        this.button.label = label;
       }
 
       if (status) {
-        this.btnClass = status === 200 ? "is-success" : "has-error";
+        this.button.state = status === 200 ? "is-success" : "has-error";
       } else {
-        this.btnClass = "has-response";
+        this.button.state = "has-response";
       }
 
       if (reload) {
@@ -212,13 +214,13 @@ export default {
       if (clipboard) {
         this.clipboardRequest = clipboard;
       } else {
-        setTimeout(this.resetBtnState, this.cooldown);
+        setTimeout(this.resetButton, this.cooldown);
       }
     },
 
-    resetBtnState() {
-      this.btnLabel = null;
-      this.btnClass = null;
+    resetButton() {
+      this.button.label = null;
+      this.button.state = null;
     },
 
     simulateClick(element) {
