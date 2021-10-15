@@ -1,14 +1,16 @@
 {
-  "name": "kirby-field-janitor",
-  "version": "2.11.0",
-  "description": "Kirby 3 Plugin Janitor",
-  "author": "Bruno Meilick <b@bnomei.com>",
+  "private": true,
   "scripts": {
     "dev": "kirbyup src/index.js --watch",
-    "build": "kirbyup src/index.js"
+    "build": "kirbyup src/index.js",
+    "lint": "eslint \"src/**/*.{js,vue}\"",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"src/**/*.{js,vue}\""
   },
   "devDependencies": {
-    "kirbyup": "^0.11.0",
-    "vue-template-compiler": "^2.6.14"
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-vue": "^7.19.1",
+    "kirbyup": "^0.18.0"
   }
 }
