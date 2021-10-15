@@ -1,14 +1,14 @@
 <template>
   <div class="janitor-wrapper">
     <k-button
-        class="janitor"
-        :id="id"
-        :icon="currentIcon"
-        :class="status"
-        @click="janitor()"
-        :job="job"
-        :disabled="!this.unsaved && this.pageHasChanges"
-    >{{ label }}
+      class="janitor"
+      :id="id"
+      :icon="currentIcon"
+      :class="status"
+      @click="janitor()"
+      :job="job"
+      :disabled="!this.unsaved && this.pageHasChanges"
+      >{{ label }}
     </k-button>
     <a ref="download" class="hidden" :href="downloadRequest" download></a>
     <a ref="openintab" class="hidden" :href="urlRequest" target="_blank"></a>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'Janitor',
+  name: "Janitor",
   props: {
     label: String,
     progress: String,
@@ -36,174 +36,184 @@ export default {
   },
   data() {
     return {
-      oldlabel: '',
-      downloadRequest: '',
-      clipboardRequest: '',
-      urlRequest: '',
-      confirm: '',
-    }
+      oldlabel: "",
+      downloadRequest: "",
+      clipboardRequest: "",
+      urlRequest: "",
+      confirm: "",
+    };
   },
   created() {
     this.$events.$on("model.update", this.modelHasUpdate);
     this.clickAfterAutosave();
   },
   computed: {
-    id: function() {
-      return 'janitor-' + this.hashCode(this.job + this.label + this.pageURI);
+    id: function () {
+      return "janitor-" + this.hashCode(this.job + this.label + this.pageURI);
     },
     pageHasChanges: function () {
-      return this.$store.getters['content/hasChanges']();
+      return this.$store.getters["content/hasChanges"]();
     },
     currentIcon: function () {
-      if (!this.status) return this.icon
-      else if (this.status == 'doing-job') return 'janitorLoader'
-      else if (this.status == 'is-success') return 'check'
-      else if (this.status == 'has-error') return 'alert'
-    }
+      if (!this.status) return this.icon;
+      else if (this.status == "doing-job") return "janitorLoader";
+      else if (this.status == "is-success") return "check";
+      else if (this.status == "has-error") return "alert";
+    },
   },
   methods: {
     // https://stackoverflow.com/a/8831937
     hashCode(str) {
       let hash = 0;
       if (str.length == 0) {
-          return hash;
+        return hash;
       }
       for (let i = 0; i < str.length; i++) {
-          let char = str.charCodeAt(i);
-          hash = ((hash<<5)-hash)+char;
-          hash = hash & hash; // Convert to 32bit integer
+        let char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash; // Convert to 32bit integer
       }
       return hash;
     },
     modelHasUpdate() {
-      if (sessionStorage.getItem('clickAfterAutosave')) {
+      if (sessionStorage.getItem("clickAfterAutosave")) {
         location.reload();
       }
     },
     clickAfterAutosave() {
-      let clickAfterAutosave = sessionStorage.getItem('clickAfterAutosave');
+      let clickAfterAutosave = sessionStorage.getItem("clickAfterAutosave");
       if (clickAfterAutosave != undefined && clickAfterAutosave == this.id) {
-        sessionStorage.removeItem('clickAfterAutosave');
+        sessionStorage.removeItem("clickAfterAutosave");
         this.janitor();
       }
     },
     janitor() {
-      if (this.confirm !== '' && !window.confirm(this.confirm)) {
+      if (this.confirm !== "" && !window.confirm(this.confirm)) {
         return;
       }
 
       if (this.autosave === true && this.pageHasChanges) {
         // lock janitor button, press save and listen to model.update event
-        const saveButton = document.querySelector('div.k-panel nav.k-form-buttons div.k-view').lastChild; // revert & save
+        const saveButton = document.querySelector(
+          "div.k-panel nav.k-form-buttons div.k-view"
+        ).lastChild; // revert & save
         if (saveButton !== undefined) {
-          this.unsaved = false
-          sessionStorage.setItem('clickAfterAutosave', this.id);
-          this.simulateClick(saveButton)
+          this.unsaved = false;
+          sessionStorage.setItem("clickAfterAutosave", this.id);
+          this.simulateClick(saveButton);
           return; // do not trigger job now
         }
       }
 
       if (this.clipboard === true) {
-        this.clipboardRequest = this.data
-        this.oldlabel = this.label
-        this.label = this.progress
-        this.status = 'is-success'
-        let vm = this
+        this.clipboardRequest = this.data;
+        this.oldlabel = this.label;
+        this.label = this.progress;
+        this.status = "is-success";
+        let vm = this;
         setTimeout(function () {
-          vm.label = vm.oldlabel
-          vm.status = ''
-        }, this.cooldown)
+          vm.label = vm.oldlabel;
+          vm.status = "";
+        }, this.cooldown);
         this.$nextTick(function () {
-          vm.copyToClipboard(vm.$refs.clipboard)
-        })
-        return
-      }
-
-      if (this.clipboardRequest !== '') {
-        this.copyToClipboard(this.$refs.clipboard)
-        this.label = this.oldlabel
-        this.status = ''
-        this.clipboardRequest = ''
-        return
-      }
-
-      if (this.status !== undefined && this.status !== '') {
+          vm.copyToClipboard(vm.$refs.clipboard);
+        });
         return;
       }
 
-      let url = this.job
+      if (this.clipboardRequest !== "") {
+        this.copyToClipboard(this.$refs.clipboard);
+        this.label = this.oldlabel;
+        this.status = "";
+        this.clipboardRequest = "";
+        return;
+      }
+
+      if (this.status !== undefined && this.status !== "") {
+        return;
+      }
+
+      let url = this.job;
       if (true) {
-        url = url + '/' + encodeURIComponent(this.pageURI)
+        url = url + "/" + encodeURIComponent(this.pageURI);
       }
       if (this.data != undefined) {
-        let data = this.data
-        url = url + '/' + encodeURIComponent(data)
+        let data = this.data;
+        url = url + "/" + encodeURIComponent(data);
       }
-      this.getRequest(url)
+      this.getRequest(url);
     },
     getRequest(url) {
-      let that = this
-      this.oldlabel = this.label
-      this.label = this.progress != undefined && this.progress.length > 0 ? this.progress : this.label + '...'
-      this.status = 'doing-job'
-      this.$api.get(url)
-          .then(response => {
-                if (response.label !== undefined) {
-                  that.label = response.label
-                }
-                if (response.status !== undefined) {
-                  that.status = response.status == 200 ? 'is-success' : 'has-error'
-                } else {
-                  that.status = 'has-response'
-                }
+      let that = this;
+      this.oldlabel = this.label;
+      this.label =
+        this.progress != undefined && this.progress.length > 0
+          ? this.progress
+          : this.label + "...";
+      this.status = "doing-job";
+      this.$api.get(url).then((response) => {
+        if (response.label !== undefined) {
+          that.label = response.label;
+        }
+        if (response.status !== undefined) {
+          that.status = response.status == 200 ? "is-success" : "has-error";
+        } else {
+          that.status = "has-response";
+        }
 
-                if (response.reload !== undefined && response.reload === true) {
-                  location.reload()
-                }
-                if (response.href !== undefined) {
-                  if (this.intab) {
-                    this.urlRequest = response.href
-                    let vm = this
-                    this.$nextTick(function () {
-                      vm.simulateClick(vm.$refs.openintab)
-                    })
-                  } else {
-                    location.href = response.href
-                  }
-                }
-                if (response.download !== undefined) {
-                  this.downloadRequest = response.download
-                  let vm = this
-                  this.$nextTick(function () {
-                    vm.simulateClick(vm.$refs.download)
-                  })
-                }
-                if (response.clipboard !== undefined) {
-                  this.clipboardRequest = response.clipboard
-                } else {
-                  setTimeout(function () {
-                    that.label = that.oldlabel
-                    that.status = ''
-                  }, that.cooldown)
-                }
-              }
-          )
+        if (response.reload !== undefined && response.reload === true) {
+          location.reload();
+        }
+        if (response.href !== undefined) {
+          if (this.intab) {
+            this.urlRequest = response.href;
+            let vm = this;
+            this.$nextTick(function () {
+              vm.simulateClick(vm.$refs.openintab);
+            });
+          } else {
+            location.href = response.href;
+          }
+        }
+        if (response.download !== undefined) {
+          this.downloadRequest = response.download;
+          let vm = this;
+          this.$nextTick(function () {
+            vm.simulateClick(vm.$refs.download);
+          });
+        }
+        if (response.clipboard !== undefined) {
+          this.clipboardRequest = response.clipboard;
+        } else {
+          setTimeout(function () {
+            that.label = that.oldlabel;
+            that.status = "";
+          }, that.cooldown);
+        }
+      });
     },
     simulateClick(elem) {
       /* https://gomakethings.com/how-to-simulate-a-click-event-with-javascript/ */
       // Create our event (with options)
-      let evt = new MouseEvent('click', {
+      let evt = new MouseEvent("click", {
         bubbles: true,
         cancelable: true,
-        view: window
+        view: window,
       });
       // If cancelled, don't dispatch our event
       let canceled = !elem.dispatchEvent(evt);
     },
     copyToClipboard(elem) {
-      var currentFocus, e, isInput, origSelectionEnd, origSelectionStart, succeed, target, targetId;
-      targetId = '_hiddenCopyText_';
-      isInput = elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA';
+      var currentFocus,
+        e,
+        isInput,
+        origSelectionEnd,
+        origSelectionStart,
+        succeed,
+        target,
+        targetId;
+      targetId = "_hiddenCopyText_";
+      isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
       origSelectionStart = void 0;
       origSelectionEnd = void 0;
       if (isInput) {
@@ -213,10 +223,10 @@ export default {
       } else {
         target = document.getElementById(targetId);
         if (!target) {
-          target = document.createElement('textarea');
-          target.style.position = 'absolute';
-          target.style.left = '-9999px';
-          target.style.top = '0';
+          target = document.createElement("textarea");
+          target.style.position = "absolute";
+          target.style.left = "-9999px";
+          target.style.top = "0";
           target.id = targetId;
           document.body.appendChild(target);
         }
@@ -227,23 +237,23 @@ export default {
       target.setSelectionRange(0, target.value.length);
       succeed = void 0;
       try {
-        succeed = document.execCommand('copy');
+        succeed = document.execCommand("copy");
       } catch (_error) {
         e = _error;
         succeed = false;
       }
-      if (currentFocus && typeof currentFocus.focus === 'function') {
+      if (currentFocus && typeof currentFocus.focus === "function") {
         currentFocus.focus();
       }
       if (isInput) {
         elem.setSelectionRange(origSelectionStart, origSelectionEnd);
       } else {
-        target.textContent = '';
+        target.textContent = "";
       }
       return succeed;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="postcss">

@@ -1,10 +1,11 @@
-import Janitor from './components/fields/Janitor.vue';
+import Janitor from "./components/fields/Janitor.vue";
 
-panel.plugin('bnomei/janitor', {
+panel.plugin("bnomei/janitor", {
   fields: {
-    'janitor': Janitor,
+    janitor: Janitor,
   },
   icons: {
-    janitorLoader: '<g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="1.75"><circle cx="7" cy="7" r="7.2" stroke="#000" stroke-opacity=".2"/><path d="M14.2,7c0-4-3.2-7.2-7.2-7.2" stroke="#000"><animateTransform attributeName="transform" type="rotate" from="0 7 7" to="360 7 7" dur="1s" repeatCount="indefinite"/></path></g></g>'
-  }
+    janitorLoader:
+      '<g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="1.75"><circle cx="7" cy="7" r="7.2" stroke="#000" stroke-opacity=".2"/><path d="M14.2,7c0-4-3.2-7.2-7.2-7.2" stroke="#000"><animateTransform attributeName="transform" type="rotate" from="0 7 7" to="360 7 7" dur="1s" repeatCount="indefinite"/></path></g></g>',
+  },
 });
