@@ -2,11 +2,10 @@
   <div class="janitor-wrapper">
     <k-button
       :id="id"
-      class="janitor"
+      :class="['janitor', btnClass]"
       :icon="currentIcon"
-      :class="btnClass"
       :job="job"
-      :disabled="!isUnsaved && pageHasChanges"
+      :disabled="!isUnsaved && hasChanges"
       @click="runJanitor"
     >
       {{ btnLabel || label }}
@@ -18,18 +17,20 @@
       class="visually-hidden"
       :href="downloadRequest"
       download
-    ></a>
+    />
     <a
       v-show="urlRequest"
       ref="tabAnchor"
       class="visually-hidden"
       :href="urlRequest"
       target="_blank"
-    ></a>
+    />
   </div>
 </template>
 
 <script>
+const STORAGE_ID = "janitor.clickAfterAutosave";
+
 export default {
   props: {
     label: String,
@@ -74,7 +75,7 @@ export default {
       );
     },
 
-    pageHasChanges() {
+    hasChanges() {
       return this.$store.getters["content/hasChanges"]();
     },
 
@@ -86,9 +87,13 @@ export default {
   created() {
     this.$events.$on(
       "model.update",
-      () => sessionStorage.getItem("clickAfterAutosave") && location.reload()
+      () => sessionStorage.getItem(STORAGE_ID) && location.reload()
     );
-    this.clickAfterAutosave();
+
+    if (sessionStorage.getItem(STORAGE_ID) === this.id) {
+      sessionStorage.removeItem(STORAGE_ID);
+      this.runJanitor();
+    }
   },
 
   methods: {
@@ -98,22 +103,17 @@ export default {
     hashCode(str) {
       let hash = 0;
 
-      if (str.length === 0) return hash;
+      if (str.length === 0) {
+        return hash;
+      }
 
-      for (let i = 0; i < str.length; i++) {
-        let char = str.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
-        hash = hash & hash; // Convert to 32bit integer
+      for (const i of str) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        // convert to 32bit integer
+        hash = hash & hash;
       }
 
       return hash;
-    },
-
-    clickAfterAutosave() {
-      if (sessionStorage.getItem("clickAfterAutosave") === this.id) {
-        sessionStorage.removeItem("clickAfterAutosave");
-        this.runJanitor();
-      }
     },
 
     async runJanitor() {
@@ -121,7 +121,7 @@ export default {
         return;
       }
 
-      if (this.autosave && this.pageHasChanges) {
+      if (this.autosave && this.hasChanges) {
         // lock janitor button, press save and listen to `model.update` event
         const saveButton = document.querySelector(
           ".k-panel .k-form-buttons .k-view"
@@ -130,7 +130,7 @@ export default {
         // revert & save
         if (saveButton) {
           this.isUnsaved = false;
-          sessionStorage.setItem("clickAfterAutosave", this.id);
+          sessionStorage.setItem(STORAGE_ID, this.id);
           this.simulateClick(saveButton);
           return;
         }
@@ -141,10 +141,7 @@ export default {
         this.btnLabel = this.progress;
         this.btnClass = "is-success";
 
-        setTimeout(() => {
-          this.btnLabel = null;
-          this.btnClass = null;
-        }, this.cooldown);
+        setTimeout(this.resetBtnState, this.cooldown);
 
         this.$nextTick(() => {
           this.copyToClipboard(this.data);
@@ -155,8 +152,7 @@ export default {
 
       if (this.clipboardRequest) {
         await this.copyToClipboard(this.clipboardRequest);
-        this.btnLabel = null;
-        this.btnClass = null;
+        this.resetBtnState();
         this.clipboardRequest = null;
         return;
       }
@@ -216,11 +212,13 @@ export default {
       if (clipboard) {
         this.clipboardRequest = clipboard;
       } else {
-        setTimeout(() => {
-          this.btnLabel = null;
-          this.btnClass = null;
-        }, this.cooldown);
+        setTimeout(this.resetBtnState, this.cooldown);
       }
+    },
+
+    resetBtnState() {
+      this.btnLabel = null;
+      this.btnClass = null;
     },
 
     simulateClick(element) {
