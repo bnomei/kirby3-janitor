@@ -1,24 +1,37 @@
 <template>
   <div class="janitor-wrapper">
     <k-button
-        class="janitor"
-        :id="id"
-        :icon="currentIcon"
-        :class="status"
-        @click="janitor()"
-        :job="job"
-        :disabled="!this.unsaved && this.pageHasChanges"
-    >{{ label }}
+      :id="id"
+      :class="['janitor', button.state]"
+      :icon="currentIcon"
+      :job="job"
+      :disabled="!isUnsaved && hasChanges"
+      @click="runJanitor"
+    >
+      {{ button.label || label }}
     </k-button>
-    <a ref="download" class="hidden" :href="downloadRequest" download></a>
-    <a ref="openintab" class="hidden" :href="urlRequest" target="_blank"></a>
-    <textarea class="hidden" ref="clipboard">{{ clipboardRequest }}</textarea>
+
+    <a
+      v-show="downloadRequest"
+      ref="downloadAnchor"
+      class="visually-hidden"
+      :href="downloadRequest"
+      download
+    />
+    <a
+      v-show="urlRequest"
+      ref="tabAnchor"
+      class="visually-hidden"
+      :href="urlRequest"
+      target="_blank"
+    />
   </div>
 </template>
 
 <script>
+const STORAGE_ID = "janitor.runAfterAutosave";
+
 export default {
-  name: 'Janitor',
   props: {
     label: String,
     progress: String,
@@ -32,262 +45,252 @@ export default {
     autosave: Boolean,
     intab: Boolean,
     confirm: String,
-    icon: [Boolean, String],
+    icon: {
+      type: [Boolean, String],
+      default: false,
+    },
   },
+
   data() {
     return {
-      oldlabel: '',
-      downloadRequest: '',
-      clipboardRequest: '',
-      urlRequest: '',
-      confirm: '',
-    }
+      button: {
+        label: null,
+        state: null,
+      },
+      downloadRequest: null,
+      clipboardRequest: null,
+      urlRequest: null,
+      isUnsaved: false,
+      icons: {
+        "is-running": "janitorLoader",
+        "is-success": "check",
+        "has-error": "alert",
+      },
+    };
   },
-  created() {
-    this.$events.$on("model.update", this.modelHasUpdate);
-    this.clickAfterAutosave();
-  },
+
   computed: {
-    id: function() {
-      return 'janitor-' + this.hashCode(this.job + this.label + this.pageURI);
+    id() {
+      return (
+        "janitor-" +
+        this.hashCode(this.job + (this.button.label ?? "") + this.pageURI)
+      );
     },
-    pageHasChanges: function () {
-      return this.$store.getters['content/hasChanges']();
+
+    hasChanges() {
+      return this.$store.getters["content/hasChanges"]();
     },
-    currentIcon: function () {
-      if (!this.status) return this.icon
-      else if (this.status == 'doing-job') return 'janitorLoader'
-      else if (this.status == 'is-success') return 'check'
-      else if (this.status == 'has-error') return 'alert'
+
+    currentIcon() {
+      return this.icons[this.status] ?? this.icon;
+    },
+  },
+
+  created() {
+    this.$events.$on(
+      "model.update",
+      () => sessionStorage.getItem(STORAGE_ID) && location.reload()
+    );
+
+    if (sessionStorage.getItem(STORAGE_ID) === this.id) {
+      sessionStorage.removeItem(STORAGE_ID);
+      this.runJanitor();
     }
   },
+
   methods: {
-    // https://stackoverflow.com/a/8831937
+    /**
+     * Source: https://stackoverflow.com/a/8831937
+     */
     hashCode(str) {
       let hash = 0;
-      if (str.length == 0) {
-          return hash;
+
+      if (str.length === 0) {
+        return hash;
       }
-      for (let i = 0; i < str.length; i++) {
-          let char = str.charCodeAt(i);
-          hash = ((hash<<5)-hash)+char;
-          hash = hash & hash; // Convert to 32bit integer
+
+      for (const i of str) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        // convert to 32bit integer
+        hash = hash & hash;
       }
+
       return hash;
     },
-    modelHasUpdate() {
-      if (sessionStorage.getItem('clickAfterAutosave')) {
+
+    async runJanitor() {
+      if (this.confirm && !window.confirm(this.confirm)) {
+        return;
+      }
+
+      if (this.autosave && this.hasChanges) {
+        // lock janitor button, press save and listen to `model.update` event
+        const saveButton = document.querySelector(
+          ".k-panel .k-form-buttons .k-view"
+        ).lastChild;
+
+        // revert & save
+        if (saveButton) {
+          this.isUnsaved = false;
+          sessionStorage.setItem(STORAGE_ID, this.id);
+          this.simulateClick(saveButton);
+          return;
+        }
+      }
+
+      if (this.clipboard) {
+        this.clipboardRequest = this.data;
+        this.button.label = this.progress;
+        this.button.state = "is-success";
+
+        setTimeout(this.resetButton, this.cooldown);
+
+        this.$nextTick(() => {
+          this.copyToClipboard(this.data);
+        });
+
+        return;
+      }
+
+      if (this.clipboardRequest) {
+        await this.copyToClipboard(this.clipboardRequest);
+        this.resetButton();
+        this.clipboardRequest = null;
+        return;
+      }
+
+      if (this.status) {
+        return;
+      }
+
+      let url = this.job + "/" + encodeURIComponent(this.pageURI);
+
+      if (this.data) {
+        url = url + "/" + encodeURIComponent(this.data);
+      }
+
+      this.getRequest(url);
+    },
+
+    async getRequest(url) {
+      this.button.label = this.progress ?? `${this.label} …`;
+      this.button.state = "is-running";
+
+      const { label, status, reload, href, download, clipboard } =
+        await this.$api.get(url);
+
+      if (label) {
+        this.button.label = label;
+      }
+
+      if (status) {
+        this.button.state = status === 200 ? "is-success" : "has-error";
+      } else {
+        this.button.state = "has-response";
+      }
+
+      if (reload) {
         location.reload();
       }
-    },
-    clickAfterAutosave() {
-      let clickAfterAutosave = sessionStorage.getItem('clickAfterAutosave');
-      if (clickAfterAutosave != undefined && clickAfterAutosave == this.id) {
-        sessionStorage.removeItem('clickAfterAutosave');
-        this.janitor();
-      }
-    },
-    janitor() {
-      if (this.confirm !== '' && !window.confirm(this.confirm)) {
-        return;
-      }
 
-      if (this.autosave === true && this.pageHasChanges) {
-        // lock janitor button, press save and listen to model.update event
-        const saveButton = document.querySelector('div.k-panel nav.k-form-buttons div.k-view').lastChild; // revert & save
-        if (saveButton !== undefined) {
-          this.unsaved = false
-          sessionStorage.setItem('clickAfterAutosave', this.id);
-          this.simulateClick(saveButton)
-          return; // do not trigger job now
+      if (href) {
+        if (this.intab) {
+          this.urlRequest = href;
+          this.$nextTick(() => {
+            this.simulateClick(this.$refs.tabAnchor);
+          });
+        } else {
+          location.href = href;
         }
       }
 
-      if (this.clipboard === true) {
-        this.clipboardRequest = this.data
-        this.oldlabel = this.label
-        this.label = this.progress
-        this.status = 'is-success'
-        let vm = this
-        setTimeout(function () {
-          vm.label = vm.oldlabel
-          vm.status = ''
-        }, this.cooldown)
-        this.$nextTick(function () {
-          vm.copyToClipboard(vm.$refs.clipboard)
-        })
-        return
+      if (download) {
+        this.downloadRequest = download;
+        this.$nextTick(() => {
+          this.simulateClick(this.$refs.downloadAnchor);
+        });
       }
 
-      if (this.clipboardRequest !== '') {
-        this.copyToClipboard(this.$refs.clipboard)
-        this.label = this.oldlabel
-        this.status = ''
-        this.clipboardRequest = ''
-        return
+      if (clipboard) {
+        this.clipboardRequest = clipboard;
+      } else {
+        setTimeout(this.resetButton, this.cooldown);
       }
-
-      if (this.status !== undefined && this.status !== '') {
-        return;
-      }
-
-      let url = this.job
-      if (true) {
-        url = url + '/' + encodeURIComponent(this.pageURI)
-      }
-      if (this.data != undefined) {
-        let data = this.data
-        url = url + '/' + encodeURIComponent(data)
-      }
-      this.getRequest(url)
     },
-    getRequest(url) {
-      let that = this
-      this.oldlabel = this.label
-      this.label = this.progress != undefined && this.progress.length > 0 ? this.progress : this.label + '...'
-      this.status = 'doing-job'
-      this.$api.get(url)
-          .then(response => {
-                if (response.label !== undefined) {
-                  that.label = response.label
-                }
-                if (response.status !== undefined) {
-                  that.status = response.status == 200 ? 'is-success' : 'has-error'
-                } else {
-                  that.status = 'has-response'
-                }
 
-                if (response.reload !== undefined && response.reload === true) {
-                  location.reload()
-                }
-                if (response.href !== undefined) {
-                  if (this.intab) {
-                    this.urlRequest = response.href
-                    let vm = this
-                    this.$nextTick(function () {
-                      vm.simulateClick(vm.$refs.openintab)
-                    })
-                  } else {
-                    location.href = response.href
-                  }
-                }
-                if (response.download !== undefined) {
-                  this.downloadRequest = response.download
-                  let vm = this
-                  this.$nextTick(function () {
-                    vm.simulateClick(vm.$refs.download)
-                  })
-                }
-                if (response.clipboard !== undefined) {
-                  this.clipboardRequest = response.clipboard
-                } else {
-                  setTimeout(function () {
-                    that.label = that.oldlabel
-                    that.status = ''
-                  }, that.cooldown)
-                }
-              }
-          )
+    resetButton() {
+      this.button.label = null;
+      this.button.state = null;
     },
-    simulateClick(elem) {
-      /* https://gomakethings.com/how-to-simulate-a-click-event-with-javascript/ */
-      // Create our event (with options)
-      let evt = new MouseEvent('click', {
+
+    simulateClick(element) {
+      const evt = new MouseEvent("click", {
         bubbles: true,
         cancelable: true,
-        view: window
+        view: window,
       });
-      // If cancelled, don't dispatch our event
-      let canceled = !elem.dispatchEvent(evt);
+
+      element.dispatchEvent(evt);
     },
-    copyToClipboard(elem) {
-      var currentFocus, e, isInput, origSelectionEnd, origSelectionStart, succeed, target, targetId;
-      targetId = '_hiddenCopyText_';
-      isInput = elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA';
-      origSelectionStart = void 0;
-      origSelectionEnd = void 0;
-      if (isInput) {
-        target = elem;
-        origSelectionStart = elem.selectionStart;
-        origSelectionEnd = elem.selectionEnd;
-      } else {
-        target = document.getElementById(targetId);
-        if (!target) {
-          target = document.createElement('textarea');
-          target.style.position = 'absolute';
-          target.style.left = '-9999px';
-          target.style.top = '0';
-          target.id = targetId;
-          document.body.appendChild(target);
-        }
-        target.textContent = elem.textContent;
-      }
-      currentFocus = document.activeElement;
-      target.focus();
-      target.setSelectionRange(0, target.value.length);
-      succeed = void 0;
+
+    async copyToClipboard(content) {
       try {
-        succeed = document.execCommand('copy');
-      } catch (_error) {
-        e = _error;
-        succeed = false;
+        await navigator.clipboard.writeText(content);
+      } catch (err) {
+        console.error("navigator.clipboard is not available");
       }
-      if (currentFocus && typeof currentFocus.focus === 'function') {
-        currentFocus.focus();
-      }
-      if (isInput) {
-        elem.setSelectionRange(origSelectionStart, origSelectionEnd);
-      } else {
-        target.textContent = '';
-      }
-      return succeed;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style lang="postcss">
+<style>
 .janitor {
-  background-color: black;
+  background-color: var(--color-text);
   color: white;
   border-radius: 3px;
   padding: 0.5rem 1rem;
   line-height: 1.25rem;
-  /*min-width: 200px;*/
   text-align: left;
 }
 
 .janitor:hover {
-  background-color: #1e1e1e;
+  background-color: #222;
 }
 
 .janitor .k-button-text {
   opacity: 1;
 }
 
-.janitor.doing-job {
-  background-color: #dcdcdc;
+.janitor.is-running {
+  background-color: var(--color-border);
 }
 
-.janitor.doing-job .k-button-text {
-  color: black;
+.janitor.is-running .k-button-text {
+  color: var(--color-text);
 }
 
 .janitor.has-response {
-  background-color: #999;
+  background-color: var(--color-text);
 }
 
 .janitor.is-success {
-  background-color: #5d800d;
+  background-color: var(--color-positive);
 }
 
 .janitor.has-error {
-  background-color: #d16464;
+  background-color: var(--color-negative-light);
 }
 
-.hidden {
+.visually-hidden {
   position: absolute;
-  left: -9999px;
-  top: 0px;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
 }
 </style>
