@@ -29,7 +29,7 @@
 </template>
 
 <script>
-const STORAGE_ID = "janitor.clickAfterAutosave";
+const STORAGE_ID = "janitor.runAfterAutosave";
 
 export default {
   props: {
