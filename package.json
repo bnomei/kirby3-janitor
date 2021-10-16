@@ -7,9 +7,6 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.{js,vue}\""
   },
-  "dependencies": {
-    "clipboard": "^2.0.8"
-  },
   "devDependencies": {
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
