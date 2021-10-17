@@ -8,6 +8,10 @@ sections:
         fields:
             title:
                 type: text
+            nodatajob:
+                type: janitor
+                job: 'minimal'
+                # no data
             jansite:
                 type: janitor
                 job: 'clipboard'
