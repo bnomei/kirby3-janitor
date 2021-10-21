@@ -52,6 +52,24 @@ $climate->arguments->add([
     'job' => [
         'description' => 'Run a job',
     ],
+    'tinker' => [
+        'prefix' => 't',
+        'longPrefix' => 'tinker',
+        'description' => 'Run a REPL session',
+        'noValue' => true,
+    ],
+    'down' => [
+        'prefix' => 'd',
+        'longPrefix' => 'down',
+        'description' => 'Start maintenance mode',
+        'noValue' => true,
+    ],
+    'up' => [
+        'prefix' => 'u',
+        'longPrefix' => 'up',
+        'description' => 'Stop maintenance mode',
+        'noValue' => true,
+    ],
 ]);
 $climate->arguments->parse();
 $verbose = $climate->arguments->defined('verbose');
@@ -134,5 +152,26 @@ if ($job) {
         } else {
             $climate->out($label);
         }
+    }
+}
+
+// COMMAND: tinker
+$command = $climate->arguments->get('tinker');
+if ($command) {
+    while (true) eval($climate->input('>>> ')->prompt());
+}
+
+// COMMAND: down
+$command = $climate->arguments->get('down');
+if ($command) {
+    file_put_contents(kirby()->roots()->index() . '/down', date('c'));
+}
+
+// COMMAND: up
+$command = $climate->arguments->get('up');
+if ($command) {
+    $down = kirby()->roots()->index() . '/down';
+    if (file_exists($down)) {
+        unlink($down);
     }
 }

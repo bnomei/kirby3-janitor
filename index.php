@@ -55,6 +55,9 @@ Kirby::plugin('bnomei/janitor', [
         },
         'icon' => false,
     ],
+    'snippets' => [
+        'maintenance' => __DIR__ . '/snippets/maintenance.php',
+    ],
     'fields' => [
         'janitor' => [
             'props' => [
@@ -131,6 +134,22 @@ Kirby::plugin('bnomei/janitor', [
             if (option('bnomei.janitor.thumbsOnUpload') && $file->isResizable()) {
                 janitor('render', $file->page(), 'page');
                 janitor('thumbs', $file->page(), 'page');
+            }
+        },
+        'route:before' => function () {
+            $isPanel = strpos(
+                kirby()->request()->url()->toString(),
+                kirby()->urls()->panel()
+            ) !== false;
+            $isApi = strpos(
+                kirby()->request()->url()->toString(),
+                kirby()->urls()->api()
+            ) !== false;
+            if (!$isPanel && !$isApi) {
+                if (F::exists(kirby()->roots()->index() . '/down')) {
+                    snippet('maintenance');
+                    die;
+                }
             }
         },
     ],
