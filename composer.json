@@ -35,7 +35,7 @@
         "php": ">=7.3.0",
         "getkirby/composer-installer": "^1.2",
         "league/climate": "^3.7",
-        "symfony/finder": "^4.4"
+        "symfony/finder": "^5.3"
     },
     "require-dev": {
         "getkirby/cms": "^3.5",
