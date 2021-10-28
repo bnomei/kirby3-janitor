@@ -7,6 +7,7 @@ on:
     branches: [ master ]
   schedule:
     - cron:  '0 2 * * *' # run at 2 AM UTC
+  workflow_dispatch:
 
 jobs:
   test:
@@ -19,7 +20,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.3'
+          php-version: '8.0'
           tools: composer
 
       - name: Install

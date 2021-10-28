@@ -133,7 +133,8 @@ final class JanitorTest extends TestCase
         );
 
         // class exists but has no method job()
-        $this->expectErrorMessageMatches('/Argument 1 passed/');
+        // this actually fails when trying to instantiate with wrong arguments
+        $this->expectError(TypeError::class);
         $this->assertIsArray(
             $janitor->job('Kirby\Cms\Page')['label']
         );
