@@ -16,6 +16,22 @@ Kirby 3 Plugin for running jobs.
 - It can also be used as a CLI with fancy output.
 - It can also create logs of what it did.
 
+## Install
+
+Using composer:
+
+```bash
+composer require bnomei/kirby3-janitor
+```
+
+Using git submodules:
+
+```bash
+git submodule add https://github.com/bnomei/kirby3-janitor.git site/plugins/kirby3-janitor
+```
+
+Using download & copy: download [the latest release](https://github.com/bnomei/kirby3-janitor/releases) and copy to `site/plugins`
+
 ## Commerical Usage
 
 > <br>
