@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Bnomei\Janitor;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 final class JanitorTest extends TestCase
@@ -134,7 +134,8 @@ final class JanitorTest extends TestCase
         );
 
         // class exists but has no method job()
-        $this->expectErrorMessageMatches('/must be of type array/');
+        // this actually fails when trying to instantiate with wrong arguments
+        $this->expectError(TypeError::class);
         $this->assertIsArray(
             $janitor->job('Kirby\Cms\Page')['label']
         );

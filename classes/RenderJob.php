@@ -139,7 +139,7 @@ final class RenderJob extends JanitorJob
         if (!$allPages) {
             $finder = new Finder();
             $finder->directories()
-                ->in($kirby->roots()->content());
+                ->in(kirby()->roots()->content());
             foreach ($finder as $folder) {
                 $id = $folder->getRelativePathname();
                 if (strpos($id, '_drafts') === false) {

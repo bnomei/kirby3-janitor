@@ -152,6 +152,7 @@ return array(
     'Symfony\\Component\\Finder\\Iterator\\RecursiveDirectoryIterator' => $vendorDir . '/symfony/finder/Iterator/RecursiveDirectoryIterator.php',
     'Symfony\\Component\\Finder\\Iterator\\SizeRangeFilterIterator' => $vendorDir . '/symfony/finder/Iterator/SizeRangeFilterIterator.php',
     'Symfony\\Component\\Finder\\Iterator\\SortableIterator' => $vendorDir . '/symfony/finder/Iterator/SortableIterator.php',
+    'Symfony\\Component\\Finder\\Iterator\\VcsIgnoredFilterIterator' => $vendorDir . '/symfony/finder/Iterator/VcsIgnoredFilterIterator.php',
     'Symfony\\Component\\Finder\\SplFileInfo' => $vendorDir . '/symfony/finder/SplFileInfo.php',
     'Symfony\\Polyfill\\Php80\\Php80' => $vendorDir . '/symfony/polyfill-php80/Php80.php',
     'Symfony\\Polyfill\\Php80\\PhpToken' => $vendorDir . '/symfony/polyfill-php80/PhpToken.php',

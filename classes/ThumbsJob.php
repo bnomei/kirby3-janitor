@@ -58,6 +58,7 @@ final class ThumbsJob extends JanitorJob
         }
 
         if ($countJobs && $climate) {
+            $climate->blue('Generating Thumbs...');
             $progress = $climate->progress()->total($countJobs);
         }
 
