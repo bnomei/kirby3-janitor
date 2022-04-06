@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Bnomei;
 
 use Exception;
+use Kirby\Cms\Media;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
+use Kirby\Filesystem\Dir;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\Query;
+use Kirby\Toolkit\Str;
 use Symfony\Component\Finder\Finder;
 
 final class RenderJob extends JanitorJob
@@ -41,13 +44,14 @@ final class RenderJob extends JanitorJob
      */
     public function job(): array
     {
+        $kirby = kirby();
         $climate = Janitor::climate();
         $progress = null;
         $this->verbose = $climate ? $climate->arguments->defined('verbose') : false;
         $time = time();
 
         // make sure the thumbs are triggered
-        kirby()->cache('pages')->flush();
+        $kirby->cache('pages')->flush();
         if (class_exists('\Bnomei\Lapse')) {
             Lapse::singleton()->flush();
         }
@@ -55,13 +59,13 @@ final class RenderJob extends JanitorJob
         // visit all pages to generate media/*.job files
         $allPages = $this->getAllPagesIDs();
         $this->countPages = count($allPages);
-        $this->countLanguages = kirby()->languages() ? kirby()->languages()->count() : 1;
+        $this->countLanguages = $kirby->languages()->count() > 0 ? $kirby->languages()->count() : 1;
         $visited = 0;
 
         if ($climate) {
-            $climate->out('Pages: ' . $this->countPages);
             $climate->out('Languages: ' . $this->countLanguages);
-            $climate->out('Rendering...');
+            $climate->out('Pages: ' . $this->countPages);
+            $climate->blue('Rendering Pages...');
         }
         if ($this->countPages && $climate) {
             $progress = $climate->progress()->total($this->countPages);
@@ -69,7 +73,7 @@ final class RenderJob extends JanitorJob
         $this->failed = [];
         $this->found = [];
 
-        $this->renderSiteUrl = rtrim((string)\option('bnomei.janitor.renderSiteUrl')(), '/');
+       $this->renderSiteUrl = rtrim((string)\option('bnomei.janitor.renderSiteUrl')(), '/');
 
         foreach ($allPages as $pageId) {
             try {
@@ -79,7 +83,9 @@ final class RenderJob extends JanitorJob
                 } else {
                     $content = $this->renderPage($pageId);
                 }
-                $this->verboseCheckContent($content);
+                if ($this->verbose && strlen($content) > 0) {
+                    $this->verboseCheckContent($content);
+                }
             } catch (Exception $ex) {
                 $this->failed[] = $pageId . ': ' . $ex->getMessage();
             }
@@ -90,16 +96,15 @@ final class RenderJob extends JanitorJob
             }
         }
 
-        if ($climate) {
-            if ($this->verbose) {
-                $this->found = array_unique($this->found);
-                $climate->out('Found images with media/pages/* : ' . count($this->found));
-            }
-            if (count($this->failed)) {
-                $climate->out('Render failed: ' . count($this->failed));
-                foreach ($this->failed as $fail) {
-                    $climate->red($fail);
-                }
+        $this->found = array_unique($this->found);
+        if ($climate && count($this->found)) {
+            $climate->out('Found images with media/pages/* : ' . count($this->found));
+        }
+
+        if (count($this->failed)) {
+            $climate->out('Rendering failed for Pages: ' . count($this->failed));
+            foreach ($this->failed as $fail) {
+                $climate->red($fail);
             }
         }
 
@@ -134,11 +139,11 @@ final class RenderJob extends JanitorJob
         if (!$allPages) {
             $finder = new Finder();
             $finder->directories()
-                ->in(kirby()->roots()->content());
+                ->in($kirby->roots()->content());
             foreach ($finder as $folder) {
                 $id = $folder->getRelativePathname();
                 if (strpos($id, '_drafts') === false) {
-                    $ids[] = preg_replace('/\/\d+_/', '/', $id);
+                    $ids[] = ltrim(preg_replace('/\/*\d+_/', '/', $id), '/');
                 }
             }
         }
@@ -157,11 +162,9 @@ final class RenderJob extends JanitorJob
 
     private function verboseCheckContent(string $content)
     {
-        if ($this->verbose && strlen($content) > 0) {
-            preg_match_all('/\/media\/pages\/([\w-_\.\/]+\.(?:png|jpg|jpeg|webp|gif))/', $content, $matches);
-            if ($matches && count($matches) > 1) {
-                $found = array_merge($this->found, $matches[1]);
-            }
+        preg_match_all('~/media/pages/([a-zA-Z0-9-_./]+.(?:png|jpg|jpeg|webp|gif))~', $content, $matches);
+        if ($matches && count($matches) > 1) {
+            $this->found = array_merge($this->found, $matches[1]);
         }
     }
 
