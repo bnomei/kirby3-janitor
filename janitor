@@ -52,6 +52,12 @@ $climate->arguments->add([
     'job' => [
         'description' => 'Run a job',
     ],
+    'quiet' => [
+        'prefix' => 'q',
+        'longPrefix' => 'quiet',
+        'description' => 'Run jobs silently',
+        'noValue' => true,
+    ],
     'tinker' => [
         'prefix' => 't',
         'longPrefix' => 'tinker',
@@ -125,6 +131,34 @@ if ($command) {
     }
 }
 
+// COMMAND: quiet
+$command = $climate->arguments->get('quiet');
+if ($command) {
+    $climate->output->add('quiet', new \Bnomei\QuietWriter());
+    $climate->output->defaultTo('quiet');
+}
+
+// COMMAND: tinker
+$command = $climate->arguments->get('tinker');
+if ($command) {
+    while (true) eval($climate->input('>>> ')->prompt());
+}
+
+// COMMAND: down
+$command = $climate->arguments->get('down');
+if ($command) {
+    file_put_contents(kirby()->roots()->index() . '/down', date('c'));
+}
+
+// COMMAND: up
+$command = $climate->arguments->get('up');
+if ($command) {
+    $down = kirby()->roots()->index() . '/down';
+    if (file_exists($down)) {
+        unlink($down);
+    }
+}
+
 // COMMAND: job
 $job = $climate->arguments->get('job');
 if ($job) {
@@ -152,26 +186,5 @@ if ($job) {
         } else {
             $climate->out($label);
         }
-    }
-}
-
-// COMMAND: tinker
-$command = $climate->arguments->get('tinker');
-if ($command) {
-    while (true) eval($climate->input('>>> ')->prompt());
-}
-
-// COMMAND: down
-$command = $climate->arguments->get('down');
-if ($command) {
-    file_put_contents(kirby()->roots()->index() . '/down', date('c'));
-}
-
-// COMMAND: up
-$command = $climate->arguments->get('up');
-if ($command) {
-    $down = kirby()->roots()->index() . '/down';
-    if (file_exists($down)) {
-        unlink($down);
     }
 }
