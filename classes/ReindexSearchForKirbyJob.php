@@ -13,7 +13,7 @@ final class ReindexSearchForKirbyJob extends JanitorJob
     {
         if (class_exists('\Kirby\Search\Index')) {
             try {
-                (new \Kirby\Search\Index)->build();
+                (new \Kirby\Search\Index())->build();
             } catch (\Exception $e) {
                 return [
                     'status' => 500,

@@ -8,10 +8,10 @@ use Kirby\Cms\Media;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Data\Data;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 use Symfony\Component\Finder\Finder;
@@ -38,7 +38,7 @@ final class ThumbsJob extends JanitorJob
             $finder = new Finder();
             $finder->files()
                 ->in($root)
-                ->name('/\.(?:png|jpg|jpeg|webp|gif)$/');
+                ->name('/\.(?:avif|png|jpg|jpeg|webp|gif)$/');
             if ($climate) {
                 $climate->out('Thumbs found: ' . iterator_count($finder));
             }
@@ -68,7 +68,7 @@ final class ThumbsJob extends JanitorJob
             $page = null;
 
             $page = null;
-            if (preg_match('/.*\/media\/pages\/(.*)\/.*\-[\d]*\/\.jobs/', $file->getPath(), $matches)) {
+            if (preg_match('/.*\/media\/pages\/(.*)\/.*-[\d]*\/\.jobs/', $file->getPath(), $matches)) {
                 $page = page($matches[1]);
             }
             if (!$page) {

@@ -1,4 +1,6 @@
-<?php require_once __DIR__ . '/kirby/bootstrap.php';
+<?php
+
+require_once __DIR__ . '/kirby/bootstrap.php';
 
 $kirby = new Kirby();
 

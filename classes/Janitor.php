@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Bnomei;
 
-use Exception;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;

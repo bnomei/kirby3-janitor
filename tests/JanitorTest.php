@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -133,7 +134,7 @@ final class JanitorTest extends TestCase
         );
 
         // class exists but has no method job()
-        $this->expectErrorMessageMatches('/Argument 1 passed/');
+        $this->expectErrorMessageMatches('/must be of type array/');
         $this->assertIsArray(
             $janitor->job('Kirby\Cms\Page')['label']
         );

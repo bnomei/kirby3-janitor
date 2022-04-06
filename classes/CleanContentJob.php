@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Bnomei;
 
 use Kirby\Toolkit\F;
-use Symfony\Component\Finder\Finder;
 
 final class CleanContentJob extends JanitorJob
 {
@@ -62,9 +61,10 @@ final class CleanContentJob extends JanitorJob
      * based on cookbook by @texnixe
      * https://getkirby.com/docs/cookbook/extensions/content-file-cleanup
      */
-    protected function cleanUp($collection, $ignore = null, string $lang = null):int {
+    protected function cleanUp($collection, $ignore = null, string $lang = null): int
+    {
         $updated = 0;
-        foreach($collection as $item) {
+        foreach ($collection as $item) {
             // get all fields in the content file
             $contentFields = $item->content($lang)->fields();
 
@@ -88,7 +88,7 @@ final class CleanContentJob extends JanitorJob
             if (count($fieldsToBeDeleted) > 0) {
 
                 // flip keys and values and set new values to null
-                $data = array_map(function($value) {
+                $data = array_map(function ($value) {
                     return null;
                 }, array_flip($fieldsToBeDeleted));
 
