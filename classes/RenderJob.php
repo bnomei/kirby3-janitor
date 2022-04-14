@@ -162,7 +162,7 @@ final class RenderJob extends JanitorJob
 
     private function verboseCheckContent(string $content)
     {
-        preg_match_all('~/media/pages/([a-zA-Z0-9-_./]+.(?:png|jpg|jpeg|webp|gif))~', $content, $matches);
+        preg_match_all('~/media/pages/([a-zA-Z0-9-_./]+.(?:png|jpg|jpeg|webp|avif|gif))~', $content, $matches);
         if ($matches && count($matches) > 1) {
             $this->found = array_merge($this->found, $matches[1]);
         }
