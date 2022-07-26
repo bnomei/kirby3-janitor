@@ -71,8 +71,8 @@ Kirby::plugin('bnomei/janitor', [
                 'job' => function (?string $job = null) {
                     return 'plugin-janitor/' . $job;
                 },
-                'cooldown' => function (int $cooldownMilliseconds = 2000) {
-                    return intval(option('bnomei.janitor.label.cooldown', $cooldownMilliseconds));
+                'cooldown' => function ($cooldownMilliseconds = null) {
+                    return intval($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));
                 },
                 'data' => function (?string $data = null) {
                     $data = \Bnomei\Janitor::query($data, $this->model());
