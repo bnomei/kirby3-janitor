@@ -106,7 +106,7 @@ Kirby::plugin('bnomei/janitor', [
                         $uri = $this->model()->parent()->uri();
                     }
                     if (is_a($this->model(), \Kirby\Cms\User::class)) {
-                        $uri = $this->model()->panelPath();
+                        $uri = $this->model()->panel()->path();
                     }
                     if (is_a($this->model(), \Kirby\Cms\Site::class)) {
                         $uri = '$'; // any not empty string so route /$/DATA is used
