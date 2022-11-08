@@ -5,5 +5,5 @@ fields:
     type: janitor
     label: Touch Job
     process: Touch Job...
-    job: touchfile
+    command: touchfile
     data: '{{ file.filename }}'

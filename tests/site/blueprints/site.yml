@@ -10,9 +10,9 @@ sections:
                 type: text
             nodatajob:
                 type: janitor
-                job: 'minimal'
+                command: 'minimal'
                 # no data
             jansite:
                 type: janitor
-                job: 'clipboard'
+                command: 'clipboard'
                 data: '{{ model }} {{ site.title }}'

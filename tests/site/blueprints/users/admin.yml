@@ -1,5 +1,5 @@
 fields:
  jancopyid:
    type: janitor
-   job: clipboard
+   command: clipboard
    data: '{{ model }} {{ user.id }}'

@@ -9,13 +9,13 @@ fields:
     type: janitor
     label: Clean Cache Files
     progress: Cleaning Cache Files...
-    job: clean
+    command: clean
 
   janitor_flush:
     type: janitor
     label: Flush Pages Cache
     progress: Flushing Pages Cache...
-    job: flush
+    command: flush
 
   janitor_clipboarddata:
     type: janitor
@@ -27,57 +27,57 @@ fields:
   janitor_clipboardfetch:
     type: janitor
     label: Fetch Clipboard
-    job: clipboard
+    command: clipboard
     data: '{{ user.email }}'
 
   janitor_reload:
     type: janitor
     label: Reload
-    job: reload
+    command: reload
 
   janitor_href:
     type: janitor
     label: Open URL
-    job: openurl
+    command: openurl
     intab: true
 
   janitor_hrefdata:
     type: janitor
     label: Open URL from Data
-    job: openurlfromdata
+    command: openurlfromdata
     data: "{{ page.url }}"
 
   janitor_download:
     type: janitor
     label: Download File
-    job: download
+    command: download
 
   janitor_minimal:
     type: janitor
     label: Minimal (boolean callback)
-    job: minimal
+    command: minimal
 
   janitor_whistle:
     type: janitor
     label: Whistle (external Class)
-    job: whistle
+    command: whistle
 
   janitor_query:
     type: janitor
     label: Query '{{ user.email }}'
-    job: query
+    command: query
     data: '{{ user.email }}'
 
   janitor_unsaved:
     type: janitor
     label: Disable when Page has changes
-    job: minimal
+    command: minimal
     unsaved: false
 
   janitor_autosave:
     type: janitor
     label: Save page and then run job
-    job: query
+    command: query
     data: "{{ page.text }}"
     autosave: true
 
@@ -87,5 +87,5 @@ fields:
     type: janitor
     label: Generate Thumbs
     process: Generating Thumbs...
-    job: thumbs
-    data: 'page' # 'page' means only this page. could be 'site.index' or other querys without {{}}.
+    command: thumbs
+    data: page # 'page' means only this page. could be 'site.index' or other querys without {{}}.
