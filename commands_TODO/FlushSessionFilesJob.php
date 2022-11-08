@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
 use Kirby\Toolkit\F;
 use Symfony\Component\Finder\Finder;
 
-final class FlushSessionFilesJob extends JanitorJob
+final class FlushSessionFilesJob extends \Bnomei\JanitorJob
 {
     /**
      * @return array

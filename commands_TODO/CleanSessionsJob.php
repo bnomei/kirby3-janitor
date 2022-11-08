@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
-final class CleanSessionsJob extends JanitorJob
+final class CleanSessionsJob extends \Bnomei\JanitorJob
 {
     /**
      * @return array

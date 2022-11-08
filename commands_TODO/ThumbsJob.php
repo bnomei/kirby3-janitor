@@ -2,28 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
 use Kirby\Cms\Media;
-use Kirby\Cms\Page;
-use Kirby\Cms\Pages;
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
-use Kirby\Http\Remote;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Query;
-use Kirby\Toolkit\Str;
 use Symfony\Component\Finder\Finder;
 
-final class ThumbsJob extends JanitorJob
+final class ThumbsJob extends \Bnomei\JanitorJob
 {
     /**
      * @return array
      */
     public function job(): array
     {
-        $climate = Janitor::climate();
+        $climate = \Bnomei\Janitor::climate();
         $progress = null;
         $verbose = $climate ? $climate->arguments->defined('verbose') : false;
         $time = time();

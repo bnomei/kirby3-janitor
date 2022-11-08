@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
 use Kirby\Toolkit\F;
 
-final class CleanContentJob extends JanitorJob
+final class CleanContentJob extends \Bnomei\JanitorJob
 {
     private $progress;
     private $climate;
@@ -86,7 +85,6 @@ final class CleanContentJob extends JanitorJob
 
             // update page only if there are any fields to be deleted
             if (count($fieldsToBeDeleted) > 0) {
-
                 // flip keys and values and set new values to null
                 $data = array_map(function ($value) {
                     return null;

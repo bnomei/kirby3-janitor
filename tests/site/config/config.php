@@ -1,8 +1,11 @@
 <?php
 
-use Bnomei\Janitor;
-
 return [
+    'debug' => true,
+    'languages' => true,
+
+    'bnomei.janitor.renderSiteUrl' => fn () => '/en',
+
     'bnomei.janitor.thumbs' => true,
 
     'bnomei.janitor.jobs' => [
@@ -55,6 +58,13 @@ return [
             return true;
         },
 
+        'minimaldata' => function (Kirby\Cms\Page $page = null, string $data = null) {
+            return [
+                'status' => 200,
+                'data' => $data,
+            ];
+        },
+
         'query' => function (Kirby\Cms\Page $page = null, string $data = null) {
             return [
                 'status' => 200,
@@ -94,14 +104,5 @@ return [
             ];
         },
     ],
-
-    'another.plugin.jobs' => [
-        'whistle' => 'Bnomei\\WhistleJob',
-        'context' => 'Bnomei\\ContextJob',
-    ],
-    'bnomei.janitor.jobs-extends' => [
-        'another.plugin.jobs',
-    ],
-
 
 ];

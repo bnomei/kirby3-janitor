@@ -10,38 +10,8 @@ office) clean, tends the heating system, and makes minor repairs
 
 Kirby::plugin('bnomei/janitor', [
     'options' => [
-        'jobs' => [],
-        'jobs-defaults' => [
-            'clean' => 'Bnomei\\CleanCacheFilesJob', // legacy
-            'cleanCache' => 'Bnomei\\CleanCacheFilesJob',
-            'flush' => 'Bnomei\\FlushPagesCacheJob', // legacy
-            'flushPages' => 'Bnomei\\FlushPagesCacheJob',
-            'cleanSessions' => 'Bnomei\\CleanSessionsJob',
-            'cleanContent' => 'Bnomei\\CleanContentJob',
-            'flushSessions' => 'Bnomei\\FlushSessionFilesJob',
-            'flushLapse' => 'Bnomei\\FlushLapseJob',
-            'flushRedisDB' => 'Bnomei\\FlushRedisDBJob',
-            'reindexAutoID' => 'Bnomei\\ReindexAutoIDJob',
-            'reindexSearch' => 'Bnomei\\ReindexSearchForKirbyJob',
-            'backupZip' => 'Bnomei\\BackupZipJob',
-            'render' => 'Bnomei\\RenderJob',
-            'thumbs' => 'Bnomei\\ThumbsJob',
-        ],
-        'jobs-extends' => [
-            'bnomei.lapse.jobs', // https://github.com/bnomei/kirby3-lapse/blob/master/index.php#L10
-        ],
-
         'label.cooldown' => 2000, // ms
         'secret' => null,
-
-        'thumbsOnUpload' => false,
-
-        'renderSiteUrl' => function () {
-            $url = site()->url();
-//            $url = 'https://www.example.com/';
-            return php_sapi_name() === 'cli' ? $url : '';
-        },
-
         'log.enabled' => false,
         'log.fn' => function (string $msg, string $level = 'info', array $context = []): bool {
             if (option('bnomei.janitor.log.enabled')) {
@@ -54,10 +24,13 @@ Kirby::plugin('bnomei/janitor', [
             }
             return false;
         },
-        'icon' => false,
     ],
     'snippets' => [
         'maintenance' => __DIR__ . '/snippets/maintenance.php',
+    ],
+    'commands' => [ // https://github.com/getkirby/cli
+        'janitor:maintenance' => require __DIR__ . '/commands/maintenance.php',
+        'janitor:tinker' => require __DIR__ . '/commands/tinker.php',
     ],
     'fields' => [
         'janitor' => [
@@ -68,8 +41,8 @@ Kirby::plugin('bnomei/janitor', [
                 'progress' => function ($progress = null) {
                     return \Kirby\Toolkit\I18n::translate($progress, $progress);
                 },
-                'job' => function (?string $job = null) {
-                    return 'plugin-janitor/' . $job;
+                'command' => function (?string $command = null) {
+                    return 'plugin-janitor/' . str_replace(':','+C_O_L_O_N+', $command ?? '');
                 },
                 'cooldown' => function ($cooldownMilliseconds = null) {
                     return intval($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));
@@ -114,7 +87,7 @@ Kirby::plugin('bnomei/janitor', [
                     return str_replace('/', '+', $uri);
                 },
                 'icon' => function ($icon = false) {
-                    return $icon ?? option('bnomei.janitor.icon');
+                    return $icon;
                 },
             ],
         ],
@@ -131,12 +104,7 @@ Kirby::plugin('bnomei/janitor', [
         ],
     ],
     'hooks' => [
-        'file.create:after' => function ($file) {
-            if (option('bnomei.janitor.thumbsOnUpload') && $file->isResizable()) {
-                janitor('render', $file->page(), 'page');
-                janitor('thumbs', $file->page(), 'page');
-            }
-        },
+        // maintenance
         'route:before' => function () {
             $isPanel = strpos(
                 kirby()->request()->url()->toString(),
@@ -147,7 +115,7 @@ Kirby::plugin('bnomei/janitor', [
                 kirby()->urls()->api()
             ) !== false;
             if (!$isPanel && !$isApi) {
-                if (F::exists(kirby()->roots()->index() . '/down')) {
+                if (F::exists(kirby()->roots()->index() . '/.maintenance')) {
                     snippet('maintenance');
                     die;
                 }
@@ -161,9 +129,9 @@ Kirby::plugin('bnomei/janitor', [
                 'action' => function (string $job, string $page, string $data) {
                     $janitor = \Bnomei\Janitor::singleton();
                     $janitor->log('janitor-api-auth', 'debug');
-                    return $janitor->job($job, [
-                        'contextPage' => $page,
-                        'contextData' => $data,
+                    return $janitor->job(str_replace('+C_O_L_O_N+', ':', $job), [
+                        'page' => str_replace('+', '/', urldecode($page)),
+                        'data' => str_replace('+S_L_A_S_H+', '/', urldecode($data)),
                     ]);
                 },
             ],
@@ -172,8 +140,8 @@ Kirby::plugin('bnomei/janitor', [
                 'action' => function (string $job, string $page) {
                     $janitor = \Bnomei\Janitor::singleton();
                     $janitor->log('janitor-api-auth', 'debug');
-                    return $janitor->job($job, [
-                        'contextPage' => $page,
+                    return $janitor->job(str_replace('+C_O_L_O_N+', ':', $job), [
+                        'page' => str_replace('+', '/', urldecode($page)),
                     ]);
                 },
             ],
@@ -182,7 +150,7 @@ Kirby::plugin('bnomei/janitor', [
                 'action' => function (string $job) {
                     $janitor = \Bnomei\Janitor::singleton();
                     $janitor->log('janitor-api-auth', 'debug');
-                    return $janitor->job($job);
+                    return $janitor->job(str_replace('+C_O_L_O_N+', ':', $job));
                 }
             ],
         ],
@@ -194,17 +162,8 @@ if (!class_exists('Bnomei\Janitor')) {
 }
 
 if (!function_exists('janitor')) {
-    function janitor(string $job, ?\Kirby\Cms\Page $contextPage = null, ?string $contextData = null, bool $dump = false)
+    function janitor()
     {
-        $janitor = \Bnomei\Janitor::singleton();
-        $janitor->log('janitor()', 'debug');
-        $response = $janitor->job($job, [
-            'contextPage' => $contextPage ? urlencode(str_replace('/', '+', $contextPage->uri())) : '',
-            'contextData' => $contextData ? urlencode($contextData) : '',
-        ]);
-        if ($dump) {
-            return $response;
-        }
-        return intval(A::get($response, 'status')) === 200;
+        return \Bnomei\Janitor::singleton();
     }
 }

@@ -2,19 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
-use Exception;
-use Kirby\Cms\Media;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
-use Kirby\Filesystem\Dir;
 use Kirby\Http\Remote;
 use Kirby\Toolkit\Query;
-use Kirby\Toolkit\Str;
 use Symfony\Component\Finder\Finder;
 
-final class RenderJob extends JanitorJob
+final class RenderJob extends \Bnomei\JanitorJob
 {
     /**
      * @var int|void
@@ -45,7 +40,7 @@ final class RenderJob extends JanitorJob
     public function job(): array
     {
         $kirby = kirby();
-        $climate = Janitor::climate();
+        $climate = \Bnomei\Janitor::climate();
         $progress = null;
         $this->verbose = $climate ? $climate->arguments->defined('verbose') : false;
         $time = time();
@@ -53,7 +48,7 @@ final class RenderJob extends JanitorJob
         // make sure the thumbs are triggered
         $kirby->cache('pages')->flush();
         if (class_exists('\Bnomei\Lapse')) {
-            Lapse::singleton()->flush();
+            \Bnomei\Lapse::singleton()->flush();
         }
 
         // visit all pages to generate media/*.job files
@@ -73,7 +68,7 @@ final class RenderJob extends JanitorJob
         $this->failed = [];
         $this->found = [];
 
-       $this->renderSiteUrl = rtrim((string)\option('bnomei.janitor.renderSiteUrl')(), '/');
+        $this->renderSiteUrl = rtrim((string) (php_sapi_name() === 'cli' ? site()->url() : ''), '/');
 
         foreach ($allPages as $pageId) {
             try {

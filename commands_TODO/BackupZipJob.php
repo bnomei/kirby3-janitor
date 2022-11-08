@@ -2,23 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
 use Kirby\Cms\Page;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Symfony\Component\Finder\Finder;
-use ZipArchive;
 
-final class BackupZipJob extends JanitorJob
+final class BackupZipJob extends \Bnomei\JanitorJob
 {
     /** @var array */
     private $options;
 
     public function __construct(?Page $page = null, ?string $data = null)
     {
-        parent::__construct($page, $data);
+        \Bnomei\JanitorJob::__construct($page, $data);
 
         $this->options = [
             'ulimit' => option('bnomei.janitor.backupzip.ulimit', 512), // 1024 seems to be unix default

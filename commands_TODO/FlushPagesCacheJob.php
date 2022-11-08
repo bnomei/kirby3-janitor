@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
-final class WhistleJob extends JanitorJob
+final class FlushPagesCacheJob extends \Bnomei\JanitorJob
 {
     /**
      * @return array
@@ -12,8 +11,7 @@ final class WhistleJob extends JanitorJob
     public function job(): array
     {
         return [
-            'status' => 200,
-            'label' => '♫',
+            'status' => kirby()->cache('pages')->flush() ? 200 : 404,
         ];
     }
 }

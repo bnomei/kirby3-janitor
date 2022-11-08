@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Bnomei;
 
-final class ContextJob extends JanitorJob
+final class ContextJob extends \Bnomei\JanitorJob
 {
     /**
      * @return array

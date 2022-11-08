@@ -4,7 +4,7 @@
       :id="id"
       :class="['janitor', button.state]"
       :icon="currentIcon"
-      :job="job"
+      :command="command"
       :disabled="!isUnsaved && hasChanges"
       @click="runJanitor"
     >
@@ -35,7 +35,7 @@ export default {
   props: {
     label: String,
     progress: String,
-    job: String,
+    command: String,
     cooldown: Number,
     status: String,
     data: String,
@@ -73,7 +73,7 @@ export default {
     id() {
       return (
         "janitor-" +
-        this.hashCode(this.job + (this.button.label ?? "") + this.pageURI)
+        this.hashCode(this.command + (this.button.label ?? "") + this.pageURI)
       );
     },
 
@@ -163,7 +163,7 @@ export default {
         return;
       }
 
-      let url = this.job + "/" + encodeURIComponent(this.pageURI);
+      let url = this.command + "/" + encodeURIComponent(this.pageURI);
 
       if (this.data) {
         url = url + "/" + encodeURIComponent(this.data);

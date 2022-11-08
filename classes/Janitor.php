@@ -4,15 +4,26 @@ declare(strict_types=1);
 
 namespace Bnomei;
 
+use Kirby\CLI\CLI;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use League\CLImate\CLImate;
 
 final class Janitor
 {
+    /** @var $data array */
+    private static $data;
+
+    public function data(string $command, ?array $data = null): ?array
+    {
+        if ($data) {
+            Janitor::$data[$command] = $data;
+        }
+        return A::get(Janitor::$data, $command);
+    }
+
     /**
      * @var array
      */
@@ -27,20 +38,9 @@ final class Janitor
         $defaults = [
             'debug' => option('debug'),
             'log' => option('bnomei.janitor.log.fn'),
-            'jobs' => option('bnomei.janitor.jobs'),
-            'jobs-defaults' => ['bnomei.janitor.jobs-defaults'],
-            'jobs-extends' => option('bnomei.janitor.jobs-extends'),
             'secret' => option('bnomei.janitor.secret'),
         ];
         $this->options = array_merge($defaults, $options);
-
-        $extends = array_merge($this->options['jobs-defaults'], $this->options['jobs-extends']);
-        foreach ($extends as $extend) {
-            // NOTE: it is intended that jobs override merged not other way around
-            $this->options['jobs'] = array_change_key_case(
-                array_merge(option($extend, []), $this->options['jobs'])
-            );
-        }
 
         foreach ($this->options as $key => $call) {
             if (is_callable($call) && in_array($key, ['secret'])) {
@@ -58,6 +58,7 @@ final class Janitor
         if ($key) {
             return A::get($this->options, $key);
         }
+
         return $this->options;
     }
 
@@ -67,11 +68,12 @@ final class Janitor
      * @param array $data
      * @return array
      */
-    public function jobWithSecret(string $secret, string $name, array $data = []): array
+    public function jobWithSecret(string $secret, string $name, array $args = []): array
     {
         if ($secret === $this->option('secret')) {
-            return $this->job($name, $data);
+            return $this->job($name, $args);
         }
+
         return [
             'status' => 401,
         ];
@@ -82,98 +84,13 @@ final class Janitor
      * @param array $data
      * @return array
      */
-    public function job(string $name, array $data = []): array
+    public function job(string $name, array $args = []): array
     {
-        $job = $this->findJob($name);
+        CLI::command($name, ...$args);
 
-        if (!is_string($job) && is_callable($job)) {
-            return $this->jobFromCallable($job, $data);
-        } elseif (class_exists($job)) {
-            return $this->jobFromClass($job, $data);
-        }
-
-        return [
-            'status' => 404,
-        ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function listJobs()
-    {
-        // find in jobs config
-        return array_keys($this->option('jobs'));
-    }
-
-    /**
-     * @param string $name
-     * @return mixed|string
-     */
-    public function findJob(string $name)
-    {
-        // find in jobs config
-        $jobInConfig = A::get($this->option('jobs'), strtolower($name));
-        if ($jobInConfig) {
-            return $jobInConfig;
-        }
-
-        // could be a class
-        return $name;
-    }
-
-    /**
-     * @param $job
-     * @param array $data
-     * @return array
-     */
-    public function jobFromCallable($job, array $data): array
-    {
-        $return = false;
-        try {
-            set_time_limit(0);
-        } catch (\Exception $ex) {
-            // ignore
-        }
-
-        try {
-            $return = $job(
-                page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
-                str_replace('+S_L_A_S_H+', '/', urldecode(A::get($data, 'contextData', '')))
-            );
-        } catch (\BadMethodCallException $ex) {
-            $return = $job();
-        }
-        if (is_array($return)) {
-            return $return;
-        }
-        return [
-            'status' => $return ? 200 : 404,
-        ];
-    }
-
-    /**
-     * @param string $job
-     * @param array $data
-     * @return array
-     */
-    public function jobFromClass(string $job, array $data): array
-    {
-        $object = new $job(
-            page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
-            str_replace('+S_L_A_S_H+', '/', urldecode(A::get($data, 'contextData', '')))
-        );
-
-        if (method_exists($object, 'job')) {
-            try {
-                set_time_limit(0);
-            } catch (\Exception $ex) {
-                // ignore
-            }
-            return $object->job();
-        }
-        return [
-            'status' => 400,
+        return $this->data($name) ?? [
+            'status' => 200,
+            'message' => 'Janitor has no data from command "' . $name . '".',
         ];
     }
 
@@ -194,6 +111,7 @@ final class Janitor
                 return $log($msg, $level, $context);
             }
         }
+
         return false;
     }
 
@@ -213,6 +131,7 @@ final class Janitor
         }
 
         self::$singleton = new Janitor($options);
+
         return self::$singleton;
     }
 
@@ -233,6 +152,7 @@ final class Janitor
         } elseif ($model && $model instanceof User) {
             $user = $model;
         }
+
         return Str::template($template, [
             'kirby' => kirby(),
             'site' => kirby()->site(),
@@ -252,23 +172,7 @@ final class Janitor
     {
         $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
         $boolval = ($boolval === null && !$return_null ? false : $boolval);
+
         return $boolval;
-    }
-
-    /**
-     * @var \League\CLImate\CLImate
-     */
-    private static $climate;
-
-    /**
-     * @param CLImate|null $climate
-     * @return CLImate|null
-     */
-    public static function climate(?CLImate $climate = null): ?CLImate
-    {
-        if ($climate && !self::$climate) {
-            self::$climate = $climate;
-        }
-        return self::$climate;
     }
 }
