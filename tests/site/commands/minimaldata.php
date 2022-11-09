@@ -10,8 +10,8 @@ return [
         defined('STDOUT') && $cli->success($cli->arg('data'));
 
         janitor()->data($cli->arg('command'), [
-            'status' => 202,
-//            'label' => $cli->arg('data'),
+            'status' => 200,
+            'label' => $cli->arg('data'),
         ]);
     }
 ];
