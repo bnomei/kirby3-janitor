@@ -13,8 +13,24 @@ use Kirby\Toolkit\Str;
 
 final class Janitor
 {
+    public const ARGS = [
+        'page' => [
+            'prefix' => 'p',
+            'longPrefix' => 'page',
+            'description' => 'Janitor Page URI',
+            'required' => true,
+            'castTo' => 'string',
+        ],
+        'data' => [
+            'prefix' => 'd',
+            'longPrefix' => 'data',
+            'description' => 'Janitor Data',
+            'required' => false,
+        ]
+    ];
+
     /** @var $data array */
-    private static $data;
+    private static array $data;
 
     public function data(string $command, ?array $data = null): ?array
     {
@@ -27,7 +43,7 @@ final class Janitor
     /**
      * @var array
      */
-    private $options;
+    private array $options;
 
     /**
      * Janitor constructor.
@@ -37,13 +53,12 @@ final class Janitor
     {
         $defaults = [
             'debug' => option('debug'),
-            'log' => option('bnomei.janitor.log.fn'),
             'secret' => option('bnomei.janitor.secret'),
         ];
         $this->options = array_merge($defaults, $options);
 
         foreach ($this->options as $key => $call) {
-            if (is_callable($call) && in_array($key, ['secret'])) {
+            if (is_callable($call) && $key == 'secret') {
                 $this->options[$key] = $call();
             }
         }
@@ -51,9 +66,9 @@ final class Janitor
 
     /**
      * @param string|null $key
-     * @return array
+     * @return mixed
      */
-    public function option(?string $key = null)
+    public function option(?string $key = null): mixed
     {
         if ($key) {
             return A::get($this->options, $key);
@@ -65,12 +80,12 @@ final class Janitor
     /**
      * @param string $secret
      * @param string $name
-     * @param array $data
+     * @param array $args
      * @return array
      */
     public function jobWithSecret(string $secret, string $name, array $args = []): array
     {
-        if ($secret === $this->option('secret')) {
+        if ($secret == $this->option('secret')) {
             return $this->job($name, $args);
         }
 
@@ -81,7 +96,7 @@ final class Janitor
 
     /**
      * @param string $name
-     * @param array $data
+     * @param array $args
      * @return array
      */
     public function job(string $name, array $args = []): array
@@ -92,27 +107,6 @@ final class Janitor
             'status' => 200,
             'message' => 'Janitor has no data from command "' . $name . '".',
         ];
-    }
-
-    /**
-     * @param string $msg
-     * @param string $level
-     * @param array $context
-     * @return bool
-     */
-    public function log(string $msg = '', string $level = 'info', array $context = []): bool
-    {
-        $log = $this->option('log');
-        if ($log && is_callable($log)) {
-            if (!$this->option('debug') && $level == 'debug') {
-                // skip but...
-                return true;
-            } else {
-                return $log($msg, $level, $context);
-            }
-        }
-
-        return false;
     }
 
     /*
@@ -140,16 +134,16 @@ final class Janitor
      * @param mixed|null $model
      * @return string
      */
-    public static function query(string $template = null, $model = null): string
+    public static function query(string $template = null, mixed $model = null): string
     {
         $page = null;
         $file = null;
         $user = kirby()->user();
-        if ($model && $model instanceof Page) {
+        if ($model instanceof Page) {
             $page = $model;
-        } elseif ($model && $model instanceof File) {
+        } elseif ($model instanceof File) {
             $file = $model;
-        } elseif ($model && $model instanceof User) {
+        } elseif ($model instanceof User) {
             $user = $model;
         }
 
@@ -168,11 +162,10 @@ final class Janitor
      * @param bool $return_null
      * @return bool
      */
-    public static function isTrue($val, $return_null = false): bool
+    public static function isTrue($val, bool $return_null = false): bool
     {
         $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
-        $boolval = ($boolval === null && !$return_null ? false : $boolval);
 
-        return $boolval;
+        return ($boolval === null && !$return_null ? false : $boolval);
     }
 }

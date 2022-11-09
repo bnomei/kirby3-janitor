@@ -54,10 +54,6 @@ return [
             ];
         },
 
-        'minimal' => function () {
-            return true;
-        },
-
         'minimaldata' => function (Kirby\Cms\Page $page = null, string $data = null) {
             return [
                 'status' => 200,

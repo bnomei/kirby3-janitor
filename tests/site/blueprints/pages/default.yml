@@ -5,6 +5,13 @@ fields:
   text:
     type: text
 
+  kirby_clearcache:
+    type: janitor
+    label: Kirby Clear Cache
+    progress: Kirby Clear Cache...
+    command: clear:cache
+    args: --name pages
+
   janitor_clean:
     type: janitor
     label: Clean Cache Files
@@ -22,13 +29,13 @@ fields:
     label: Data Clipboard
     progress: Copied!
     clipboard: true
-    data: '{{ page.title }}'
+    args: '--data {{ page.title }}'
 
   janitor_clipboardfetch:
     type: janitor
     label: Fetch Clipboard
     command: clipboard
-    data: '{{ user.email }}'
+    args: '--data {{ user.email }}'
 
   janitor_reload:
     type: janitor
@@ -45,7 +52,7 @@ fields:
     type: janitor
     label: Open URL from Data
     command: openurlfromdata
-    data: "{{ page.url }}"
+    args: '--data {{ page.url }}'
 
   janitor_download:
     type: janitor
@@ -54,19 +61,26 @@ fields:
 
   janitor_minimal:
     type: janitor
-    label: Minimal (boolean callback)
+    label: Minimal
     command: minimal
+
+  janitor_minimaldata:
+    type: janitor
+    label: Minimal Data
+    command: minimaldata
+    error: '{{ page.title }}'
+    args: '--data {{ page.url }}'
 
   janitor_whistle:
     type: janitor
-    label: Whistle (external Class)
+    label: Whistle
     command: whistle
 
   janitor_query:
     type: janitor
     label: Query '{{ user.email }}'
     command: query
-    data: '{{ user.email }}'
+    args: '--data {{ user.email }}'
 
   janitor_unsaved:
     type: janitor
@@ -78,7 +92,7 @@ fields:
     type: janitor
     label: Save page and then run job
     command: query
-    data: "{{ page.text }}"
+    args: '--data {{ page.text }}'
     autosave: true
 
   # NOTE: Is better to generate thumbs via CLI / SSH / CRON
@@ -88,4 +102,4 @@ fields:
     label: Generate Thumbs
     process: Generating Thumbs...
     command: thumbs
-    data: page # 'page' means only this page. could be 'site.index' or other querys without {{}}.
+    args: 'page' # 'page' means only this page. could be 'site.index' or other querys without {{}}.

@@ -2,4 +2,4 @@ fields:
  jancopyid:
    type: janitor
    command: clipboard
-   data: '{{ model }} {{ user.id }}'
+   args: '--data {{ model }} {{ user.id }}'

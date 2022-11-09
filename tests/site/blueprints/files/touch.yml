@@ -6,4 +6,4 @@ fields:
     label: Touch Job
     process: Touch Job...
     command: touchfile
-    data: '{{ file.filename }}'
+    args: '--data {{ file.filename }}'

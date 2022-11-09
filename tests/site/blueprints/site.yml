@@ -15,4 +15,4 @@ sections:
             jansite:
                 type: janitor
                 command: 'clipboard'
-                data: '{{ model }} {{ site.title }}'
+                args: '--data {{ model }} {{ site.title }}'

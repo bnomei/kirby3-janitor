@@ -35,11 +35,13 @@ export default {
   props: {
     label: String,
     progress: String,
+    success: String,
+    error: String,
     command: String,
     cooldown: Number,
     status: String,
-    data: String,
-    pageURI: String,
+    args: String,
+    uri: String,
     clipboard: Boolean,
     unsaved: Boolean,
     autosave: Boolean,
@@ -73,7 +75,7 @@ export default {
     id() {
       return (
         "janitor-" +
-        this.hashCode(this.command + (this.button.label ?? "") + this.pageURI)
+        this.hashCode(this.command + (this.button.label ?? "") + this.uri)
       );
     },
 
@@ -139,14 +141,14 @@ export default {
       }
 
       if (this.clipboard) {
-        this.clipboardRequest = this.data;
+        this.clipboardRequest = this.args;
         this.button.label = this.progress;
         this.button.state = "is-success";
 
         setTimeout(this.resetButton, this.cooldown);
 
         this.$nextTick(() => {
-          this.copyToClipboard(this.data);
+          this.copyToClipboard(this.args);
         });
 
         return;
@@ -163,10 +165,10 @@ export default {
         return;
       }
 
-      let url = this.command + "/" + encodeURIComponent(this.pageURI);
+      let url = this.command + "/" + encodeURIComponent(this.uri);
 
-      if (this.data) {
-        url = url + "/" + encodeURIComponent(this.data);
+      if (this.args) {
+        url = url + "/" + encodeURIComponent(this.args);
       }
 
       this.getRequest(url);
@@ -176,8 +178,14 @@ export default {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
-      const { label, status, reload, href, download, clipboard } =
+      const { label, status, reload, href, download, clipboard, success, error } =
         await this.$api.get(url);
+
+      if (status === 200) {
+        this.button.label = success ?? this.success
+      } else {
+        this.button.label = error ?? this.error
+      }
 
       if (label) {
         this.button.label = label;

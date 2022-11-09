@@ -10,12 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 final class JanitorTest extends TestCase
 {
-    public function testLog()
-    {
-        $janitor = new Janitor();
-        $this->assertFalse($janitor->log());
-    }
-
     public function testSingleton()
     {
         // create
