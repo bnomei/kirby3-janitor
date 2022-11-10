@@ -11,6 +11,8 @@ return [
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,
+            // urls forwared to janitor in `open` will trigger a location.href change.
+            // you can use `intab: true` in blueprint to open it in a new tab.
             'open' => $cli->arg('data'),
         ]);
     }

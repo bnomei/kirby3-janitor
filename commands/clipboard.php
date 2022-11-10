@@ -12,6 +12,7 @@ return [
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,
+            // anything you forward to janitor in `clipboard` will be copied in panel.
             'clipboard' => $cli->arg('data'),
         ]);
     }

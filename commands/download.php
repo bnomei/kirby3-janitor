@@ -11,6 +11,7 @@ return [
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,
+            // urls forwarded to janitor in `download` will trigger a download in panel.
             'download' => $cli->arg('data'),
         ]);
     }
