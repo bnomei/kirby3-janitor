@@ -38,7 +38,6 @@ export default {
     confirm: String,
     command: String,
     cooldown: Number,
-    data: String,
     error: String,
     icon: {
       type: [Boolean, String],
