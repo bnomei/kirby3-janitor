@@ -1,18 +1,16 @@
-
 sections:
-    pages:
-        type: pages
+  pages:
+    type: pages
 
+  fields:
+    type: fields
     fields:
-        type: fields
-        fields:
-            title:
-                type: text
-            nodatajob:
-                type: janitor
-                command: 'minimal'
-                # no data
-            jansite:
-                type: janitor
-                command: 'clipboard'
-                args: '--data {{ model }} {{ site.title }}'
+      title:
+        type: text
+      nodatajob:
+        type: janitor
+        command: whistle
+        # no data
+      jansite:
+        type: janitor
+        command: 'janitor:clipboard --data {{ site.title }}'

@@ -78,7 +78,7 @@ fields:
 
   janitor_download:
     type: janitor
-    command: 'janitor:download --data https://avatars.githubusercontent.com/u/3265642?s=8&v=4'
+    command: 'janitor:download --data {{ site.index.files.first.url }}'
     label: Download File Example
 
 ### =======
