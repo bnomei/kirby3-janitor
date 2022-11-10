@@ -9,11 +9,13 @@ fields:
     type: janitor
     command: clear:cache --name pages
     label: Kirby Clear Pages Cache
+    icon: trash
 
   test_whistle:
     type: janitor
     command: whistle
     label: Whistle
+    icon: 'audio'
 
   test_ping:
     type: janitor
@@ -27,6 +29,8 @@ fields:
     type: janitor
     command: janitor:flush --name pages
     label: Janitor Flush Pages Cache
+    success: Cache was cleared!
+    icon: trash
 
   test_uuid:
     type: janitor
@@ -38,6 +42,7 @@ fields:
     command: whistle
     unsaved: false
     label: Disable when Page has changes
+    icon: 'lock'
 
   test_autosave:
     type: janitor
@@ -49,6 +54,7 @@ fields:
     type: janitor
     command: reload
     label: Reload Page Example
+    icon: 'refresh'
     # help: returns `reload => true` to janitor
 
   janitor_href:
@@ -56,30 +62,35 @@ fields:
     command: 'janitor:open --data {{ user.panel.url }}'
     intab: true
     label: Open current user URL in new tab
+    icon: 'open'
     # help: returns `href => $data` to janitor
 
   janitor_pipedatatohref:
     type: janitor
-    command: 'janitor:pipe --data {{ user.panel.url }} --to href'
+    command: 'janitor:pipe --data {{ user.panel.url }} --to open'
     intab: true
     label: Open current user URL in new tab (via pipe)
+    icon: 'open'
     # help: returns `$to => $data` to janitor
 
   janitor_clipboardfetch:
     type: janitor
     command: 'janitor:clipboard --data {{ user.email }}'
     label: Fetch Clipboard
+    icon: 'copy'
 
   janitor_clipboarddata:
     type: janitor
     command: 'janitor:clipboard --data {{ page.title }}'
     label: 'Copy "{{ page.title }}" to Clipboard'
     progress: Copied!
+    icon: 'copy'
 
   janitor_download:
     type: janitor
     command: 'janitor:download --data {{ site.index.files.first.url }}'
     label: Download File Example
+    icon: 'download'
 
 ### =======
 
