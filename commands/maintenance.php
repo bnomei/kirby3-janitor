@@ -43,6 +43,8 @@ return [
             'status' => $down ? 203 : 200,
             // urls forwarded to janitor in `download` will trigger a download in panel.
             'label' => $message,
+            'defaultlabel' => 'Maintenance: ' . site()->isUnderMaintenance()->ecco("DOWN","UP"),
+            'icon' => $down ? 'cancel' : 'circle',
         ]);
     }
 ];

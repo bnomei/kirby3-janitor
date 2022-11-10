@@ -60,8 +60,8 @@ Kirby::plugin('bnomei/janitor', [
                     $error = \Bnomei\Janitor::query($error, $this->model());
                     return \Kirby\Toolkit\I18n::translate($error, $error);
                 },
-                'icon' => function ($icon = false) {
-                    return $icon;
+                'icon' => function ($icon = null) {
+                    return \Bnomei\Janitor::query($icon, $this->model());
                 },
                 'intab' => function ($intab = false) {
                     return \Bnomei\Janitor::isTrue($intab);
@@ -117,6 +117,16 @@ Kirby::plugin('bnomei/janitor', [
                 ];
             },
         ],
+    ],
+    'fieldMethods' => [
+        'ecco' => function ($field, string $a, string $b = ''): string {
+            return $field->bool() ? $a : $b;
+        },
+    ],
+    'siteMethods' => [
+        'isUnderMaintenance' => function (): \Kirby\Cms\Field {
+            return new \Kirby\Cms\Field(null, 'isUnderMaintenance', F::exists(kirby()->roots()->index() . '/.maintenance'));
+        },
     ],
     'snippets' => [
         'maintenance' => __DIR__ . '/snippets/maintenance.php',

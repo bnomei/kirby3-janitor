@@ -39,10 +39,7 @@ export default {
     command: String,
     cooldown: Number,
     error: String,
-    icon: {
-      type: [Boolean, String],
-      default: false,
-    },
+    icon: String,
     intab: Boolean,
     label: String,
     progress: String,
@@ -154,7 +151,7 @@ export default {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
-      const { label, status, reload, open, download, clipboard, success, error } =
+      const { label, defaultlabel, status, reload, open, download, clipboard, success, error, icon } =
         await this.$api.get(url);
 
       if (status === 200) {
@@ -163,8 +160,16 @@ export default {
         this.button.label = error ?? this.error
       }
 
+      if (defaultlabel) {
+        this.label = defaultlabel;
+      }
+
       if (label) {
         this.button.label = label;
+      }
+
+      if (icon) {
+        this.icon = icon;
       }
 
       if (status) {

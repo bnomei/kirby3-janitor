@@ -115,7 +115,8 @@ fields:
     type: janitor
     command: 'janitor:maintenance --user {{ user.uuid }}'
     cooldown: 5000
-    label: 'Maintenance: TOGGLE'
+    label: 'Maintenance: {{ site.isUnderMaintenance.ecco("DOWN","UP") }}'
+    icon: '{{ site.isUnderMaintenance.ecco("cancel","circle") }}'
 
 ### =======
 
