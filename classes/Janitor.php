@@ -33,7 +33,7 @@ final class Janitor
             'castTo' => 'string',
         ],
         'site' => [
-            'prefix' => 'p',
+            'prefix' => 's',
             'longPrefix' => 'page',
             'description' => 'Site',
             'noValue' => true,

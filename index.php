@@ -14,12 +14,16 @@ Kirby::plugin('bnomei/janitor', [
         'secret' => null,
     ],
     'commands' => [ // https://github.com/getkirby/cli
+        'janitor:backupzip' => require __DIR__ . '/commands/backupzip.php',
+        'janitor:cleancontent' => require __DIR__ . '/commands/cleancontent.php',
         'janitor:clipboard' => require __DIR__ . '/commands/clipboard.php',
         'janitor:download' => require __DIR__ . '/commands/download.php',
         'janitor:flush' => require __DIR__ . '/commands/flush.php',
-        'janitor:open' => require __DIR__ . '/commands/open.php',
         'janitor:maintenance' => require __DIR__ . '/commands/maintenance.php',
+        'janitor:open' => require __DIR__ . '/commands/open.php',
         'janitor:pipe' => require __DIR__ . '/commands/pipe.php',
+        'janitor:render' => require __DIR__ . '/commands/render.php',
+        'janitor:thumbs' => require __DIR__ . '/commands/thumbs.php',
         'janitor:tinker' => require __DIR__ . '/commands/tinker.php',
     ],
     'fields' => [

@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\CLI\CLI;
+
 return [
     'description' => 'Flush a cache',
     'args' => [
@@ -7,7 +9,7 @@ return [
             'description' => 'Name of the cache',
         ],
     ],
-    'command' => static function ($cli): void {
+    'command' => static function (CLI $cli): void {
         $name  = $cli->argOrPrompt('name', 'Which cache should be emptied? (press <Enter> to clear the pages cache)', false);
         $name = empty($name) ? 'pages' : $name;
 

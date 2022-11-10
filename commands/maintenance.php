@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\CLI\CLI;
+
 return [
     'description' => 'Maintenance',
     'args' => [
@@ -16,7 +18,7 @@ return [
             'noValue'     => true,
         ],
     ],
-    'command' => static function ($cli): void {
+    'command' => static function (CLI $cli): void {
         $maintenance = kirby()->roots()->index() . '/.maintenance';
         if ($cli->arg('up')) {
             if (file_exists($maintenance)) {

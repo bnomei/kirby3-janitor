@@ -191,9 +191,9 @@ class ComposerStaticInit93e06e1702e47b8b6c35e36f5d963e7d
         ),
         'Kirby\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/tests/kirby/src',
-            1 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
-            2 => __DIR__ . '/..' . '/getkirby/cli/src',
+            0 => __DIR__ . '/..' . '/getkirby/cli/src',
+            1 => __DIR__ . '/../..' . '/tests/kirby/src',
+            2 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -248,7 +248,6 @@ class ComposerStaticInit93e06e1702e47b8b6c35e36f5d963e7d
 
     public static $classMap = array (
         'Bnomei\\Janitor' => __DIR__ . '/../..' . '/classes/Janitor.php',
-        'Bnomei\\JanitorResult' => __DIR__ . '/../..' . '/classes/JanitorResult.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Semver\\Comparator' => __DIR__ . '/..' . '/composer/semver/src/Comparator.php',
         'Composer\\Semver\\CompilingMatcher' => __DIR__ . '/..' . '/composer/semver/src/CompilingMatcher.php',

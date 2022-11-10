@@ -92,6 +92,13 @@ fields:
     label: Download File Example
     icon: 'download'
 
+  janitor_backupzip:
+    type: janitor
+    command: janitor:backupzip
+    cooldown: 5000
+    label: Generate Backup ZIP
+    icon: archive
+
 ### =======
 
   # NOTE: Is better to generate thumbs via CLI / SSH / CRON

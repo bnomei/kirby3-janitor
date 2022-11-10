@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Bnomei\\Janitor' => $baseDir . '/classes/Janitor.php',
-    'Bnomei\\JanitorResult' => $baseDir . '/classes/JanitorResult.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Composer\\Semver\\Comparator' => $vendorDir . '/composer/semver/src/Comparator.php',
     'Composer\\Semver\\CompilingMatcher' => $vendorDir . '/composer/semver/src/CompilingMatcher.php',

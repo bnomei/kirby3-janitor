@@ -31,7 +31,7 @@ return array(
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'League\\CLImate\\' => array($vendorDir . '/league/climate/src'),
     'Laminas\\Escaper\\' => array($vendorDir . '/laminas/laminas-escaper/src'),
-    'Kirby\\' => array($baseDir . '/tests/kirby/src', $vendorDir . '/getkirby/composer-installer/src', $vendorDir . '/getkirby/cli/src'),
+    'Kirby\\' => array($vendorDir . '/getkirby/cli/src', $baseDir . '/tests/kirby/src', $vendorDir . '/getkirby/composer-installer/src'),
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
