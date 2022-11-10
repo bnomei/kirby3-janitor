@@ -5,101 +5,88 @@ fields:
   text:
     type: text
 
-  kirby_clearcache:
+  kirby_clearcachepages:
     type: janitor
-    label: Kirby Clear Cache
-    progress: Kirby Clear Cache...
-    command: clear:cache
-    args: --name pages
+    command: clear:cache --name pages
+    label: Kirby Clear Pages Cache
 
-  janitor_clean:
+  test_whistle:
     type: janitor
-    label: Clean Cache Files
-    progress: Cleaning Cache Files...
-    command: clean
+    command: whistle
+    label: Whistle
 
-  janitor_flush:
+  test_ping:
     type: janitor
-    label: Flush Pages Cache
-    progress: Flushing Pages Cache...
-    command: flush
+    command: ping
+    label: Ping
+    progress: ....
+    success: Pong
+    error: BAMM
 
-  janitor_clipboarddata:
+  janitor_flushpages:
     type: janitor
-    label: Data Clipboard
-    progress: Copied!
-    clipboard: true
-    args: '--data {{ page.title }}'
+    command: janitor:flush --name pages
+    label: Janitor Flush Pages Cache
 
-  janitor_clipboardfetch:
+  test_uuid:
     type: janitor
-    label: Fetch Clipboard
-    command: clipboard
-    args: '--data {{ user.email }}'
+    command: 'uuid --data {{ model.uuid }}'
+    label: Echo the uuid
 
-  janitor_reload:
+  test_unsaved:
     type: janitor
-    label: Reload
+    command: whistle
+    unsaved: false
+    label: Disable when Page has changes
+
+  test_autosave:
+    type: janitor
+    command: whistle
+    autosave: true
+    label: 'Safe on Click [Text = {{ page.text }}]'
+
+  test_reload:
+    type: janitor
     command: reload
+    label: Reload Page Example
+    # help: returns `reload => true` to janitor
 
   janitor_href:
     type: janitor
-    label: Open URL
-    command: openurl
+    command: 'janitor:open --data {{ user.panel.url }}'
     intab: true
+    label: Open current user URL in new tab
+    # help: returns `href => $data` to janitor
 
-  janitor_hrefdata:
+  janitor_pipedatatohref:
     type: janitor
-    label: Open URL from Data
-    command: openurlfromdata
-    args: '--data {{ page.url }}'
+    command: 'janitor:pipe --data {{ user.panel.url }} --to href'
+    intab: true
+    label: Open current user URL in new tab (via pipe)
+    # help: returns `$to => $data` to janitor
+
+  janitor_clipboardfetch:
+    type: janitor
+    command: 'janitor:clipboard --data {{ user.email }}'
+    label: Fetch Clipboard
+
+  janitor_clipboarddata:
+    type: janitor
+    command: 'janitor:clipboard --data {{ page.title }}'
+    label: 'Copy "{{ page.title }}" to Clipboard'
+    progress: Copied!
 
   janitor_download:
     type: janitor
-    label: Download File
-    command: download
+    command: 'janitor:download --data https://avatars.githubusercontent.com/u/3265642?s=8&v=4'
+    label: Download File Example
 
-  janitor_minimal:
-    type: janitor
-    label: Minimal
-    command: minimal
-
-  janitor_minimaldata:
-    type: janitor
-    label: Minimal Data
-    command: minimaldata
-    error: '{{ page.title }}'
-    args: '--data {{ page.url }}'
-
-  janitor_whistle:
-    type: janitor
-    label: Whistle
-    command: whistle
-
-  janitor_query:
-    type: janitor
-    label: Query '{{ user.email }}'
-    command: query
-    args: '--data {{ user.email }}'
-
-  janitor_unsaved:
-    type: janitor
-    label: Disable when Page has changes
-    command: minimal
-    unsaved: false
-
-  janitor_autosave:
-    type: janitor
-    label: Save page and then run job
-    command: query
-    args: '--data {{ page.text }}'
-    autosave: true
+### =======
 
   # NOTE: Is better to generate thumbs via CLI / SSH / CRON
   # since most servers have 30sec php timeout for web
   janitor_thumbs:
     type: janitor
+    command: thumbs page' # 'page' means only this page. could be 'site.index' or other querys without {{}}.
     label: Generate Thumbs
     process: Generating Thumbs...
-    command: thumbs
-    args: 'page' # 'page' means only this page. could be 'site.index' or other querys without {{}}.

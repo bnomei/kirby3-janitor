@@ -14,20 +14,17 @@ Kirby::plugin('bnomei/janitor', [
         'secret' => null,
     ],
     'commands' => [ // https://github.com/getkirby/cli
+        'janitor:clipboard' => require __DIR__ . '/commands/clipboard.php',
+        'janitor:download' => require __DIR__ . '/commands/download.php',
+        'janitor:flush' => require __DIR__ . '/commands/flush.php',
+        'janitor:open' => require __DIR__ . '/commands/open.php',
         'janitor:maintenance' => require __DIR__ . '/commands/maintenance.php',
+        'janitor:pipe' => require __DIR__ . '/commands/pipe.php',
         'janitor:tinker' => require __DIR__ . '/commands/tinker.php',
     ],
     'fields' => [
         'janitor' => [
             'props' => [
-                'args' => function ($args = null) {
-                    $args = \Bnomei\Janitor::query($args, $this->model());
-                    return str_replace(
-                        '/',
-                        '+++',
-                        \Kirby\Toolkit\I18n::translate($args, $args)
-                    );
-                },
                 'autosave' => function ($doAutosave = false) {
                     return \Bnomei\Janitor::isTrue($doAutosave);
                 },
@@ -35,8 +32,19 @@ Kirby::plugin('bnomei/janitor', [
                     return \Bnomei\Janitor::isTrue($clipboard);
                 },
                 'command' => function ($command = null) {
+                    // resolve queries
                     $command = \Bnomei\Janitor::query($command, $this->model());
-                    return 'plugin-janitor/' . str_replace(':','+', $command ?? '');
+                    // append model
+                    if ($this->model() instanceof \Kirby\Cms\Page) {
+                        $command .= ' --page ' . $this->model()->uuid() ?? $this->model()->id();
+                    } elseif ($this->model() instanceof \Kirby\Cms\File) {
+                        $command .= ' --file ' . $this->model()->uuid() ?? $this->model()->id();
+                    } elseif ($this->model() instanceof \Kirby\Cms\User) {
+                        $command .= ' --user ' . $this->model()->uuid() ?? $this->model()->id();
+                    } elseif ($this->model() instanceof \Kirby\Cms\Site) {
+                        $command .= ' --site';
+                    }
+                    return $command;
                 },
                 'confirm' => function ($confirm = '') {
                     return $confirm;
@@ -55,34 +63,19 @@ Kirby::plugin('bnomei/janitor', [
                     return \Bnomei\Janitor::isTrue($intab);
                 },
                 'label' => function ($label = null) {
+                    $label = \Bnomei\Janitor::query($label, $this->model());
                     return \Kirby\Toolkit\I18n::translate($label, $label);
                 },
-                'progress' => function ($progress = null) {
-                    $progress = \Bnomei\Janitor::query($progress, $this->model());
-                    return \Kirby\Toolkit\I18n::translate($progress, $progress);
+                'progress' => function ($label = null) {
+                    $label = \Bnomei\Janitor::query($label, $this->model());
+                    return \Kirby\Toolkit\I18n::translate($label, $label);
                 },
-                'success' => function ($success = null) {
-                    $success = \Bnomei\Janitor::query($success, $this->model());
-                    return \Kirby\Toolkit\I18n::translate($success, $success);
+                'success' => function ($label = null) {
+                    $label = \Bnomei\Janitor::query($label, $this->model());
+                    return \Kirby\Toolkit\I18n::translate($label, $label);
                 },
                 'unsaved' => function ($allowUnsaved = true) {
                     return \Bnomei\Janitor::isTrue($allowUnsaved);
-                },
-                'uri' => function () {
-                    $uri = kirby()->site()->homePageId();
-                    if (is_a($this->model(), \Kirby\Cms\Page::class)) {
-                        $uri = $this->model()->uri();
-                    }
-                    if (is_a($this->model(), \Kirby\Cms\File::class)) {
-                        $uri = $this->model()->parent()->uri();
-                    }
-                    if (is_a($this->model(), \Kirby\Cms\User::class)) {
-                        $uri = $this->model()->panel()->path();
-                    }
-                    if (is_a($this->model(), \Kirby\Cms\Site::class)) {
-                        $uri = '$'; // any not empty string so route /$/DATA is used
-                    }
-                    return str_replace('/', '+', $uri);
                 },
             ],
         ],
@@ -90,14 +83,8 @@ Kirby::plugin('bnomei/janitor', [
     'hooks' => [
         // maintenance
         'route:before' => function () {
-            $isPanel = strpos(
-                    kirby()->request()->url()->toString(),
-                    kirby()->urls()->panel()
-                ) !== false;
-            $isApi = strpos(
-                    kirby()->request()->url()->toString(),
-                    kirby()->urls()->api()
-                ) !== false;
+            $isPanel = str_contains(kirby()->request()->url()->toString(), kirby()->urls()->panel());
+            $isApi = str_contains(kirby()->request()->url()->toString(), kirby()->urls()->api());
             if (!$isPanel && !$isApi) {
                 if (F::exists(kirby()->roots()->index() . '/.maintenance')) {
                     snippet('maintenance');
@@ -109,40 +96,24 @@ Kirby::plugin('bnomei/janitor', [
     'api' => [
         'routes' => [
             [
-                'pattern' => 'plugin-janitor/(:any)/(:any)/(:any)',
-                'action' => function (string $command, string $page, string $data) {
-                    $janitor = \Bnomei\Janitor::singleton();
-                    return $janitor->job(str_replace('+', ':', $command), [
-                        '--page', str_replace('+', '/', urldecode($page)),
-                        ...explode(' ', str_replace('+++', '/', urldecode($data))),
-                    ]);
-                },
-            ],
-            [
-                'pattern' => 'plugin-janitor/(:any)/(:any)',
-                'action' => function (string $command, string $page) {
-                    $janitor = \Bnomei\Janitor::singleton();
-                    return $janitor->job(str_replace('+', ':', $command), [
-                        '--page', str_replace('+', '/', urldecode($page)),
-                    ]);
-                },
-            ],
-            [
-                'pattern' => 'plugin-janitor/(:any)',
+                'pattern' => 'plugin-janitor/(:all)', // using (:all) fixes issues with kirbys routing for : and /
                 'action' => function (string $command) {
-                    $janitor = \Bnomei\Janitor::singleton();
-                    return $janitor->job(str_replace('+', ':', $command));
-                }
-            ],
+                    return \Bnomei\Janitor::singleton()->job(urldecode($command));
+                },
+            ]
         ],
     ],
     'routes' => [
         [
-            'pattern' => 'plugin-janitor/(:any)/(:any)',
-            'action' => function (string $command, string $secret) {
-                $janitor = new \Bnomei\Janitor();
-                $response = $janitor->jobWithSecret($secret, $command);
-                return Kirby\Http\Response::json($response, A::get($response, 'status', 400));
+            'pattern' => 'plugin-janitor/(:any)/(:all)', // using (:all) fixes issues with kirbys routing for : and /
+            'action' => function (string $secret, string $command) {
+                $janitor = \Bnomei\Janitor::singleton();
+                if ($secret == $janitor->option('secret')) {
+                    return $janitor->job(urldecode($command));
+                }
+                return [
+                    'status' => 401,
+                ];
             },
         ],
     ],
@@ -156,7 +127,7 @@ if (!class_exists('Bnomei\Janitor')) {
 }
 
 if (!function_exists('janitor')) {
-    function janitor()
+    function janitor(): \Bnomei\Janitor
     {
         return \Bnomei\Janitor::singleton();
     }

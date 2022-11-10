@@ -1,5 +1,5 @@
 fields:
- jancopyid:
-   type: janitor
-   command: clipboard
-   args: '--data {{ model }} {{ user.id }}'
+  test_uuid:
+    type: janitor
+    command: 'uuid --data {{ model.uuid }}'
+    label: Echo the uuid

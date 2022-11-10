@@ -1,17 +1,18 @@
+
 <?php
 
 use Bnomei\Janitor;
 use Kirby\CLI\CLI;
 
 return [
-    'description' => 'Whistle',
+    'description' => 'Ping',
     'args' => [] + Janitor::ARGS, // page, file, user, site, data
     'command' => static function (CLI $cli): void {
-        defined('STDOUT') && $cli->success(' ♫ ');
+        defined('STDOUT') && $cli->error('No reload in CLI.');
 
         janitor()->data($cli->arg('command'), [
-            'status' => 200,
-            'label' => ' ♫ ',
+            'status' => 200 ,
+            'reload' => true, // will trigger JS location.reload in panel
         ]);
     }
 ];

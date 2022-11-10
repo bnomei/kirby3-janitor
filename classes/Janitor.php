@@ -17,15 +17,31 @@ final class Janitor
         'page' => [
             'prefix' => 'p',
             'longPrefix' => 'page',
-            'description' => 'Janitor Page URI',
-            'required' => true,
+            'description' => 'Page UUID or ID',
             'castTo' => 'string',
+        ],
+        'file' => [
+            'prefix' => 'f',
+            'longPrefix' => 'file',
+            'description' => 'File UUID or ID',
+            'castTo' => 'string',
+        ],
+        'user' => [
+            'prefix' => 'u',
+            'longPrefix' => 'user',
+            'description' => 'User UUID or ID',
+            'castTo' => 'string',
+        ],
+        'site' => [
+            'prefix' => 'p',
+            'longPrefix' => 'page',
+            'description' => 'Site',
+            'noValue' => true,
         ],
         'data' => [
             'prefix' => 'd',
             'longPrefix' => 'data',
-            'description' => 'Janitor Data',
-            'required' => false,
+            'description' => 'Data',
         ]
     ];
 
@@ -37,6 +53,7 @@ final class Janitor
         if ($data) {
             Janitor::$data[$command] = $data;
         }
+
         return A::get(Janitor::$data, $command);
     }
 
@@ -78,29 +95,14 @@ final class Janitor
     }
 
     /**
-     * @param string $secret
-     * @param string $name
-     * @param array $args
+     * @param string $command
      * @return array
      */
-    public function jobWithSecret(string $secret, string $name, array $args = []): array
+    public function job(string $command): array
     {
-        if ($secret == $this->option('secret')) {
-            return $this->job($name, $args);
-        }
+        $args = explode(' ', $command);
+        $name = array_shift($args);
 
-        return [
-            'status' => 401,
-        ];
-    }
-
-    /**
-     * @param string $name
-     * @param array $args
-     * @return array
-     */
-    public function job(string $name, array $args = []): array
-    {
         CLI::command($name, ...$args);
 
         return $this->data($name) ?? [
@@ -153,7 +155,7 @@ final class Janitor
             'page' => $page,
             'file' => $file,
             'user' => $user,
-            'model' => $model ? get_class($model) : null,
+            'model' => $model,
         ]);
     }
 
