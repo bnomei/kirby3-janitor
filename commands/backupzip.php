@@ -29,8 +29,9 @@ return [
             'defaultValue' => '',
             'castTo' => 'string',
         ],
-        'target' => [
-            'longPrefix' => 'target',
+        'output' => [
+            'shortPrefix' => 'o',
+            'longPrefix' => 'output',
             'description' => 'absolute output folder and file. defaults to: site/backups/{{ timestamp }}.zip',
             'defaultValue' => '',
             'castTo' => 'string',
@@ -38,16 +39,16 @@ return [
     ] + Janitor::ARGS, // page, file, user, site, data
     'command' => static function (CLI $cli): void {
         $time = time();
-        $target = $cli->arg('target');
-        if (empty($target)) {
-            $target = realpath(kirby()->roots()->accounts() . '/../') . '/backups/{{ timestamp }}.zip';
+        $output = $cli->arg('output');
+        if (empty($output)) {
+            $output = realpath(kirby()->roots()->accounts() . '/../') . '/backups/{{ timestamp }}.zip';
         }
-        $target = str_replace('{{ timestamp }}', strval(time()), $target);
-        Dir::make(dirname($target));
+        $output = str_replace('{{ timestamp }}', strval(time()), $output);
+        Dir::make(dirname($output));
 
         $zip = new ZipArchive();
-        if ($zip->open($target, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) !== true) {
-            defined('STDOUT') && $cli->error('Failed to create: ' . $target);
+        if ($zip->open($output, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) !== true) {
+            defined('STDOUT') && $cli->error('Failed to create: ' . $output);
             janitor()->data($cli->arg('command'), [
                 'status' => 500,
             ]);
@@ -101,9 +102,9 @@ return [
 
                 if ($zipped % $ulimit === 0) {
                     $zip->close();
-                    if ($zip->open($target) === false) {
-                        @unlink($target);
-                        $errorMessage = 'Hit ulimit but failed to reopen zip: ' . $target;
+                    if ($zip->open($output) === false) {
+                        @unlink($output);
+                        $errorMessage = 'Hit ulimit but failed to reopen zip: ' . $output;
                         if (defined('STDOUT')) {
                             $cli->error($errorMessage);
                         }
@@ -121,16 +122,16 @@ return [
         $data = [
             'status' => $zipped > 0 ? 200 : 204,
             'duration' => time() - $time,
-            'filename' => basename($target, '.zip'),
+            'filename' => basename($output, '.zip'),
             'files' => $zipped,
-            'nicesize' => F::niceSize($target),
-            'modified' => date('d/m/Y, H:i:s', F::modified($target)),
+            'nicesize' => F::niceSize($output),
+            'modified' => date('d/m/Y, H:i:s', F::modified($output)),
         ];
         $data['label'] = $data['filename'] . '.zip [' .$data['nicesize'] .']';
 
         defined('STDOUT') && $cli->blue($data['duration'] . ' sec');
         defined('STDOUT') && $cli->blue($data['nicesize']);
-        defined('STDOUT') && $cli->success($target);
+        defined('STDOUT') && $cli->success($output);
 
         janitor()->data($cli->arg('command'), $data);
     }

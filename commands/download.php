@@ -4,10 +4,26 @@ use Bnomei\Janitor;
 use Kirby\CLI\CLI;
 
 return [
-    'description' => 'Pipe `data` to `download` arg in Janitor',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'description' => 'Pipe `data` to `download` arg in Janitor or download on CLI via wget',
+    'args' => [
+        'output' => [
+            'shortPrefix' => 'o',
+            'longPrefix' => 'output',
+            'description' => 'output filename',
+            'defaultValue' => '',
+            'castTo' => 'string',
+        ],
+    ] + Janitor::ARGS, // page, file, user, site, data
     'command' => static function (CLI $cli): void {
         defined('STDOUT') && $cli->success('download => ' . $cli->arg('data'));
+
+        if(defined('STDOUT')) {
+            $command = 'wget';
+            if (!empty($cli->arg('output'))) {
+                $command .= ' -O ' . $cli->arg('output');
+            }
+            exec($command . ' ' . $cli->arg('data'));
+        }
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,

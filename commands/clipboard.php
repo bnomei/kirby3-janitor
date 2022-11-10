@@ -4,7 +4,7 @@ use Bnomei\Janitor;
 use Kirby\CLI\CLI;
 
 return [
-    'description' => 'Pipe `data` to `clipboard` arg in Janitor',
+    'description' => 'Pipe `data` to `clipboard` arg in Janitor or on CLI use pbcopy',
     'args' => [] + Janitor::ARGS, // page, file, user, site, data
     'command' => static function (CLI $cli): void {
         defined('STDOUT') && exec('echo "'.$cli->arg('data').'" | pbcopy');

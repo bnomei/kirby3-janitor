@@ -87,13 +87,10 @@ Kirby::plugin('bnomei/janitor', [
     'hooks' => [
         // maintenance
         'route:before' => function () {
-            $isPanel = str_contains(kirby()->request()->url()->toString(), kirby()->urls()->panel());
-            $isApi = str_contains(kirby()->request()->url()->toString(), kirby()->urls()->api());
-            if (!$isPanel && !$isApi) {
-                if (F::exists(kirby()->roots()->index() . '/.maintenance')) {
-                    snippet('maintenance');
-                    die;
-                }
+            if (\Bnomei\Janitor::requestBlockedByMaintenance() &&
+                F::exists(kirby()->roots()->index() . '/.maintenance')) {
+                snippet('maintenance');
+                die;
             }
         },
     ],

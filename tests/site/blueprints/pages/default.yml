@@ -99,6 +99,24 @@ fields:
     label: Generate Backup ZIP
     icon: archive
 
+  janitor_down:
+    type: janitor
+    command: 'janitor:maintenance --down --user {{ user.uuid }}'
+    cooldown: 5000
+    label: 'Maintenance: DOWN'
+
+  janitor_up:
+    type: janitor
+    command: 'janitor:maintenance --up --user {{ user.uuid }}'
+    cooldown: 5000
+    label: 'Maintenance: UP'
+
+  janitor_maintenance:
+    type: janitor
+    command: 'janitor:maintenance --user {{ user.uuid }}'
+    cooldown: 5000
+    label: 'Maintenance: TOGGLE'
+
 ### =======
 
   # NOTE: Is better to generate thumbs via CLI / SSH / CRON

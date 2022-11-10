@@ -170,4 +170,19 @@ final class Janitor
 
         return ($boolval === null && !$return_null ? false : $boolval);
     }
+
+    public static function requestBlockedByMaintenance(): bool
+    {
+        $request = kirby()->request()->url()->toString();
+        foreach([
+            kirby()->urls()->panel(),
+            kirby()->urls()->api(),
+            kirby()->urls()->media()
+        ] as $url) {
+            if (str_contains($request, $url)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
