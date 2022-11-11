@@ -19,6 +19,7 @@ Kirby::plugin('bnomei/janitor', [
         'janitor:clipboard' => require __DIR__ . '/commands/clipboard.php',
         'janitor:download' => require __DIR__ . '/commands/download.php',
         'janitor:flush' => require __DIR__ . '/commands/flush.php',
+        'janitor:job' => require __DIR__ . '/commands/job.php',
         'janitor:maintenance' => require __DIR__ . '/commands/maintenance.php',
         'janitor:open' => require __DIR__ . '/commands/open.php',
         'janitor:pipe' => require __DIR__ . '/commands/pipe.php',
@@ -99,7 +100,7 @@ Kirby::plugin('bnomei/janitor', [
             [
                 'pattern' => 'plugin-janitor/(:all)', // using (:all) fixes issues with kirbys routing for : and /
                 'action' => function (string $command) {
-                    return \Bnomei\Janitor::singleton()->job(urldecode($command));
+                    return \Bnomei\Janitor::singleton()->command(urldecode($command));
                 },
             ]
         ],
@@ -110,7 +111,7 @@ Kirby::plugin('bnomei/janitor', [
             'action' => function (string $secret, string $command) {
                 $janitor = \Bnomei\Janitor::singleton();
                 if ($secret == $janitor->option('secret')) {
-                    return $janitor->job(urldecode($command));
+                    return $janitor->command(urldecode($command));
                 }
                 return [
                     'status' => 401,

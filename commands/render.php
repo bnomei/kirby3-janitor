@@ -7,6 +7,5 @@ return [
     'description' => 'Render all pages',
     'args' => [] + Janitor::ARGS, // page, file, user, site, data
     'command' => static function (CLI $cli): void {
-
     }
 ];

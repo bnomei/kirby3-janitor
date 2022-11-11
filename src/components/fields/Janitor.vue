@@ -151,7 +151,7 @@ export default {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
-      const { label, defaultlabel, status, reload, open, download, clipboard, success, error, icon } =
+      const { label, message, status, reload, open, download, clipboard, success, error, icon } =
         await this.$api.get(url);
 
       if (status === 200) {
@@ -160,12 +160,12 @@ export default {
         this.button.label = error ?? this.error
       }
 
-      if (defaultlabel) {
-        this.label = defaultlabel;
+      if (label) {
+        this.label = label;
       }
 
-      if (label) {
-        this.button.label = label;
+      if (message) {
+        this.button.label = message;
       }
 
       if (icon) {
@@ -202,7 +202,6 @@ export default {
 
       if (clipboard) {
         this.clipboardRequest = clipboard;
-
         this.button.label = this.progress;
         this.button.state = "is-success";
 

@@ -32,8 +32,7 @@ return [
             file_exists($maintenance) && unlink($maintenance);
             $message = 'UP ' . date('c') . ' [' . $cli->arg('user') . ']';
             defined('STDOUT') && $cli->success($message);
-        }
-        elseif ($down === true) {
+        } elseif ($down === true) {
             $message = 'DOWN ' . date('c') . ' [' . $cli->arg('user') . ']';
             file_put_contents($maintenance, $message);
             defined('STDOUT') && $cli->red($message);
@@ -42,8 +41,8 @@ return [
         janitor()->data($cli->arg('command'), [
             'status' => $down ? 203 : 200,
             // urls forwarded to janitor in `download` will trigger a download in panel.
-            'label' => $message,
-            'defaultlabel' => 'Maintenance: ' . site()->isUnderMaintenance()->ecco("DOWN","UP"),
+            'message' => $message,
+            'label' => 'Maintenance: ' . site()->isUnderMaintenance()->ecco("DOWN", "UP"),
             'icon' => $down ? 'cancel' : 'circle',
         ]);
     }

@@ -17,7 +17,7 @@ return [
     'command' => static function (CLI $cli): void {
         defined('STDOUT') && $cli->success('download => ' . $cli->arg('data'));
 
-        if(defined('STDOUT')) {
+        if (defined('STDOUT')) {
             $command = 'wget';
             if (!empty($cli->arg('output'))) {
                 $command .= ' -O ' . $cli->arg('output');

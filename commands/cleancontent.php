@@ -7,6 +7,5 @@ return [
     'description' => 'Remove all content data that has no blueprint setup',
     'args' => [] + Janitor::ARGS, // page, file, user, site, data
     'command' => static function (CLI $cli): void {
-
     }
 ];

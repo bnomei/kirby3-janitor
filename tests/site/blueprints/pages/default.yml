@@ -118,6 +118,11 @@ fields:
     label: 'Maintenance: {{ site.isUnderMaintenance.ecco("DOWN","UP") }}'
     icon: '{{ site.isUnderMaintenance.ecco("cancel","circle") }}'
 
+  janitor_job:
+    type: janitor
+    command: 'janitor:job --key some.key.to.an.task --data "some data"'
+    label: 'Run Janitor v2 job'
+
 ### =======
 
   # NOTE: Is better to generate thumbs via CLI / SSH / CRON

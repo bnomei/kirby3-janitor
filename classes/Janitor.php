@@ -45,7 +45,6 @@ final class Janitor
         ]
     ];
 
-    /** @var $data array */
     private static array $data;
 
     public function data(string $command, ?array $data = null): ?array
@@ -57,15 +56,8 @@ final class Janitor
         return A::get(Janitor::$data, $command);
     }
 
-    /**
-     * @var array
-     */
     private array $options;
 
-    /**
-     * Janitor constructor.
-     * @param array $options
-     */
     public function __construct(array $options = [])
     {
         $defaults = [
@@ -81,10 +73,6 @@ final class Janitor
         }
     }
 
-    /**
-     * @param string|null $key
-     * @return mixed
-     */
     public function option(?string $key = null): mixed
     {
         if ($key) {
@@ -94,14 +82,9 @@ final class Janitor
         return $this->options;
     }
 
-    /**
-     * @param string $command
-     * @return array
-     */
-    public function job(string $command): array
+    public function command(string $command): array
     {
-        $args = explode(' ', $command);
-        $name = array_shift($args);
+        list($name, $args) = Janitor::parseCommand($command);
 
         CLI::command($name, ...$args);
 
@@ -111,15 +94,8 @@ final class Janitor
         ];
     }
 
-    /*
-     * @var Janitor
-     */
     private static $singleton;
 
-    /**
-     * @param array $options
-     * @return Janitor
-     */
     public static function singleton(array $options = []): Janitor
     {
         if (self::$singleton) {
@@ -131,11 +107,6 @@ final class Janitor
         return self::$singleton;
     }
 
-    /**
-     * @param string|null $template
-     * @param mixed|null $model
-     * @return string
-     */
     public static function query(string $template = null, mixed $model = null): string
     {
         $page = null;
@@ -159,11 +130,6 @@ final class Janitor
         ]);
     }
 
-    /**
-     * @param $val
-     * @param bool $return_null
-     * @return bool
-     */
     public static function isTrue($val, bool $return_null = false): bool
     {
         $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
@@ -174,7 +140,7 @@ final class Janitor
     public static function requestBlockedByMaintenance(): bool
     {
         $request = kirby()->request()->url()->toString();
-        foreach([
+        foreach ([
             kirby()->urls()->panel(),
             kirby()->urls()->api(),
             kirby()->urls()->media()
@@ -184,5 +150,24 @@ final class Janitor
             }
         }
         return true;
+    }
+
+    public static function parseCommand(string $command)
+    {
+        $groups = explode(' ', $command);
+        $name = array_shift($groups);
+        $groups = explode(' --', ' ' . implode(' ', $groups));
+        array_shift($groups); // remove empty first value
+        $args = [];
+
+        foreach ($groups as $group) {
+            $parts = explode(' ', $group);
+            $args[] = '--' . array_shift($parts);
+            // remove enclosing " or ' from string like it would happen
+            // in terminal so commands in blueprint can be used vice versa
+            $args[] = trim(trim(implode(' ', $parts), '"'), "'");
+        }
+
+        return [$name, $args];
     }
 }
