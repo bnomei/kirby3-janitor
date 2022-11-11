@@ -17,16 +17,22 @@ return [
         $job = option($key);
         $result = [];
 
-        if (!is_string($job) && is_callable($job)) {
+        $model = null;
+        if ($cli->arg('site')) {
+            $model = $cli->kirby()->site();
+        } elseif (!empty($cli->arg('page'))) {
+            $model = $cli->kirby()->page($cli->arg('page'));
+        } elseif (!empty($cli->arg('file'))) {
+            $model = $cli->kirby()->file($cli->arg('file'));
+        } elseif (!empty($cli->arg('user'))) {
+            $model = $cli->kirby()->user($cli->arg('user'));
+        }
+
+        if ($model && !is_string($job) && is_callable($job)) {
             if (empty($cli->arg('data'))) {
-                $result = $job(
-                    page($cli->arg('page'))
-                );
+                $result = $job($model);
             } else {
-                $result = $job(
-                    page($cli->arg('page')),
-                    $cli->arg('data')
-                );
+                $result = $job($model, $cli->arg('data'));
             }
         }
         janitor()->data($cli->arg('command'), $result);

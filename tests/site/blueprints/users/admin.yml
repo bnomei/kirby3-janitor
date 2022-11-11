@@ -3,3 +3,8 @@ fields:
     type: janitor
     command: 'uuid --data {{ model.uuid }}'
     label: Echo the uuid
+
+  janitor_job_v3:
+    type: janitor
+    command: 'janitor:job --key some.key.to.task --data "some data"'
+    label: 'Run Janitor v2 job'

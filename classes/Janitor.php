@@ -34,7 +34,7 @@ final class Janitor
         ],
         'site' => [
             'prefix' => 's',
-            'longPrefix' => 'page',
+            'longPrefix' => 'site',
             'description' => 'Site',
             'noValue' => true,
         ],

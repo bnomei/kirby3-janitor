@@ -118,9 +118,16 @@ fields:
     label: 'Maintenance: {{ site.isUnderMaintenance.ecco("DOWN","UP") }}'
     icon: '{{ site.isUnderMaintenance.ecco("cancel","circle") }}'
 
-  janitor_job:
+#  janitor_job_v2:
+#    type: janitor
+#    job: some.key.to.task
+#    data: "some data"
+#    label: 'Run Janitor v2 job'
+
+  janitor_job_v3:
     type: janitor
-    command: 'janitor:job --key some.key.to.an.task --data "some data"'
+    command: 'janitor:job --key some.key.to.task --data "some data"'
+    # terminal: 'janitor:job --key some.key.to.task --data "some data" --user user://kXLzsVwR'
     label: 'Run Janitor v2 job'
 
 ### =======

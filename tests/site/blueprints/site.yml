@@ -14,3 +14,7 @@ sections:
       jansite:
         type: janitor
         command: 'janitor:clipboard --data {{ site.title }}'
+      janitor_job_v3:
+        type: janitor
+        command: 'janitor:job --key some.key.to.task --data "some data"'
+        label: 'Run Janitor v2 job'
