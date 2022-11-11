@@ -15,7 +15,9 @@ return [
     'command' => static function (CLI $cli): void {
         $key = $cli->arg('key');
         $job = option($key);
-        $result = [];
+        $result = [
+            'status' => 500,
+        ];
 
         $model = null;
         if ($cli->arg('site')) {
@@ -28,16 +30,24 @@ return [
             $model = $cli->kirby()->user($cli->arg('user'));
         }
 
-        if ($model && !is_string($job) && is_callable($job)) {
-            if (empty($cli->arg('data'))) {
-                $result = $job($model);
+        if ($model) {
+            if (!is_string($job) && is_callable($job)) {
+                if (empty($cli->arg('data'))) {
+                    $result = $job($model);
+                } else {
+                    $result = $job($model, $cli->arg('data'));
+                }
             } else {
-                $result = $job($model, $cli->arg('data'));
+                $result['message'] = t('janitor.job-not-found', 'Job "'. $key . '" could not be found.');
             }
+        } else {
+            $result['message'] = t('janitor.model-not-found', 'No model provided');
+            defined('STDOUT') && $cli->error('No model provided. Use `--page`, `--file`, `--user` or `--site`.');
         }
-        janitor()->data($cli->arg('command'), $result);
 
         defined('STDOUT') && (A::get($result, 'status') === 200 ? $cli->success($key) : $cli->error($key));
         defined('STDOUT') && $cli->out(print_r($result, true));
+
+        janitor()->data($cli->arg('command'), $result);
     }
 ];
