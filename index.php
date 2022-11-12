@@ -142,6 +142,7 @@ Kirby::plugin('bnomei/janitor', [
             'janitor.maintenance.down' => 'im Wartungs-Modus',
             'janitor.maintenance.up' => 'online',
             'janitor.maintenance.notice' => 'Diese Webseite ist bald wieder online.', // in snippet
+            'janitor.render.message' => '{{ count }} Seiten gerendert',
         ],
     ]
 ]);

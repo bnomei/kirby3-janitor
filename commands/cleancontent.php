@@ -3,7 +3,7 @@
 use Bnomei\Janitor;
 use Kirby\CLI\CLI;
 
-class CleanContentCommand
+class JanitorCleanContentCommand
 {
     /**
      * based on cookbook by @texnixe
@@ -96,10 +96,10 @@ return [
             $count *= $kirby->languages()->count();
             $languages = $kirby->languages();
             foreach ($languages as $language) {
-                $updated += CleanContentCommand::cleanUp($cli, $collection, $ignore, $language->code());
+                $updated += JanitorCleanContentCommand::cleanUp($cli, $collection, $ignore, $language->code());
             }
         } else {
-            $updated += CleanContentCommand::cleanUp($cli, $collection, $ignore);
+            $updated += JanitorCleanContentCommand::cleanUp($cli, $collection, $ignore);
         }
 
         $data = [

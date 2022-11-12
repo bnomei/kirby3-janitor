@@ -7,5 +7,5 @@ foreach ($page->images() as $image) {
     echo $image->thumb(['width' => 128]);
 }
 
-\Kirby\CLI\CLI::command('whistle');
-var_dump(janitor()->data('whistle'));
+//\Kirby\CLI\CLI::command('whistle');
+//var_dump(janitor()->data('whistle'));

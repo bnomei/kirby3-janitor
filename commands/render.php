@@ -2,10 +2,195 @@
 
 use Bnomei\Janitor;
 use Kirby\CLI\CLI;
+use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
+use Kirby\Http\Remote;
+use Kirby\Toolkit\Query;
+use Symfony\Component\Finder\Finder;
+
+class JanitorRenderCommand
+{
+    private int $countPages;
+    private int $visitedPages;
+    private int $countLanguages;
+    private array $renderFailed;
+    private array $foundThumbs;
+    private string $renderSiteUrl;
+
+    public function run(CLI $cli): void
+    {
+        $time = time();
+        $kirby = $cli->kirby();
+
+        // make sure the thumbs are triggered
+        $kirby->cache('pages')->flush();
+        if (class_exists('\Bnomei\Lapse')) {
+            \Bnomei\Lapse::singleton()->flush();
+        }
+
+        // visit all pages to generate media/*.job files
+        $allPages = $this->getPageIDs($cli);
+        $this->countPages = count($allPages);
+        $this->countLanguages = $kirby->multilang() === true ? $kirby->languages()->count() : 1;
+        $this->renderFailed = [];
+        $this->foundThumbs = [];
+        $this->visitedPages = 0;
+
+        $this->renderSiteUrl = !empty($cli->arg('remote')) ?
+            rtrim($cli->arg('remote'), '/') : '';
+        // rtrim((php_sapi_name() === 'cli' ? site()->url() : ''), '/')
+
+        defined('STDOUT') && $cli->blue($this->countLanguages . ' languages');
+        defined('STDOUT') && $cli->blue($this->countPages . ' pages');
+        defined('STDOUT') && $cli->out('Rendering Pages...');
+
+        foreach ($allPages as $pageId) {
+            try {
+                if (strlen($this->renderSiteUrl) > 0) {
+                    $content = $this->remotePageContent($pageId);
+                } else {
+                    $content = $this->renderPageContent($pageId);
+                }
+                if (strlen($content) > 0) {
+                    $thumbs = $this->findUrlOfThumbsInContent($content);
+                    $thumbs = array_unique($thumbs);
+                    $this->foundThumbs = array_merge(
+                        $this->foundThumbs,
+                        $thumbs
+                    );
+                }
+                defined('STDOUT') && $cli->out('[' . count($thumbs) . '] ' . $pageId);
+            } catch (Exception $ex) {
+                $this->renderFailed[] = $pageId . ' => ' . $ex->getMessage();
+            }
+
+            $this->visitedPages++;
+        }
+
+        $this->foundThumbs = array_unique($this->foundThumbs);
+        $duration = time() - $time;
+
+        $data = [
+            'status' => $this->visitedPages > 0 ? 200 : 204,
+            'duration' => $duration,
+            'count' => $this->visitedPages,
+            'foundThumbs' => count($this->foundThumbs),
+            'renderFailed' => count($this->renderFailed),
+        ];
+        $data['message'] = t(
+            'janitor.render.message',
+            str_replace(
+                '{{ count }}',
+                $data['count'],
+                '{{ count }} pages rendered'
+            )
+        );
+
+        defined('STDOUT') && $cli->blue($data['duration'] . ' sec');
+        defined('STDOUT') && $cli->blue($data['foundThumbs'] . ' images found in rendered content');
+        defined('STDOUT') && (
+            $data['renderFailed'] > 0 ?
+                $cli->error($data['renderFailed'] . ' pages failed rendering') :
+                $cli->blue($data['renderFailed'] . ' pages failed rendering')
+        );
+        foreach ($this->renderFailed as $fail) {
+            defined('STDOUT') && defined('STDOUT') && $cli->red($fail);
+        }
+        defined('STDOUT') && $cli->success($data['count'] . ' pages rendered');
+
+        janitor()->data($cli->arg('command'), $data);
+    }
+
+    private function getPageIDs(CLI $cli): array
+    {
+        $query = $cli->arg('query');
+        $page = !empty($cli->arg('page')) ? page($cli->arg('page')) : null;
+        $ids = [];
+        if (!empty($query) && $query !== 'site.index') {
+            $allPages = (new Query(
+                $query,
+                [
+                    'kirby' => $cli->kirby(),
+                    'site' => $cli->kirby()->site(),
+                    'page' => $page,
+                ]
+            ))->result();
+            // got single page from query instead of collection then create collection
+            if ($allPages instanceof Page) {
+                $allPages = new Pages([$allPages]);
+            }
+            foreach ($allPages as $page) {
+                $ids[] = $page->id(); // this should not fully load the page yet
+            }
+        } else { // performance optimized way to get ids for `site.index`
+            $finder = new Finder();
+            $finder->directories()
+                ->in($cli->kirby()->roots()->content());
+            foreach ($finder as $folder) {
+                $id = $folder->getRelativePathname();
+                if (!str_contains($id, '_drafts')) {
+                    $ids[] = ltrim(preg_replace('/\/*\d+_/', '/', $id), '/');
+                }
+            }
+        }
+
+        return $ids;
+    }
+
+    private function findUrlOfThumbsInContent(string $content): array
+    {
+        preg_match_all('~/media/pages/([a-zA-Z0-9-_./]+.(?:png|jpg|jpeg|webp|avif|gif))~', $content, $matches);
+        if ($matches && count($matches) > 1) {
+            return $matches[1];
+        }
+
+        return [];
+    }
+
+    private function renderPageContent(string $pageId): string
+    {
+        $page = page($pageId);
+        if ($this->countLanguages > 1) {
+            $content = $page->render();
+            foreach (kirby()->languages() as $lang) {
+                site()->visit($page, $lang->code());
+                $content .= $page->render();
+            }
+        } else {
+            site()->visit($page);
+            $content = $page->render();
+        }
+        return $content;
+    }
+
+    private function remotePageContent(string $pageId): string
+    {
+        $content = Remote::get($this->renderSiteUrl . '/' . $pageId)->content();
+        foreach (kirby()->languages() as $lang) {
+            $content .= Remote::get($this->renderSiteUrl . '/' . $lang->code() . '/' . $pageId)->content();
+        }
+        return $content;
+    }
+}
 
 return [
     'description' => 'Render all pages',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [
+        'query' => [
+            'shortPrefix' => 'q',
+            'longPrefix' => 'query',
+            'description' => 'Query what pages to render. like `site.index()` (default), `site.index(true)` or `page.children()`',
+            'defaultValue' => 'site.index', // `site.index`, `site.index(true)` for with drafts
+            'castTo' => 'string',
+        ],
+        'remote' => [
+            'shortPrefix' => 'r',
+            'longPrefix' => 'remote',
+            'description' => 'provide URL to render using Remote::get instead of `$page->render()`',
+            'castTo' => 'string',
+        ],
+    ] + Janitor::ARGS, // page, file, user, site, data
     'command' => static function (CLI $cli): void {
+        (new JanitorRenderCommand())->run($cli);
     }
 ];

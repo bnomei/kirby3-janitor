@@ -118,6 +118,7 @@ fields:
     label: 'Maintenance: {{ site.isUnderMaintenance.ecco("DOWN","UP") }}'
     icon: '{{ site.isUnderMaintenance.ecco("cancel","circle") }}'
 
+#  NOTE: This is old/v2 syntax
 #  janitor_job_v2:
 #    type: janitor
 #    job: some.key.to.task
@@ -135,12 +136,14 @@ fields:
     command: 'janitor:cleancontent'
     label: 'Clean Content'
 
-### =======
+  janitor_render:
+    type: janitor
+    command: 'janitor:render'
+    label: Render pages to create missing thumb jobs
 
-  # NOTE: Is better to generate thumbs via CLI / SSH / CRON
+  # NOTE: It is better to generate thumbs via CLI / SSH / CRON
   # since most servers have 30sec php timeout for web
   janitor_thumbs:
     type: janitor
-    command: thumbs page' # 'page' means only this page. could be 'site.index' or other querys without {{}}.
-    label: Generate Thumbs
-    process: Generating Thumbs...
+    command: 'janitor:thumbs'
+    label: Generate thumbs from existing thumb jobs
