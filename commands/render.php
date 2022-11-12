@@ -71,7 +71,7 @@ class JanitorRenderCommand
         $duration = time() - $time;
 
         $data = [
-            'status' => $this->visitedPages > 0 ? 200 : 204,
+            'status' => $this->visitedPages === 0 || count($this->renderFailed) ? 204 : 200,
             'duration' => $duration,
             'count' => $this->visitedPages,
             'foundThumbs' => count($this->foundThumbs),
@@ -80,9 +80,9 @@ class JanitorRenderCommand
         $data['message'] = t(
             'janitor.render.message',
             str_replace(
-                '{{ count }}',
-                $data['count'],
-                '{{ count }} pages rendered'
+                ['{{ count }}', '{{ failed }}', '{{ thumbs }}'],
+                [$data['count'], $data['renderFailed'], $data['foundThumbs']],
+                '{{ count }} pages rendered, {{ failed }} failed, {{ thumbs }} thumbs'
             )
         );
 
@@ -96,7 +96,9 @@ class JanitorRenderCommand
         foreach ($this->renderFailed as $fail) {
             defined('STDOUT') && defined('STDOUT') && $cli->red($fail);
         }
-        defined('STDOUT') && $cli->success($data['count'] . ' pages rendered');
+        defined('STDOUT') && $cli->success(
+            $data['count'] . ' pages rendered'
+        );
 
         janitor()->data($cli->arg('command'), $data);
     }

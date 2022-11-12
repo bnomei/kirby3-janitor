@@ -9,3 +9,4 @@ foreach ($page->images() as $image) {
 
 //\Kirby\CLI\CLI::command('whistle');
 //var_dump(janitor()->data('whistle'));
+// throw new Exception('xx');
