@@ -68,7 +68,7 @@ Janitor will automatically fill in the current model.
 - On a panel file view... `--file`.
 - And lastly `--site` will be automatically set when you had the button in the `site/blueprints/site.yml` blueprint.
 
-Create a Kirby CLI command [via a custom plugin](https://getkirby.com/docs/reference/plugins/extensions/commands) or put them into `site/commands`. If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
+Create a Kirby CLI command [via a custom plugin](https://getkirby.com/docs/reference/plugins/extensions/commands) or put them into `site/commands`.
 
 **site/commands/example.php**
 ```php
@@ -117,7 +117,7 @@ return [
 ];
 ```
 
-The Janitor plugin has a special command `janitor:job` that you can use to trigger you callback.
+The Janitor plugin has a special command `janitor:job` that you can use to trigger your callback.
 
 **site/blueprints/page/default.yml**
 ```yml
@@ -226,6 +226,8 @@ Again... checkout the [build-in commands](https://github.com/bnomei/kirby3-janit
     command: 'janitor:thumbs --site'
     label: Generate thumbs from existing thumb jobs (full site)
 ```
+
+If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
 
 ## Dependencies
 
