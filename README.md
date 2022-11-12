@@ -181,7 +181,7 @@ In either the command or the callback you will be setting/returning data to the 
 - `status`, return `200` for a **green** button flash, anything else for a **red** flash
 
 
-#### Examples
+### Examples
 
 Again... checkout the [build-in commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) and plugin [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) to learn how to use the field and api options yourself.
 
