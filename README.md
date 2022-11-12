@@ -19,7 +19,7 @@ Kirby 3 Plugin for running commands.
 Using composer:
 
 ```bash
-composer require https://github.com/getkirby/cli bnomei/kirby3-janitor
+composer require getkirby/cli bnomei/kirby3-janitor
 ```
 
 Using git submodules:
