@@ -11,7 +11,7 @@ return [
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,
-            'label' => ' ♫ ',
+            'message' => ' ♫ ',
         ]);
     }
 ];

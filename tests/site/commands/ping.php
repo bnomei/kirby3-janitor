@@ -15,7 +15,7 @@ return [
 
         janitor()->data($cli->arg('command'), [
             'status' => $success ? 200 : 404,
-            // label for success and error are defined in blueprint
+            // messages for success and error are defined in blueprint
             // but could also be provided here
             // 'success' => 'Pang',
             // 'error' => 'BONG',

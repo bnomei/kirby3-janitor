@@ -13,7 +13,7 @@ return [
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,
-            'label' => $file->modified('c'),
+            'message' => $file->modified('c'),
         ]);
     }
 ];
