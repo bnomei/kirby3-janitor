@@ -143,7 +143,12 @@ fields:
 
   # NOTE: It is better to generate thumbs via CLI / SSH / CRON
   # since most servers have 30sec php timeout for web
-  janitor_thumbs:
+  janitor_thumbssite:
     type: janitor
-    command: 'janitor:thumbs'
-    label: Generate thumbs from existing thumb jobs
+    command: 'janitor:thumbs --site'
+    label: Generate thumbs from existing thumb jobs (full site)
+
+  janitor_thumbspage:
+    type: janitor
+    command: 'janitor:thumbs' # NOTE: without --site
+    label: Generate thumbs from existing thumb jobs (only this page)

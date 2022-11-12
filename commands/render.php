@@ -42,7 +42,7 @@ class JanitorRenderCommand
 
         defined('STDOUT') && $cli->blue($this->countLanguages . ' languages');
         defined('STDOUT') && $cli->blue($this->countPages . ' pages');
-        defined('STDOUT') && $cli->out('Rendering Pages...');
+        defined('STDOUT') && $this->countPages > 0 && $cli->out('Rendering Pages...');
 
         foreach ($allPages as $pageId) {
             try {
@@ -82,7 +82,7 @@ class JanitorRenderCommand
             str_replace(
                 ['{{ count }}', '{{ failed }}', '{{ thumbs }}'],
                 [$data['count'], $data['renderFailed'], $data['foundThumbs']],
-                '{{ count }} pages rendered, {{ failed }} failed, {{ thumbs }} thumbs'
+                '{{ count }} pages rendered, {{ failed }} failed, {{ thumbs }} thumbs found'
             )
         );
 
@@ -141,7 +141,7 @@ class JanitorRenderCommand
 
     private function findUrlOfThumbsInContent(string $content): array
     {
-        preg_match_all('~/media/pages/([a-zA-Z0-9-_./]+.(?:png|jpg|jpeg|webp|avif|gif))~', $content, $matches);
+        preg_match_all('~/media/pages/([a-zA-Z0-9-_./]+.(?:avif|gif|jpeg|jpg|png|webp))~', $content, $matches);
         if ($matches && count($matches) > 1) {
             return $matches[1];
         }
