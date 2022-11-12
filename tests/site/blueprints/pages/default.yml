@@ -57,7 +57,7 @@ fields:
     icon: refresh
     # help: returns `reload => true` to janitor
 
-  janitor_href:
+  janitor_open:
     type: janitor
     command: 'janitor:open --data {{ user.panel.url }}'
     intab: true
