@@ -132,6 +132,18 @@ Kirby::plugin('bnomei/janitor', [
     'snippets' => [
         'maintenance' => __DIR__ . '/snippets/maintenance.php',
     ],
+    'translations' => [
+        'en' => [
+            // defined inline as fallbacks
+        ],
+        'de' => [
+            'janitor.cleancontent.message' => '{{ updated }} / {{ count }} bereinigt',
+            'janitor.maintenance.label' => 'Website ist {{ status }}',
+            'janitor.maintenance.down' => 'im Wartungs-Modus',
+            'janitor.maintenance.up' => 'online',
+            'janitor.maintenance.notice' => 'Diese Webseite ist bald wieder online.', // in snippet
+        ],
+    ]
 ]);
 
 if (!class_exists('Bnomei\Janitor')) {

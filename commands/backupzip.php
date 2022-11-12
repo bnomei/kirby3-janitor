@@ -127,7 +127,7 @@ return [
             'nicesize' => F::niceSize($output),
             'modified' => date('d/m/Y, H:i:s', F::modified($output)),
         ];
-        $data['label'] = $data['filename'] . '.zip [' .$data['nicesize'] .']';
+        $data['message'] = $data['filename'] . '.zip [' .$data['nicesize'] .']';
 
         defined('STDOUT') && $cli->blue($data['duration'] . ' sec');
         defined('STDOUT') && $cli->blue($data['nicesize']);

@@ -130,6 +130,11 @@ fields:
     # terminal: 'janitor:job --key some.key.to.task --data "some data" --user user://kXLzsVwR'
     label: 'Run Janitor v2 job'
 
+  janitor_cleancontent:
+    type: janitor
+    command: 'janitor:cleancontent'
+    label: 'Clean Content'
+
 ### =======
 
   # NOTE: Is better to generate thumbs via CLI / SSH / CRON
