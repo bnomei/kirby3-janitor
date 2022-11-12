@@ -135,7 +135,7 @@ The `$model` will match the model of whatever page, file, user or site object yo
 
 ### Built in commands and examples
 
-This plugin comes with a [few commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) you might like to use yourself and some [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) used to showcase the various options the button has (like how to change the icon or open a URL in a new tab). Some commands can be used in both panel and termial. Others are limited in their use to either one of them. In the terminal you can use `--help` argument to view the help for each command.
+This plugin comes with a [few commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) you might like to use yourself and some [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) used to showcase the various options the button has (like how to change the icon or open a URL in a new tab). Some commands can be used in both panel and terminal. Others are limited in their use to either one of them. In the terminal you can use `--help` argument to view the help for each command.
 
 - `janitor:backupzip`, creates a backup zip
 - `janitor:cleancontent`, removes fields from content file that are not defined in your blueprints
@@ -158,7 +158,7 @@ The button you create with the `field: janitor` in your blueprint can be configu
 - `command`, command like you would enter it in terminal, with [query language support](https://getkirby.com/docs/guide/blueprints/query-language) and page/file/user/site/data arguments
 - `cooldown`, time in milliseconds the message is flashed on the button (default: 2000)
 - `error`, set message to show on all non-`200` status returns with query language support
-- `icon`, set the icon of the button
+- `icon`, set the [icon](https://getkirby.com/docs/reference/panel/icons) of the button
 - `intab`, if `true` then use in combination with the `open`-option to open an URL in a new tab
 - `label`, set label of the button
 - `progress`, set message to show while the button waits for the response, with query language support
@@ -172,12 +172,12 @@ In either the command or the callback you will be setting/returning data to the 
 - `clipboard`, string to copy to clipboard
 - `download`, URL to start downloading
 - `error`, see `error`-field option
-- `icon`, see `error`-field option
-- `label`, see `error`-field option
-- `message`, see `error`-field option
+- `icon`, see `icon`-field option
+- `label`, see `label`-field option
+- `message`, see `message`-field option
 - `open`, URL to open, use with `intab`-field option to open in a new tab
 - `reload`, if `true` will reload panel view once api call is received
-- `success`, see `error`-field option
+- `success`, see `success`-field option
 - `status`, return `200` for a **green** button flash, anything else for a **red** flash
 
 
