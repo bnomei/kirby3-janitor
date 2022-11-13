@@ -260,6 +260,49 @@ if(F::exists($backup)) {
 }
 ```
 
+### Webhook with secret
+
+You can not call Janitors api unauthenticated. You either need to use the panel button or you can set a `secret` in your config.php file and call the janitor api URL with that secret.
+
+**site/config/config.php**
+```
+<?php
+
+return [
+  'bnomei.janitor.secret' => 'e9fe51f94eadabf54',
+  //... other options
+];
+```
+
+#### example URL
+```
+https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip
+```
+
+#### example with urlencoded arguments
+```
+http://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Athumbs%20--site
+```
+### CRON
+
+#### wget or curl
+
+You can also use the secret to trigger a job using wget or curl.
+
+```php
+wget https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip --delete-after
+// or
+curl -s https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip > /dev/null
+```
+
+### kirby cli (installed with composer)
+
+in your cron scheduler add the following command
+
+```
+cd /path/to/my/kirby/project/root && vendor/bin/kirby janitor:backupzip
+```
+
 ## Dependencies
 
 - [Kirby CLI](https://github.com/getkirby/cli)
