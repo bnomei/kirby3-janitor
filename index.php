@@ -41,13 +41,13 @@ Kirby::plugin('bnomei/janitor', [
                     $command = \Bnomei\Janitor::query($command, $this->model());
                     // append model
                     if ($this->model() instanceof \Kirby\Cms\Page) {
-                        $command .= ' --page ' . $this->model()->uuid() ?? $this->model()->id();
+                        $command .= ' --page ' . $this->model()->uuid()->toString() ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\File) {
-                        $command .= ' --file ' . $this->model()->uuid() ?? $this->model()->id();
+                        $command .= ' --file ' . $this->model()->uuid()->toString() ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\User) {
-                        $command .= ' --user ' . $this->model()->uuid() ?? $this->model()->id();
+                        $command .= ' --user ' . $this->model()->uuid()->toString() ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\Site) {
-                        $command .= ' --site';
+                        $command .= ' --site'; // boolean argument
                     }
                     return $command;
                 },

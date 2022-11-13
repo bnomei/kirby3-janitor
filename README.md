@@ -265,11 +265,11 @@ if(F::exists($backup)) {
 Supplying parameter to the core CLI functions can be a bit tricky since you need to separate argument key and argument values. It seems easy with one but gets a bit tedious with a dynamic list of parameters and if values contain `space`-chars or quotes. But fret not – Janitor has a helper for that as well.
 
 ```php
-Kirby\CLI\CLI::command('uuid', '--page', 'page://82h2nkal12ls'); // tests/site/commands/uuid.php
+Kirby\CLI\CLI::command('uuid', '--page', 'some/page'); // tests/site/commands/uuid.php
 
-janitor()->command('uuid --page page://82h2nkal12ls');
+janitor()->command('uuid --page some/page');
 
-var_dump(janitor()->data('uuid'));
+var_dump(janitor()->data('uuid')['message']); // page://82h2nkal12ls
 ```
 
 > Remember that using the `janitor()->command($string)`-helper you can call any of your own commands and the core commands as well, not just the ones defined by Janitor.

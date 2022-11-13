@@ -34,7 +34,7 @@ fields:
 
   test_uuid:
     type: janitor
-    command: 'uuid --data {{ model.uuid }}'
+    command: 'uuid'
     label: Echo the uuid
 
   test_unsaved:

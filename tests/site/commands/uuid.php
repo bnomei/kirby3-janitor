@@ -11,16 +11,16 @@ return [
 
         // get uuid from model (using a callback with $model would have been easier)
         if (!empty($cli->arg('page'))) {
-            $uuid = $cli->kirby()->page($cli->arg('page'))->uuid();
+            $uuid = $cli->kirby()->page($cli->arg('page'))->uuid()->toString();
         }
         if (!empty($cli->arg('file'))) {
-            $uuid = $cli->kirby()->file($cli->arg('file'))->uuid();
+            $uuid = $cli->kirby()->file($cli->arg('file'))->uuid()->toString();
         }
         if (!empty($cli->arg('user'))) {
-            $uuid = $cli->kirby()->user($cli->arg('user'))->uuid();
+            $uuid = $cli->kirby()->user($cli->arg('user'))->uuid()->toString();
         }
         if ($cli->arg('site')) {
-            $uuid = $cli->kirby()->site()->uuid();
+            $uuid = $cli->kirby()->site()->uuid()->toString();
         }
         // overwrite if defined explicitly
         if (!empty($cli->arg('data'))) {
