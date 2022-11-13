@@ -238,7 +238,7 @@ If you want you can also call any of [the core shipping with the CLI](https://gi
 
 ### Running commands in your code
 
-You can run any command in you own code as well like in a model, template, controller or hook. Since commands do not return data directly you need to retrieve data stored for janitor using a helper `janitor()->data($commandName)`.
+You can run any command in you own code as well like in a model, template, controller or hook. Since commands do not return data directly you need to retrieve data stored for Janitor using a helper `janitor()->data($commandName)`.
 
 #### Get data returned from a command
 ```php
@@ -259,6 +259,28 @@ if(F::exists($backup)) {
   die(); // needed to make content type work
 }
 ```
+
+#### Calling a command with parameters
+
+Supplying parameter to the core CLI functions can be a bit tricky since you need to separate argument key and argument values. It seems easy with one but gets a bit tedious with a dynamic list of parameters and if values contain `space`-chars or quotes. But fret not – Janitor has a helper for that as well.
+
+```php
+Kirby\CLI\CLI::command('uuid', '--page', 'page://82h2nkal12ls'); // tests/site/commands/uuid.php
+
+janitor()->command('uuid --page page://82h2nkal12ls');
+
+var_dump(janitor()->data('whistle'));
+```
+
+> Remember that using the `janitor()->command($string)`-helper you can call any of your own commands and the core commands as well, not just the ones defined by Janitor.
+
+If you want to work with command strings yourself you can use the following static helper method.
+
+```php
+list($name, $args) = Bnomei\Janitor::parseCommand('uuid --page page://82h2nkal12ls');
+Kirby\CLI\CLI::command($name, ...$args);
+```
+
 
 ### Webhook with secret
 
