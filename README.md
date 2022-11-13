@@ -180,30 +180,6 @@ In either the command or the callback you will be setting/returning data to the 
 - `success`, see `success`-field option
 - `status`, return `200` for a **green** button flash, anything else for a **red** flash
 
-### Run commands in your code
-
-You can run any command in you own code as well like in a model, template, controller or hook. Since commands do not return data directly you need to retrieve data stored for janitor using a helper `janitor()->data($commandName)`.
-
-#### Get data returned from a command
-```php
-Kirby\CLI\CLI::command('whistle'); // tests/site/commands/whistle.php
-var_dump(janitor()->data('whistle'));
-```
-
-#### Create and download a backup
-```php
-Kirby\CLI\CLI::command('janitor:backupzip');
-$backup = janitor()->data('janitor:backupzip')['path'];
-if(F::exists($backup)) {
-  Header::download([
-    'mime' => F::mime($backup),
-    'name' => F::filename($backup),
-  ]);
-  readfile($backup);
-  die(); // needed to make content type work
-}
-```
-
 ### Examples
 
 Again... check out the [built-in commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) and plugin [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) to learn how to use the field and api options yourself.
@@ -259,6 +235,30 @@ Again... check out the [built-in commands](https://github.com/bnomei/kirby3-jani
 ```
 
 If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
+
+### Running commands in your code
+
+You can run any command in you own code as well like in a model, template, controller or hook. Since commands do not return data directly you need to retrieve data stored for janitor using a helper `janitor()->data($commandName)`.
+
+#### Get data returned from a command
+```php
+Kirby\CLI\CLI::command('whistle'); // tests/site/commands/whistle.php
+var_dump(janitor()->data('whistle'));
+```
+
+#### Create and download a backup
+```php
+Kirby\CLI\CLI::command('janitor:backupzip');
+$backup = janitor()->data('janitor:backupzip')['path'];
+if(F::exists($backup)) {
+  Header::download([
+    'mime' => F::mime($backup),
+    'name' => F::filename($backup),
+  ]);
+  readfile($backup);
+  die(); // needed to make content type work
+}
+```
 
 ## Dependencies
 
