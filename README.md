@@ -297,7 +297,7 @@ return [
 https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip
 ```
 
-#### example with urlencoded arguments
+#### example URL with urlencoded arguments
 ```
 http://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Athumbs%20--site
 ```
