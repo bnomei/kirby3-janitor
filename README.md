@@ -285,7 +285,7 @@ http://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Athumbs%20--site
 ```
 ### CRON
 
-#### wget or curl
+#### Webhook with wget or curl
 
 You can also use the secret to trigger a job using wget or curl.
 
@@ -295,7 +295,7 @@ wget https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip
 curl -s https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip > /dev/null
 ```
 
-### kirby cli (installed with composer)
+#### Kirby CLI (installed with composer)
 
 in your cron scheduler add the following command
 
