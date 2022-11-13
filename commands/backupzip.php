@@ -126,6 +126,7 @@ return [
             'files' => $zipped,
             'nicesize' => F::niceSize($output),
             'modified' => date('d/m/Y, H:i:s', F::modified($output)),
+            'path' => $output,
         ];
         $data['message'] = $data['filename'] . '.zip [' .$data['nicesize'] .']';
 

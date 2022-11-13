@@ -10,7 +10,7 @@
 Kirby 3 Plugin for running commands.
 
 - It is a Panel Button!
-- It has commands build-in for cleaning the cache, sessions, create zip-backup, pre-generate thumbs, open URLs, refresh the current Panel page and more.
+- It has commands built-in for cleaning the cache, sessions, create zip-backup, pre-generate thumbs, open URLs, refresh the current Panel page and more.
 - You can define your own commands (call API hooks, play a game, hack a server, ...)
 - It can be triggered in your frontend code, with the official kirby CLI and a CRON.
 
@@ -57,7 +57,7 @@ title: Default Page
 fields:
   call_my_command:
     type: janitor
-    command: example --data test
+    command: 'example --data test'
     label: Call `Example` Command
 ```
 
@@ -125,7 +125,7 @@ title: Default Page
 fields:
   call_my_command:
     type: janitor
-    command: janitor:job --key example --data test
+    command: 'janitor:job --key example --data test'
     label: Call `Example` Command
 ```
 
@@ -157,12 +157,12 @@ The button you create with the `field: janitor` in your blueprint can be configu
 - `autosave`, if `true` then save before pressing the button
 - `command`, command like you would enter it in terminal, with [query language support](https://getkirby.com/docs/guide/blueprints/query-language) and page/file/user/site/data arguments
 - `cooldown`, time in milliseconds the message is flashed on the button (default: 2000)
-- `error`, set message to show on all non-`200` status returns with query language support
+- `error`, set message to show on all **non-200**-status returns with query language support
 - `icon`, set the [icon](https://getkirby.com/docs/reference/panel/icons) of the button
 - `intab`, if `true` then use in combination with the `open`-option to open an URL in a new tab
 - `label`, set label of the button
 - `progress`, set message to show while the button waits for the response, with query language support
-- `success`, set message to show on all non-`200` status returns, with query language support
+- `success`, set message to show on all **200**-status returns, with query language support
 - `unsaved`, if `false` then disable the button if panel view has unsaved content
 
 ### Janitor API options
@@ -180,12 +180,43 @@ In either the command or the callback you will be setting/returning data to the 
 - `success`, see `success`-field option
 - `status`, return `200` for a **green** button flash, anything else for a **red** flash
 
+### Run commands in your code
+
+You can run any command in you own code as well like in a model, template, controller or hook. Since commands do not return data directly you need to retrieve data stored for janitor using a helper `janitor()->data($commandName)`.
+
+#### Get data returned from a command
+```php
+Kirby\CLI\CLI::command('whistle'); // tests/site/commands/whistle.php
+var_dump(janitor()->data('whistle'));
+```
+
+#### Create and download a backup
+```php
+Kirby\CLI\CLI::command('janitor:backupzip');
+$backup = janitor()->data('janitor:backupzip')['path'];
+if(F::exists($backup)) {
+  Header::download([
+    'mime' => F::mime($backup),
+    'name' => F::filename($backup),
+  ]);
+  readfile($backup);
+  die(); // needed to make content type work
+}
+```
 
 ### Examples
 
-Again... checkout the [build-in commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) and plugin [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) to learn how to use the field and api options yourself.
+Again... check out the [built-in commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) and plugin [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) to learn how to use the field and api options yourself.
 
 ```yml
+  test_ping:
+    type: janitor
+    command: 'ping' # see tests/site/commands/ping.php
+    label: Ping
+    progress: ....
+    success: Pong
+    error: BAMM
+
   janitor_open:
     type: janitor
     command: 'janitor:open --data {{ user.panel.url }}'
