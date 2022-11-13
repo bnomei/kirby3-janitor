@@ -265,11 +265,29 @@ if(F::exists($backup)) {
 You can not call Janitors api unauthenticated. You either need to use the panel button or you can set a `secret` in your config.php file and call the janitor api URL with that secret.
 
 **site/config/config.php**
-```
+```php
 <?php
 
 return [
-  'bnomei.janitor.secret' => 'e9fe51f94eadabf54',
+  'bnomei.janitor.secret' => 'e9fe51f94eadabf54', // whatever string you like
+  //... other options
+];
+```
+
+You could also use a callback if you want to store the secret in a `.env` file and have it loaded by my [dotenv plugin](https://github.com/bnomei/kirby3-dotenv).
+
+**/.env**
+```dotenv
+# whatever key and value you like
+MY_JANITOR_SECRET=e9fe51f94eadabf54
+```
+
+**site/config/config.php**
+```php
+<?php
+
+return [
+  'bnomei.janitor.secret' => fn() => env('MY_JANITOR_SECRET'),
   //... other options
 ];
 ```
