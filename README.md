@@ -265,9 +265,9 @@ if(F::exists($backup)) {
 Supplying parameter to the core CLI functions can be a bit tricky since you need to separate argument key and argument values. It seems easy with one but gets a bit tedious with a dynamic list of parameters and if values contain `space`-chars or quotes. But fret not – Janitor has a helper for that as well.
 
 ```php
-Kirby\CLI\CLI::command('uuid', '--data', 'page://82h2nkal12ls'); // tests/site/commands/uuid.php
+Kirby\CLI\CLI::command('uuid', '--page', 'page://82h2nkal12ls'); // tests/site/commands/uuid.php
 
-janitor()->command('uuid --data page://82h2nkal12ls');
+janitor()->command('uuid --page page://82h2nkal12ls');
 
 var_dump(janitor()->data('uuid'));
 ```
@@ -277,7 +277,7 @@ var_dump(janitor()->data('uuid'));
 If you want to work with command strings yourself you can use the following static helper method.
 
 ```php
-list($name, $args) = Bnomei\Janitor::parseCommand('uuid --data page://82h2nkal12ls');
+list($name, $args) = Bnomei\Janitor::parseCommand('uuid --page page://82h2nkal12ls');
 Kirby\CLI\CLI::command($name, ...$args);
 ```
 
