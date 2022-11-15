@@ -10,183 +10,141 @@ office) clean, tends the heating system, and makes minor repairs
 
 Kirby::plugin('bnomei/janitor', [
     'options' => [
-        'jobs' => [],
-        'jobs-defaults' => [
-            'clean' => 'Bnomei\\CleanCacheFilesJob', // legacy
-            'cleanCache' => 'Bnomei\\CleanCacheFilesJob',
-            'flush' => 'Bnomei\\FlushPagesCacheJob', // legacy
-            'flushPages' => 'Bnomei\\FlushPagesCacheJob',
-            'cleanSessions' => 'Bnomei\\CleanSessionsJob',
-            'cleanContent' => 'Bnomei\\CleanContentJob',
-            'flushSessions' => 'Bnomei\\FlushSessionFilesJob',
-            'flushLapse' => 'Bnomei\\FlushLapseJob',
-            'flushRedisDB' => 'Bnomei\\FlushRedisDBJob',
-            'reindexAutoID' => 'Bnomei\\ReindexAutoIDJob',
-            'reindexSearch' => 'Bnomei\\ReindexSearchForKirbyJob',
-            'backupZip' => 'Bnomei\\BackupZipJob',
-            'render' => 'Bnomei\\RenderJob',
-            'thumbs' => 'Bnomei\\ThumbsJob',
-        ],
-        'jobs-extends' => [
-            'bnomei.lapse.jobs', // https://github.com/bnomei/kirby3-lapse/blob/master/index.php#L10
-        ],
-
         'label.cooldown' => 2000, // ms
         'secret' => null,
-
-        'thumbsOnUpload' => false,
-
-        'renderSiteUrl' => function () {
-            $url = site()->url();
-//            $url = 'https://www.example.com/';
-            return php_sapi_name() === 'cli' ? $url : '';
-        },
-
-        'log.enabled' => false,
-        'log.fn' => function (string $msg, string $level = 'info', array $context = []): bool {
-            if (option('bnomei.janitor.log.enabled')) {
-                if (function_exists('monolog')) {
-                    monolog()->{$level}($msg, $context);
-                } elseif (function_exists('kirbyLog')) {
-                    kirbyLog('bnomei.janitor.log')->log($msg, $level, $context);
-                }
-                return true;
-            }
-            return false;
-        },
-        'icon' => false,
     ],
-    'snippets' => [
-        'maintenance' => __DIR__ . '/snippets/maintenance.php',
+    'commands' => [ // https://github.com/getkirby/cli
+        'janitor:backupzip' => require __DIR__ . '/commands/backupzip.php',
+        'janitor:cleancontent' => require __DIR__ . '/commands/cleancontent.php',
+        'janitor:clipboard' => require __DIR__ . '/commands/clipboard.php',
+        'janitor:download' => require __DIR__ . '/commands/download.php',
+        'janitor:flush' => require __DIR__ . '/commands/flush.php',
+        'janitor:job' => require __DIR__ . '/commands/job.php',
+        'janitor:maintenance' => require __DIR__ . '/commands/maintenance.php',
+        'janitor:open' => require __DIR__ . '/commands/open.php',
+        'janitor:pipe' => require __DIR__ . '/commands/pipe.php',
+        'janitor:render' => require __DIR__ . '/commands/render.php',
+        'janitor:thumbs' => require __DIR__ . '/commands/thumbs.php',
+        'janitor:tinker' => require __DIR__ . '/commands/tinker.php',
     ],
     'fields' => [
         'janitor' => [
             'props' => [
-                'label' => function ($label = null) {
-                    return \Kirby\Toolkit\I18n::translate($label, $label);
-                },
-                'progress' => function ($progress = null) {
-                    return \Kirby\Toolkit\I18n::translate($progress, $progress);
-                },
-                'job' => function (?string $job = null) {
-                    return 'plugin-janitor/' . $job;
-                },
-                'cooldown' => function ($cooldownMilliseconds = null) {
-                    return intval($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));
-                },
-                'data' => function (?string $data = null) {
-                    $data = \Bnomei\Janitor::query($data, $this->model());
-                    return str_replace(
-                        '/',
-                        '+S_L_A_S_H+',
-                        \Kirby\Toolkit\I18n::translate($data, $data)
-                    );
+                'autosave' => function ($doAutosave = false) {
+                    return \Bnomei\Janitor::isTrue($doAutosave);
                 },
                 'clipboard' => function ($clipboard = null) {
                     return \Bnomei\Janitor::isTrue($clipboard);
                 },
-                'unsaved' => function ($allowUnsaved = true) {
-                    return \Bnomei\Janitor::isTrue($allowUnsaved);
-                },
-                'autosave' => function ($doAutosave = false) {
-                    return \Bnomei\Janitor::isTrue($doAutosave);
-                },
-                'intab' => function ($intab = false) {
-                    return \Bnomei\Janitor::isTrue($intab);
+                'command' => function ($command = null) {
+                    // resolve queries
+                    $command = \Bnomei\Janitor::query($command, $this->model());
+                    // append model
+                    if ($this->model() instanceof \Kirby\Cms\Page) {
+                        $command .= ' --page ' . $this->model()->uuid()->toString() ?? $this->model()->id();
+                    } elseif ($this->model() instanceof \Kirby\Cms\File) {
+                        $command .= ' --file ' . $this->model()->uuid()->toString() ?? $this->model()->id();
+                    } elseif ($this->model() instanceof \Kirby\Cms\User) {
+                        $command .= ' --user ' . $this->model()->uuid()->toString() ?? $this->model()->id();
+                    } elseif ($this->model() instanceof \Kirby\Cms\Site) {
+                        $command .= ' --site'; // boolean argument
+                    }
+                    return $command;
                 },
                 'confirm' => function ($confirm = '') {
                     return $confirm;
                 },
-                'pageURI' => function () {
-                    $uri = kirby()->site()->homePageId();
-                    if (is_a($this->model(), \Kirby\Cms\Page::class)) {
-                        $uri = $this->model()->uri();
-                    }
-                    if (is_a($this->model(), \Kirby\Cms\File::class)) {
-                        $uri = $this->model()->parent()->uri();
-                    }
-                    if (is_a($this->model(), \Kirby\Cms\User::class)) {
-                        $uri = $this->model()->panel()->path();
-                    }
-                    if (is_a($this->model(), \Kirby\Cms\Site::class)) {
-                        $uri = '$'; // any not empty string so route /$/DATA is used
-                    }
-                    return str_replace('/', '+', $uri);
+                'cooldown' => function ($cooldownMilliseconds = null) {
+                    return intval($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));
                 },
-                'icon' => function ($icon = false) {
-                    return $icon ?? option('bnomei.janitor.icon');
+                'error' => function ($error = null) {
+                    $error = \Bnomei\Janitor::query($error, $this->model());
+                    return \Kirby\Toolkit\I18n::translate($error, $error);
+                },
+                'icon' => function ($icon = null) {
+                    return \Bnomei\Janitor::query($icon, $this->model());
+                },
+                'intab' => function ($intab = false) {
+                    return \Bnomei\Janitor::isTrue($intab);
+                },
+                'label' => function ($label = null) {
+                    $label = \Bnomei\Janitor::query($label, $this->model());
+                    return \Kirby\Toolkit\I18n::translate($label, $label);
+                },
+                'progress' => function ($label = null) {
+                    $label = \Bnomei\Janitor::query($label, $this->model());
+                    return \Kirby\Toolkit\I18n::translate($label, $label);
+                },
+                'success' => function ($label = null) {
+                    $label = \Bnomei\Janitor::query($label, $this->model());
+                    return \Kirby\Toolkit\I18n::translate($label, $label);
+                },
+                'unsaved' => function ($allowUnsaved = true) {
+                    return \Bnomei\Janitor::isTrue($allowUnsaved);
                 },
             ],
         ],
     ],
-    'routes' => [
-        [
-            'pattern' => 'plugin-janitor/(:any)/(:any)',
-            'action' => function (string $job, string $secret) {
-                $janitor = new \Bnomei\Janitor();
-                $janitor->log('janitor-api-secret', 'debug');
-                $response = $janitor->jobWithSecret($secret, $job);
-                return Kirby\Http\Response::json($response, A::get($response, 'status', 400));
-            },
-        ],
-    ],
     'hooks' => [
-        'file.create:after' => function ($file) {
-            if (option('bnomei.janitor.thumbsOnUpload') && $file->isResizable()) {
-                janitor('render', $file->page(), 'page');
-                janitor('thumbs', $file->page(), 'page');
-            }
-        },
+        // maintenance
         'route:before' => function () {
-            $isPanel = strpos(
-                kirby()->request()->url()->toString(),
-                kirby()->urls()->panel()
-            ) !== false;
-            $isApi = strpos(
-                kirby()->request()->url()->toString(),
-                kirby()->urls()->api()
-            ) !== false;
-            if (!$isPanel && !$isApi) {
-                if (F::exists(kirby()->roots()->index() . '/down')) {
-                    snippet('maintenance');
-                    die;
-                }
+            if (\Bnomei\Janitor::requestBlockedByMaintenance() &&
+                F::exists(kirby()->roots()->index() . '/.maintenance')) {
+                snippet('maintenance');
+                die;
             }
         },
     ],
     'api' => [
         'routes' => [
             [
-                'pattern' => 'plugin-janitor/(:any)/(:any)/(:any)',
-                'action' => function (string $job, string $page, string $data) {
-                    $janitor = \Bnomei\Janitor::singleton();
-                    $janitor->log('janitor-api-auth', 'debug');
-                    return $janitor->job($job, [
-                        'contextPage' => $page,
-                        'contextData' => $data,
-                    ]);
+                'pattern' => 'plugin-janitor/(:all)', // using (:all) fixes issues with kirbys routing for : and /
+                'action' => function (string $command) {
+                    return \Bnomei\Janitor::singleton()->command(urldecode($command));
                 },
-            ],
-            [
-                'pattern' => 'plugin-janitor/(:any)/(:any)',
-                'action' => function (string $job, string $page) {
-                    $janitor = \Bnomei\Janitor::singleton();
-                    $janitor->log('janitor-api-auth', 'debug');
-                    return $janitor->job($job, [
-                        'contextPage' => $page,
-                    ]);
-                },
-            ],
-            [
-                'pattern' => 'plugin-janitor/(:any)',
-                'action' => function (string $job) {
-                    $janitor = \Bnomei\Janitor::singleton();
-                    $janitor->log('janitor-api-auth', 'debug');
-                    return $janitor->job($job);
-                }
-            ],
+            ]
         ],
     ],
+    'routes' => [
+        [
+            'pattern' => 'plugin-janitor/(:any)/(:all)', // using (:all) fixes issues with kirbys routing for : and /
+            'action' => function (string $secret, string $command) {
+                $janitor = \Bnomei\Janitor::singleton();
+                if ($secret == $janitor->option('secret')) {
+                    return $janitor->command(urldecode($command));
+                }
+                return [
+                    'status' => 401,
+                ];
+            },
+        ],
+    ],
+    'fieldMethods' => [
+        'ecco' => function ($field, string $a, string $b = ''): string {
+            return $field->bool() ? $a : $b;
+        },
+    ],
+    'siteMethods' => [
+        'isUnderMaintenance' => function (): \Kirby\Cms\Field {
+            return new \Kirby\Cms\Field(null, 'isUnderMaintenance', F::exists(kirby()->roots()->index() . '/.maintenance'));
+        },
+    ],
+    'snippets' => [
+        'maintenance' => __DIR__ . '/snippets/maintenance.php',
+    ],
+    'translations' => [
+        'en' => [
+            // defined inline as fallbacks
+        ],
+        'de' => [
+            'janitor.cleancontent.message' => '{{ updated }} / {{ count }} bereinigt',
+            'janitor.maintenance.label' => 'Website ist {{ status }}',
+            'janitor.maintenance.down' => 'im Wartungs-Modus',
+            'janitor.maintenance.up' => 'online',
+            'janitor.maintenance.notice' => 'Diese Webseite ist bald wieder online.', // in snippet
+            'janitor.render.message' => '{{ count }} Seiten gerendert',
+        ],
+    ]
 ]);
 
 if (!class_exists('Bnomei\Janitor')) {
@@ -194,17 +152,8 @@ if (!class_exists('Bnomei\Janitor')) {
 }
 
 if (!function_exists('janitor')) {
-    function janitor(string $job, ?\Kirby\Cms\Page $contextPage = null, ?string $contextData = null, bool $dump = false)
+    function janitor(): \Bnomei\Janitor
     {
-        $janitor = \Bnomei\Janitor::singleton();
-        $janitor->log('janitor()', 'debug');
-        $response = $janitor->job($job, [
-            'contextPage' => $contextPage ? urlencode(str_replace('/', '+', $contextPage->uri())) : '',
-            'contextData' => $contextData ? urlencode($contextData) : '',
-        ]);
-        if ($dump) {
-            return $response;
-        }
-        return intval(A::get($response, 'status')) === 200;
+        return \Bnomei\Janitor::singleton();
     }
 }

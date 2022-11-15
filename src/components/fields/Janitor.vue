@@ -4,8 +4,8 @@
       :id="id"
       :class="['janitor', button.state]"
       :icon="currentIcon"
-      :job="job"
-      :disabled="!isUnsaved && hasChanges"
+      :command="command"
+      :disabled="!unsaved && !isUnsaved && hasChanges"
       @click="runJanitor"
     >
       {{ button.label || label }}
@@ -33,22 +33,19 @@ const STORAGE_ID = "janitor.runAfterAutosave";
 
 export default {
   props: {
+    autosave: Boolean,
+    clipboard: Boolean,
+    confirm: String,
+    command: String,
+    cooldown: Number,
+    error: String,
+    icon: String,
+    intab: Boolean,
     label: String,
     progress: String,
-    job: String,
-    cooldown: Number,
+    success: String,
     status: String,
-    data: String,
-    pageURI: String,
-    clipboard: Boolean,
     unsaved: Boolean,
-    autosave: Boolean,
-    intab: Boolean,
-    confirm: String,
-    icon: {
-      type: [Boolean, String],
-      default: false,
-    },
   },
 
   data() {
@@ -57,32 +54,30 @@ export default {
         label: null,
         state: null,
       },
-      downloadRequest: null,
       clipboardRequest: null,
-      urlRequest: null,
-      isUnsaved: false,
+      downloadRequest: null,
       icons: {
         "is-running": "janitorLoader",
         "is-success": "check",
         "has-error": "alert",
       },
+      isUnsaved: false,
+      urlRequest: null,
     };
   },
 
   computed: {
+    currentIcon() {
+      return this.icons[this.status] ?? this.icon;
+    },
     id() {
       return (
         "janitor-" +
-        this.hashCode(this.job + (this.button.label ?? "") + this.pageURI)
+        this.hashCode(this.command + (this.button.label ?? "") + this.label)
       );
     },
-
     hasChanges() {
       return this.$store.getters["content/hasChanges"]();
-    },
-
-    currentIcon() {
-      return this.icons[this.status] ?? this.icon;
     },
   },
 
@@ -138,20 +133,6 @@ export default {
         }
       }
 
-      if (this.clipboard) {
-        this.clipboardRequest = this.data;
-        this.button.label = this.progress;
-        this.button.state = "is-success";
-
-        setTimeout(this.resetButton, this.cooldown);
-
-        this.$nextTick(() => {
-          this.copyToClipboard(this.data);
-        });
-
-        return;
-      }
-
       if (this.clipboardRequest) {
         await this.copyToClipboard(this.clipboardRequest);
         this.resetButton();
@@ -163,24 +144,32 @@ export default {
         return;
       }
 
-      let url = this.job + "/" + encodeURIComponent(this.pageURI);
-
-      if (this.data) {
-        url = url + "/" + encodeURIComponent(this.data);
-      }
-
-      this.getRequest(url);
+      this.getRequest("plugin-janitor/" + encodeURIComponent(this.command));
     },
 
     async getRequest(url) {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
-      const { label, status, reload, href, download, clipboard } =
+      const { label, message, status, reload, open, download, clipboard, success, error, icon } =
         await this.$api.get(url);
 
+      if (status === 200) {
+        this.button.label = success ?? this.success
+      } else {
+        this.button.label = error ?? this.error
+      }
+
       if (label) {
-        this.button.label = label;
+        this.label = label;
+      }
+
+      if (message) {
+        this.button.label = message;
+      }
+
+      if (icon) {
+        this.icon = icon;
       }
 
       if (status) {
@@ -193,14 +182,14 @@ export default {
         location.reload();
       }
 
-      if (href) {
+      if (open) {
         if (this.intab) {
-          this.urlRequest = href;
+          this.urlRequest = open;
           this.$nextTick(() => {
             this.simulateClick(this.$refs.tabAnchor);
           });
         } else {
-          location.href = href;
+          location.href = open;
         }
       }
 
@@ -213,6 +202,15 @@ export default {
 
       if (clipboard) {
         this.clipboardRequest = clipboard;
+        this.button.label = this.progress;
+        this.button.state = "is-success";
+
+        setTimeout(this.resetButton, this.cooldown);
+
+        this.$nextTick(() => {
+          this.copyToClipboard(this.clipboardRequest);
+        });
+
       } else {
         setTimeout(this.resetButton, this.cooldown);
       }

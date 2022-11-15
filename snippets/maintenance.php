@@ -35,7 +35,7 @@
 </head>
 <body>
   <p class="notice">
-    This page is currently in maintenance.
+    <?= t('janitor.maintenance.notice', 'This page is currently in maintenance.') ?>
   </p>
 </body>
 </html>

@@ -1,0 +1,24 @@
+<?php
+
+use Bnomei\Janitor;
+use Kirby\CLI\CLI;
+
+return [
+    'description' => 'Pipe `data` to `pipe` arg in Janitor',
+    'args' => [
+        'to' => [
+            'longPrefix' => 'to',
+            'description' => 'String value of output to Janitor (like `href` or `clipboard`)',
+            'required' => true,
+        ],
+    ] + Janitor::ARGS, // page, file, user, site, data
+    'command' => static function (CLI $cli): void {
+        $pipe = $cli->arg('to');
+        defined('STDOUT') && $cli->success($pipe . ' => ' . $cli->arg('data'));
+
+        janitor()->data($cli->arg('command'), [
+            'status' => 200,
+            $pipe => $cli->arg('data'),
+        ]);
+    }
+];

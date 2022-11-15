@@ -1,18 +1,20 @@
-
 sections:
-    pages:
-        type: pages
+  pages:
+    type: pages
 
+  fields:
+    type: fields
     fields:
-        type: fields
-        fields:
-            title:
-                type: text
-            nodatajob:
-                type: janitor
-                job: 'minimal'
-                # no data
-            jansite:
-                type: janitor
-                job: 'clipboard'
-                data: '{{ model }} {{ site.title }}'
+      title:
+        type: text
+      nodatajob:
+        type: janitor
+        command: whistle
+        # no data
+      jansite:
+        type: janitor
+        command: 'janitor:clipboard --data {{ site.title }}'
+      janitor_job_v3:
+        type: janitor
+        command: 'janitor:job --key some.key.to.task --data "some data"'
+        label: 'Run Janitor v2 job'

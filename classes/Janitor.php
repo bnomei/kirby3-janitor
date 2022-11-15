@@ -4,208 +4,98 @@ declare(strict_types=1);
 
 namespace Bnomei;
 
+use Kirby\CLI\CLI;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use League\CLImate\CLImate;
 
 final class Janitor
 {
-    /**
-     * @var array
-     */
-    private $options;
+    public const ARGS = [
+        'page' => [
+            'prefix' => 'p',
+            'longPrefix' => 'page',
+            'description' => 'Page UUID or ID',
+            'castTo' => 'string',
+        ],
+        'file' => [
+            'prefix' => 'f',
+            'longPrefix' => 'file',
+            'description' => 'File UUID or ID',
+            'castTo' => 'string',
+        ],
+        'user' => [
+            'prefix' => 'u',
+            'longPrefix' => 'user',
+            'description' => 'User UUID or ID',
+            'castTo' => 'string',
+        ],
+        'site' => [
+            'prefix' => 's',
+            'longPrefix' => 'site',
+            'description' => 'Site',
+            'noValue' => true,
+        ],
+        'data' => [
+            'prefix' => 'd',
+            'longPrefix' => 'data',
+            'description' => 'Data',
+        ]
+    ];
 
-    /**
-     * Janitor constructor.
-     * @param array $options
-     */
+    private static array $data;
+
+    public function data(string $command, ?array $data = null): ?array
+    {
+        if ($data) {
+            Janitor::$data[$command] = $data;
+        }
+
+        return A::get(Janitor::$data, $command);
+    }
+
+    private array $options;
+
     public function __construct(array $options = [])
     {
         $defaults = [
             'debug' => option('debug'),
-            'log' => option('bnomei.janitor.log.fn'),
-            'jobs' => option('bnomei.janitor.jobs'),
-            'jobs-defaults' => ['bnomei.janitor.jobs-defaults'],
-            'jobs-extends' => option('bnomei.janitor.jobs-extends'),
             'secret' => option('bnomei.janitor.secret'),
         ];
         $this->options = array_merge($defaults, $options);
 
-        $extends = array_merge($this->options['jobs-defaults'], $this->options['jobs-extends']);
-        foreach ($extends as $extend) {
-            // NOTE: it is intended that jobs override merged not other way around
-            $this->options['jobs'] = array_change_key_case(
-                array_merge(option($extend, []), $this->options['jobs'])
-            );
-        }
-
         foreach ($this->options as $key => $call) {
-            if (is_callable($call) && in_array($key, ['secret'])) {
+            if (is_callable($call) && $key == 'secret') {
                 $this->options[$key] = $call();
             }
         }
     }
 
-    /**
-     * @param string|null $key
-     * @return array
-     */
-    public function option(?string $key = null)
+    public function option(?string $key = null): mixed
     {
         if ($key) {
             return A::get($this->options, $key);
         }
+
         return $this->options;
     }
 
-    /**
-     * @param string $secret
-     * @param string $name
-     * @param array $data
-     * @return array
-     */
-    public function jobWithSecret(string $secret, string $name, array $data = []): array
+    public function command(string $command): array
     {
-        if ($secret === $this->option('secret')) {
-            return $this->job($name, $data);
-        }
-        return [
-            'status' => 401,
+        list($name, $args) = Janitor::parseCommand($command);
+
+        CLI::command($name, ...$args);
+
+        return $this->data($name) ?? [
+            'status' => 200,
+            'message' => 'Janitor has no data from command "' . $name . '".',
         ];
     }
 
-    /**
-     * @param string $name
-     * @param array $data
-     * @return array
-     */
-    public function job(string $name, array $data = []): array
-    {
-        $job = $this->findJob($name);
-
-        if (!is_string($job) && is_callable($job)) {
-            return $this->jobFromCallable($job, $data);
-        } elseif (class_exists($job)) {
-            return $this->jobFromClass($job, $data);
-        }
-
-        return [
-            'status' => 404,
-        ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function listJobs()
-    {
-        // find in jobs config
-        return array_keys($this->option('jobs'));
-    }
-
-    /**
-     * @param string $name
-     * @return mixed|string
-     */
-    public function findJob(string $name)
-    {
-        // find in jobs config
-        $jobInConfig = A::get($this->option('jobs'), strtolower($name));
-        if ($jobInConfig) {
-            return $jobInConfig;
-        }
-
-        // could be a class
-        return $name;
-    }
-
-    /**
-     * @param $job
-     * @param array $data
-     * @return array
-     */
-    public function jobFromCallable($job, array $data): array
-    {
-        $return = false;
-        try {
-            set_time_limit(0);
-        } catch (\Exception $ex) {
-            // ignore
-        }
-
-        try {
-            $return = $job(
-                page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
-                str_replace('+S_L_A_S_H+', '/', urldecode(A::get($data, 'contextData', '')))
-            );
-        } catch (\BadMethodCallException $ex) {
-            $return = $job();
-        }
-        if (is_array($return)) {
-            return $return;
-        }
-        return [
-            'status' => $return ? 200 : 404,
-        ];
-    }
-
-    /**
-     * @param string $job
-     * @param array $data
-     * @return array
-     */
-    public function jobFromClass(string $job, array $data): array
-    {
-        $object = new $job(
-            page(str_replace('+', '/', urldecode(A::get($data, 'contextPage', '')))),
-            str_replace('+S_L_A_S_H+', '/', urldecode(A::get($data, 'contextData', '')))
-        );
-
-        if (method_exists($object, 'job')) {
-            try {
-                set_time_limit(0);
-            } catch (\Exception $ex) {
-                // ignore
-            }
-            return $object->job();
-        }
-        return [
-            'status' => 400,
-        ];
-    }
-
-    /**
-     * @param string $msg
-     * @param string $level
-     * @param array $context
-     * @return bool
-     */
-    public function log(string $msg = '', string $level = 'info', array $context = []): bool
-    {
-        $log = $this->option('log');
-        if ($log && is_callable($log)) {
-            if (!$this->option('debug') && $level == 'debug') {
-                // skip but...
-                return true;
-            } else {
-                return $log($msg, $level, $context);
-            }
-        }
-        return false;
-    }
-
-    /*
-     * @var Janitor
-     */
     private static $singleton;
 
-    /**
-     * @param array $options
-     * @return Janitor
-     */
     public static function singleton(array $options = []): Janitor
     {
         if (self::$singleton) {
@@ -213,62 +103,71 @@ final class Janitor
         }
 
         self::$singleton = new Janitor($options);
+
         return self::$singleton;
     }
 
-    /**
-     * @param string|null $template
-     * @param mixed|null $model
-     * @return string
-     */
-    public static function query(string $template = null, $model = null): string
+    public static function query(string $template = null, mixed $model = null): string
     {
         $page = null;
         $file = null;
         $user = kirby()->user();
-        if ($model && $model instanceof Page) {
+        if ($model instanceof Page) {
             $page = $model;
-        } elseif ($model && $model instanceof File) {
+        } elseif ($model instanceof File) {
             $file = $model;
-        } elseif ($model && $model instanceof User) {
+        } elseif ($model instanceof User) {
             $user = $model;
         }
+
         return Str::template($template, [
             'kirby' => kirby(),
             'site' => kirby()->site(),
             'page' => $page,
             'file' => $file,
             'user' => $user,
-            'model' => $model ? get_class($model) : null,
+            'model' => $model,
         ]);
     }
 
-    /**
-     * @param $val
-     * @param bool $return_null
-     * @return bool
-     */
-    public static function isTrue($val, $return_null = false): bool
+    public static function isTrue($val, bool $return_null = false): bool
     {
         $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
-        $boolval = ($boolval === null && !$return_null ? false : $boolval);
-        return $boolval;
+
+        return ($boolval === null && !$return_null ? false : $boolval);
     }
 
-    /**
-     * @var \League\CLImate\CLImate
-     */
-    private static $climate;
-
-    /**
-     * @param CLImate|null $climate
-     * @return CLImate|null
-     */
-    public static function climate(?CLImate $climate = null): ?CLImate
+    public static function requestBlockedByMaintenance(): bool
     {
-        if ($climate && !self::$climate) {
-            self::$climate = $climate;
+        $request = kirby()->request()->url()->toString();
+        foreach ([
+            kirby()->urls()->panel(),
+            kirby()->urls()->api(),
+            kirby()->urls()->media()
+        ] as $url) {
+            if (str_contains($request, $url)) {
+                return false;
+            }
         }
-        return self::$climate;
+        return true;
+    }
+
+    public static function parseCommand(string $command)
+    {
+        $groups = explode(' ', $command);
+        $name = array_shift($groups);
+        $groups = explode(' --', ' ' . implode(' ', $groups));
+        array_shift($groups); // remove empty first value
+        $args = [];
+
+        foreach ($groups as $group) {
+            $parts = explode(' ', $group);
+            $args[] = '--' . array_shift($parts);
+            // remove enclosing " or ' from string like it would happen
+            // in terminal so commands in blueprint can be used vice versa
+            $args[] = trim(trim(implode(' ', $parts), '"'), "'");
+        }
+
+        return [$name, $args];
     }
 }
