@@ -11,7 +11,7 @@ use Kirby\CLI\CLI;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Http\Remote;
-use Kirby\Toolkit\Query;
+use Kirby\Query\Query;
 use Symfony\Component\Finder\Finder;
 
 class JanitorRenderCommand
@@ -115,14 +115,11 @@ class JanitorRenderCommand
         $page = !empty($cli->arg('page')) ? page($cli->arg('page')) : null;
         $ids = [];
         if (!empty($query) && $query !== 'site.index') {
-            $allPages = (new Query(
-                $query,
-                [
-                    'kirby' => $cli->kirby(),
-                    'site' => $cli->kirby()->site(),
-                    'page' => $page,
-                ]
-            ))->result();
+            $allPages = (new Query($query))->resolve([
+                'kirby' => $cli->kirby(),
+                'site' => $cli->kirby()->site(),
+                'page' => $page,
+            ]);
             // got single page from query instead of collection then create collection
             if ($allPages instanceof Page) {
                 $allPages = new Pages([$allPages]);

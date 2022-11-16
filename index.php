@@ -102,6 +102,13 @@ Kirby::plugin('bnomei/janitor', [
                 'action' => function (string $command) {
                     return \Bnomei\Janitor::singleton()->command(urldecode($command));
                 },
+            ],
+            [
+                'pattern' => 'plugin-janitor',
+                'method' => 'POST',
+                'action' => function () {
+                    return \Bnomei\Janitor::singleton()->command(get('command'));
+                },
             ]
         ],
     ],
@@ -112,6 +119,19 @@ Kirby::plugin('bnomei/janitor', [
                 $janitor = \Bnomei\Janitor::singleton();
                 if ($secret == $janitor->option('secret')) {
                     return $janitor->command(urldecode($command));
+                }
+                return [
+                    'status' => 401,
+                ];
+            },
+        ],
+        [
+            'pattern' => 'plugin-janitor/(:any)',
+            'method' => 'POST',
+            'action' => function (string $secret) {
+                $janitor = \Bnomei\Janitor::singleton();
+                if ($secret == $janitor->option('secret')) {
+                    return $janitor->command(get('command'));
                 }
                 return [
                     'status' => 401,

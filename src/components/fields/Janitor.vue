@@ -144,15 +144,15 @@ export default {
         return;
       }
 
-      this.getRequest("plugin-janitor/" + encodeURIComponent(this.command));
+      this.postRequest("plugin-janitor", { command: this.command });
     },
 
-    async getRequest(url) {
+    async postRequest(path, data) {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
       const { label, message, status, reload, open, download, clipboard, success, error, icon } =
-        await this.$api.get(url);
+        await this.$api.post(path, data);
 
       if (status === 200) {
         this.button.label = success ?? this.success
