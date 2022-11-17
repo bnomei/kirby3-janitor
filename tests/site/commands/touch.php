@@ -5,7 +5,7 @@ use Kirby\CLI\CLI;
 
 return [
     'description' => 'Touch a file',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $file = site()->file($cli->arg('file'));
         touch($file->root());

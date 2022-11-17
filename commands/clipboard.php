@@ -11,7 +11,7 @@ use Kirby\CLI\CLI;
 
 return [
     'description' => 'Pipe `data` to `clipboard` arg in Janitor or on CLI use pbcopy',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         defined('STDOUT') && exec('echo "'.$cli->arg('data').'" | pbcopy');
         defined('STDOUT') && $cli->success('Copied "'.$cli->arg('data').'" to your clipboard.');

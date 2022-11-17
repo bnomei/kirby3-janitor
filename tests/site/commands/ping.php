@@ -5,7 +5,7 @@ use Kirby\CLI\CLI;
 
 return [
     'description' => 'Ping',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         sleep(1);
         $success = rand(0, 10) > 0; // 10% chance to fail

@@ -5,7 +5,7 @@ use Kirby\CLI\CLI;
 
 return [
     'description' => 'Show uuid from model as message, set `data` arg to overwrite',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $uuid = null;
 

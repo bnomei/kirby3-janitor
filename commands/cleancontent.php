@@ -76,7 +76,7 @@ return [
             'description' => 'ignored fields in content files as comma seperated list',
             'castTo' => 'string',
         ],
-    ] + Janitor::ARGS, // page, file, user, site, data
+    ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $kirby = $cli->kirby();
 

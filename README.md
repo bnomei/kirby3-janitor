@@ -80,7 +80,7 @@ use Kirby\CLI\CLI;
 
 return [
     'description' => 'Example',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $page = page($cli->arg('page'));
 

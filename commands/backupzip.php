@@ -40,7 +40,7 @@ return [
             'defaultValue' => '',
             'castTo' => 'string',
         ],
-    ] + Janitor::ARGS, // page, file, user, site, data
+    ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $time = time();
         $output = $cli->arg('output');

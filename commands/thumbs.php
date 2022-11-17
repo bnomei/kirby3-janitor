@@ -16,7 +16,7 @@ use Symfony\Component\Finder\Finder;
 
 return [
     'description' => 'Generate all thumbs',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $time = time();
 

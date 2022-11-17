@@ -17,7 +17,7 @@ return [
                 'description' => 'Key of option (not name of a class)',
                 'required' => true,
             ],
-        ] + Janitor::ARGS, // page, file, user, site, data
+        ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $key = $cli->arg('key');
         $job = option($key);

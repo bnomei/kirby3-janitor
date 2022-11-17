@@ -17,7 +17,7 @@ return [
             'description' => 'String value of output to Janitor (like `href` or `clipboard`)',
             'required' => true,
         ],
-    ] + Janitor::ARGS, // page, file, user, site, data
+    ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $pipe = $cli->arg('to');
         defined('STDOUT') && $cli->success($pipe . ' => ' . $cli->arg('data'));

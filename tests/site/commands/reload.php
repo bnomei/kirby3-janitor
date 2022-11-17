@@ -6,7 +6,7 @@ use Kirby\CLI\CLI;
 
 return [
     'description' => 'Ping',
-    'args' => [] + Janitor::ARGS, // page, file, user, site, data
+    'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         defined('STDOUT') && $cli->error('No reload in CLI.');
 

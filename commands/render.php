@@ -194,7 +194,7 @@ return [
             'description' => 'provide URL to render using Remote::get instead of `$page->render()`',
             'castTo' => 'string',
         ],
-    ] + Janitor::ARGS, // page, file, user, site, data
+    ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         (new JanitorRenderCommand())->run($cli);
     }
