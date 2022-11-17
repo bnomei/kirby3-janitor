@@ -49,6 +49,8 @@ Kirby::plugin('bnomei/janitor', [
                     } elseif ($this->model() instanceof \Kirby\Cms\Site) {
                         $command .= ' --site'; // boolean argument
                     }
+                    $command .= ' --model '. $this->model()->uuid()->toString() ??
+                        ($this->model() instanceof \Kirby\Cms\Site ? 'site://' : $this->model()->id());
                     return $command;
                 },
                 'confirm' => function ($confirm = '') {

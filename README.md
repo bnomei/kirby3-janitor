@@ -63,10 +63,11 @@ fields:
 
 Janitor will automatically fill in the current model.
 
-- So for example if you press the panel button on a page you will have `--page` argument set.
-- If you call it on a user then `--user` arg will be set.
-- On a panel file view... `--file`.
-- And lastly `--site` will be automatically set when you had the button in the `site/blueprints/site.yml` blueprint.
+- The `--model` argument will have the UUID or ID of the current model. You can use `janitor()->model($cli->arg('model))` to get the object.
+- But if for example you press the panel button on a page you will have `--page` argument set to the UUID or ID of that page. Use `$cli->kirby()->page($cli->arg('page'))` to get the object.
+- If you call it on a file view then `--file` arg will be set. Use `$cli->kirby()->file($cli->arg('file'))` to get the object.
+- On a panel user view... `--user`. Use `$cli->kirby()->user($cli->arg('user'))` to get the object.
+- And lastly `--site` (boolean) will be automatically set when you had the button in the `site/blueprints/site.yml` blueprint. `if($cli->arg('site')) { $cli->kirby()->site(); }`
 
 Create a Kirby CLI command [via a custom plugin](https://getkirby.com/docs/reference/plugins/extensions/commands) or put them into `site/commands`.
 
@@ -185,56 +186,71 @@ In either the command or the callback you will be setting/returning data to the 
 Again... check out the [built-in commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) and plugin [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) to learn how to use the field and api options yourself.
 
 ```yml
-  test_ping:
-    type: janitor
-    command: 'ping' # see tests/site/commands/ping.php
-    label: Ping
-    progress: ....
-    success: Pong
-    error: BAMM
+test_ping:
+  type: janitor
+  command: 'ping' # see tests/site/commands/ping.php
+  label: Ping
+  progress: ....
+  success: Pong
+  error: BAMM
 
-  janitor_open:
-    type: janitor
-    command: 'janitor:open --data {{ user.panel.url }}'
-    intab: true
-    label: Open current user URL in new tab
-    icon: open
-    # the open command will forward the `data` arg to `open` and open that URL
+janitor_open:
+  type: janitor
+  command: 'janitor:open --data {{ user.panel.url }}'
+  intab: true
+  label: Open current user URL in new tab
+  icon: open
+  # the open command will forward the `data` arg to `open` and open that URL
 
-  janitor_clipboarddata:
-    type: janitor
-    command: 'janitor:clipboard --data {{ page.title }}'
-    label: 'Copy "{{ page.title }}" to Clipboard'
-    progress: Copied!
-    icon: copy
-    # the clipboard command will forward the `data` arg to `clipboard` and copy that
+janitor_clipboarddata:
+  type: janitor
+  command: 'janitor:clipboard --data {{ page.title }}'
+  label: 'Copy "{{ page.title }}" to Clipboard'
+  progress: Copied!
+  icon: copy
+  # the clipboard command will forward the `data` arg to `clipboard` and copy that
 
-  janitor_download:
-    type: janitor
-    command: 'janitor:download --data {{ site.index.files.first.url }}'
-    label: Download File Example
-    icon: download
-    # the download command will forward the `data` arg to `download` and start downloading that
+janitor_download:
+  type: janitor
+  command: 'janitor:download --data {{ site.index.files.first.url }}'
+  label: Download File Example
+  icon: download
+  # the download command will forward the `data` arg to `download` and start downloading that
 
-  janitor_backupzip:
-    type: janitor
-    command: 'janitor:backupzip'
-    cooldown: 5000
-    label: Generate Backup ZIP
-    icon: archive
+janitor_backupzip:
+  type: janitor
+  command: 'janitor:backupzip'
+  cooldown: 5000
+  label: Generate Backup ZIP
+  icon: archive
 
-  janitor_render:
-    type: janitor
-    command: 'janitor:render'
-    label: Render pages to create missing thumb jobs
+janitor_render:
+  type: janitor
+  command: 'janitor:render'
+  label: Render pages to create missing thumb jobs
 
-  janitor_thumbssite:
-    type: janitor
-    command: 'janitor:thumbs --site'
-    label: Generate thumbs from existing thumb jobs (full site)
+janitor_thumbssite:
+  type: janitor
+  command: 'janitor:thumbs --site'
+  label: Generate thumbs from existing thumb jobs (full site)
 ```
 
 If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
+
+### Smartly delaying resolution of an command argument
+
+In some cases you do not want to resolve the query language of a commands argument(s) **every time** when the button is shown in the panel but delay that until the api call is received by Janitor. Janitor will then resolve it **once** and forward the updated argument(s) to your command. This is useful for process-intensive calls or when the string of the data would be very long, like when the data is HTML.
+
+To achieve this you need to change the query language bounds for that argument from `{{ query }}` to `{( query )}`.
+
+> Note: This only works inside the Janitor fields `command`-property.
+
+```yml
+test_sendmail:
+  type: janitor
+  command: 'sendmail --to {{ user.email }} --data {( page.htmlOfEmail )}'
+  label: send mail
+```
 
 ### Running commands in your code
 

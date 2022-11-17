@@ -152,3 +152,9 @@ fields:
     type: janitor
     command: 'janitor:thumbs' # NOTE: without --site
     label: Generate thumbs from existing thumb jobs (only this page)
+
+  janitor_smart:
+    label: 'Resolve Arg smart/lazy using {( instead of {{'
+    type: janitor
+    command: 'janitor:pipe --data {( model.text.kirbytext )} --to message'
+    # pipe will show lazy/smart resolved data on button (aka the message)

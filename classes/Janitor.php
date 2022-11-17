@@ -42,7 +42,12 @@ final class Janitor
             'prefix' => 'd',
             'longPrefix' => 'data',
             'description' => 'Data',
-        ]
+        ],
+        'model' => [
+            'prefix' => 'm',
+            'longPrefix' => 'model',
+            'description' => 'Model (Page, File, User, Site) UUID or ID',
+        ],
     ];
 
     private static array $data;
@@ -85,6 +90,7 @@ final class Janitor
     public function command(string $command): array
     {
         list($name, $args) = Janitor::parseCommand($command);
+        $args = Janitor::resolveQueriesInCommand($args); // like a "lazy/smart" `{( page.callme )}`
 
         CLI::command($name, ...$args);
 
@@ -92,6 +98,11 @@ final class Janitor
             'status' => 200,
             'message' => 'Janitor has no data from command "' . $name . '".',
         ];
+    }
+
+    public function model(string $uuid): mixed
+    {
+        return Janitor::resolveModel($uuid);
     }
 
     private static $singleton;
@@ -105,6 +116,32 @@ final class Janitor
         self::$singleton = new Janitor($options);
 
         return self::$singleton;
+    }
+
+    public static function isTrue($val, bool $return_null = false): bool
+    {
+        $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
+
+        return ($boolval === null && !$return_null ? false : $boolval);
+    }
+
+    public static function parseCommand(string $command)
+    {
+        $groups = explode(' ', $command);
+        $name = array_shift($groups);
+        $groups = explode(' --', ' ' . implode(' ', $groups));
+        array_shift($groups); // remove empty first value
+        $args = [];
+
+        foreach ($groups as $group) {
+            $parts = explode(' ', $group);
+            $args[] = '--' . array_shift($parts);
+            // remove enclosing " or ' from string like it would happen
+            // in terminal so commands in blueprint can be used vice versa
+            $args[] = trim(trim(implode(' ', $parts), '"'), "'");
+        }
+
+        return [$name, $args];
     }
 
     public static function query(string $template = null, mixed $model = null): string
@@ -130,13 +167,6 @@ final class Janitor
         ]);
     }
 
-    public static function isTrue($val, bool $return_null = false): bool
-    {
-        $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
-
-        return ($boolval === null && !$return_null ? false : $boolval);
-    }
-
     public static function requestBlockedByMaintenance(): bool
     {
         $request = kirby()->request()->url()->toString();
@@ -152,22 +182,43 @@ final class Janitor
         return true;
     }
 
-    public static function parseCommand(string $command)
+    public static function resolveModel(string $uuid): mixed
     {
-        $groups = explode(' ', $command);
-        $name = array_shift($groups);
-        $groups = explode(' --', ' ' . implode(' ', $groups));
-        array_shift($groups); // remove empty first value
-        $args = [];
-
-        foreach ($groups as $group) {
-            $parts = explode(' ', $group);
-            $args[] = '--' . array_shift($parts);
-            // remove enclosing " or ' from string like it would happen
-            // in terminal so commands in blueprint can be used vice versa
-            $args[] = trim(trim(implode(' ', $parts), '"'), "'");
+        if(Str::startsWith($uuid, 'page://')) {
+            return kirby()->page($uuid);
+        } elseif(Str::startsWith($uuid, 'file://')) {
+            return kirby()->file($uuid);
+        } elseif(Str::startsWith($uuid, 'user://') || Str::contains($uuid, '@')) {
+            return kirby()->user($uuid);
+        } elseif(Str::startsWith($uuid, 'site://') || $uuid === '$') {
+            return kirby()->site();
         }
 
-        return [$name, $args];
+        foreach(['page', 'file', 'user'] as $finder) {
+            if($model = kirby()->{$finder}($uuid)) {
+                return $model;
+            }
+        }
+
+        return null;
+    }
+
+    public static function resolveQueriesInCommand(array $args): array
+    {
+        $modelKey = array_search('--model', $args);
+        $model = $modelKey !== false && $modelKey + 1 < count($args) ? $args[$modelKey + 1] : null;
+        $model = Janitor::resolveModel($model);
+
+        $args = array_map(function($value) use ($model) {
+            // allows for html even without {< since it is not a blueprint query
+            // but just a string inside the command
+            $value = str_replace(['{(',')}'], ['{{', '}}'], $value, $count);
+            if ($count > 0) {
+                $value = Janitor::query($value, $model);
+            }
+            return $value;
+        }, $args);
+
+        return $args;
     }
 }
