@@ -237,13 +237,11 @@ janitor_thumbssite:
 
 If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
 
-### Smartly delaying resolution of an command argument
+### Smartly delaying resolution of a command argument
 
 In some cases you do not want to resolve the query language of a commands argument(s) **every time** when the button is shown in the panel but delay that until the api call is received by Janitor. Janitor will then resolve it **once** and forward the updated argument(s) to your command. This is useful for process-intensive calls or when the string of the data would be very long, like when the data is HTML.
 
 To achieve this you need to change the query language bounds for that argument from `{{ query }}` to `{( query )}`.
-
-> Note: This only works inside the Janitor fields `command`-property.
 
 ```yml
 test_sendmail:
@@ -251,6 +249,8 @@ test_sendmail:
   command: 'sendmail --to {{ user.email }} --data {( page.htmlOfEmail )}'
   label: send mail
 ```
+
+> Note: This only works inside the Janitor fields `command`-property.
 
 ### Running commands in your code
 
