@@ -151,6 +151,8 @@ This plugin comes with a [few commands](https://github.com/bnomei/kirby3-janitor
 - `janitor:thumbs`, process thumb jobs of a certain page or all pages
 - `janitor:tinker`, run a REPL session in terminal
 
+The plugin will register these commands starting with `janitor:*` automatically - no copying required.<br>But if you want to re-use any of the other example provided you need to copy them to your `site/commands`-folder
+
 ### Blueprint field options
 
 The button you create with the `field: janitor` in your blueprint can be configured to do various things. Checkout the [example default.yml blueprint](https://github.com/bnomei/kirby3-janitor/blob/master/tests/site/blueprints/pages/default.yml) to familiarize yourself with how to use it.
