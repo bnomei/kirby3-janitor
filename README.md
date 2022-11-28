@@ -22,14 +22,7 @@ Using composer:
 composer require getkirby/cli bnomei/kirby3-janitor
 ```
 
-Using git submodules:
-
-```bash
-git submodule add https://github.com/getkirby/cli.git site/plugins/cli
-git submodule add https://github.com/bnomei/kirby3-janitor.git site/plugins/kirby3-janitor
-```
-
-Using download & copy: download [the latest release of this plugin](https://github.com/bnomei/kirby3-janitor/releases) and [the latest release of the kirby cli](https://github.com/getkirby/cli/releases) then unzip and copy them to `site/plugins`
+You need to install the CLI with composer. Since Janitor depends on the CLI to be available installing only the janitor plugin via submodules or via ZIP do not make much sense. Please stick to composer for now.
 
 ## Commercial Usage
 
