@@ -207,6 +207,9 @@ final class Janitor
     {
         $modelKey = array_search('--model', $args);
         $model = $modelKey !== false && $modelKey + 1 < count($args) ? $args[$modelKey + 1] : null;
+        if (!$model) {
+            return $args;
+        }
         $model = Janitor::resolveModel($model);
 
         $args = array_map(function($value) use ($model) {
