@@ -102,7 +102,7 @@ return [
                 }
 
                 $zipped++;
-                defined('STDOUT') && $cli->out("[${zipped}/${count}] " . $filePath);
+                defined('STDOUT') && $cli->out("[$zipped/$count] " . $filePath);
 
                 if ($zipped % $ulimit === 0) {
                     $zip->close();
