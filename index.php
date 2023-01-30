@@ -59,9 +59,11 @@ Kirby::plugin('bnomei/janitor', [
                 'cooldown' => function ($cooldownMilliseconds = null) {
                     return intval($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));
                 },
-                'error' => function ($error = null) {
-                    $error = \Bnomei\Janitor::query($error, $this->model());
-                    return \Kirby\Toolkit\I18n::translate($error, $error);
+                'error' => function ($label = null) {
+                    if (kirby()->multilang()) {
+                        $label = \Kirby\Toolkit\I18n::translate($label, $label, kirby()->language()->code());
+                    }
+                    return \Bnomei\Janitor::query($label, $this->model());
                 },
                 'icon' => function ($icon = null) {
                     return \Bnomei\Janitor::query($icon, $this->model());
@@ -69,17 +71,29 @@ Kirby::plugin('bnomei/janitor', [
                 'intab' => function ($intab = false) {
                     return \Bnomei\Janitor::isTrue($intab);
                 },
+                'help' => function ($label = null) {
+                    if (kirby()->multilang()) {
+                        $label = \Kirby\Toolkit\I18n::translate($label, $label, kirby()->language()->code());
+                    }
+                    return \Bnomei\Janitor::query($label, $this->model());
+                },
                 'label' => function ($label = null) {
-                    $label = \Bnomei\Janitor::query($label, $this->model());
-                    return \Kirby\Toolkit\I18n::translate($label, $label);
+                    if (kirby()->multilang()) {
+                        $label = \Kirby\Toolkit\I18n::translate($label, $label, kirby()->language()->code());
+                    }
+                    return \Bnomei\Janitor::query($label, $this->model());
                 },
                 'progress' => function ($label = null) {
-                    $label = \Bnomei\Janitor::query($label, $this->model());
-                    return \Kirby\Toolkit\I18n::translate($label, $label);
+                    if (kirby()->multilang()) {
+                        $label = \Kirby\Toolkit\I18n::translate($label, $label, kirby()->language()->code());
+                    }
+                    return \Bnomei\Janitor::query($label, $this->model());
                 },
                 'success' => function ($label = null) {
-                    $label = \Bnomei\Janitor::query($label, $this->model());
-                    return \Kirby\Toolkit\I18n::translate($label, $label);
+                    if (kirby()->multilang()) {
+                        $label = \Kirby\Toolkit\I18n::translate($label, $label, kirby()->language()->code());
+                    }
+                    return \Bnomei\Janitor::query($label, $this->model());
                 },
                 'unsaved' => function ($allowUnsaved = true) {
                     return \Bnomei\Janitor::isTrue($allowUnsaved);
