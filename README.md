@@ -79,13 +79,13 @@ return [
 
         // output for the command line
         defined('STDOUT') && $cli->success(
-            $model->title() . ' ' . $cli->arg('data')
+            $page->title() . ' ' . $cli->arg('data')
         );
 
         // output for janitor
         janitor()->data($cli->arg('command'), [
             'status' => 200,
-            'message' => $model->title() . ' ' . $cli->arg('data'),
+            'message' => $page->title() . ' ' . $cli->arg('data'),
         ]);
     }
 ];
