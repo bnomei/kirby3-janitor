@@ -10,7 +10,7 @@
     >
       {{ button.label || label }}
     </k-button>
-
+    <k-text v-if="help" theme="help" class="k-field-help" :html="help" />
     <a
       v-show="downloadRequest"
       ref="downloadAnchor"
@@ -41,6 +41,7 @@ export default {
     error: String,
     icon: String,
     intab: Boolean,
+    help: String,
     label: String,
     progress: String,
     success: String,
