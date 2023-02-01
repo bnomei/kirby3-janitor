@@ -78,7 +78,7 @@ return [
         $page = page($cli->arg('page'));
 
         // output for the command line
-        defined('STDOUT') && $cli->success(
+        $cli->success(
             $page->title() . ' ' . $cli->arg('data')
         );
 

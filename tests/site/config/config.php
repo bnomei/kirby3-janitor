@@ -9,6 +9,7 @@ return [
         return [
             'status' => 200,
             'message' => $model->uuid() . ' ' . $data,
+            'help' => 'new help from api'
         ];
     },
 ];

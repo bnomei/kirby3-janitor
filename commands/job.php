@@ -48,11 +48,11 @@ return [
             }
         } else {
             $result['message'] = t('janitor.model-not-found', 'No model provided');
-            defined('STDOUT') && $cli->error('No model provided. Use `--page`, `--file`, `--user` or `--site`.');
+            $cli->error('No model provided. Use `--page`, `--file`, `--user` or `--site`.');
         }
 
-        defined('STDOUT') && (A::get($result, 'status') === 200 ? $cli->success($key) : $cli->error($key));
-        defined('STDOUT') && $cli->out(print_r($result, true));
+        (A::get($result, 'status') === 200 ? $cli->success($key) : $cli->error($key));
+        $cli->out(print_r($result, true));
 
         janitor()->data($cli->arg('command'), $result);
     }

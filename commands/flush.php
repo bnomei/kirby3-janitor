@@ -21,7 +21,7 @@ return [
 
         $cli->kirby()->cache($name)->flush();
 
-        defined('STDOUT') && $cli->success('The cache "' . $name . '" has been cleared.');
+        $cli->success('The cache "' . $name . '" has been cleared.');
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,

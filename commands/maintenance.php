@@ -37,11 +37,11 @@ return [
         if ($down === false) {
             file_exists($maintenance) && unlink($maintenance);
             $message = t('janitor.maintenance.up', 'online');
-            defined('STDOUT') && $cli->success($message);
+            $cli->success($message);
         } elseif ($down === true) {
             file_put_contents($maintenance, date('c') . ' [' . $cli->arg('user') . ']');
             $message = t('janitor.maintenance.down', 'in maintenance');
-            defined('STDOUT') && $cli->red($message);
+            $cli->red($message);
         }
 
         janitor()->data($cli->arg('command'), [

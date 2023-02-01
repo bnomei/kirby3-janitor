@@ -8,7 +8,7 @@ return [
     'description' => 'Ping',
     'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
-        defined('STDOUT') && $cli->error('No reload in CLI.');
+        $cli->error('No reload in CLI.');
 
         janitor()->data($cli->arg('command'), [
             'status' => 200 ,

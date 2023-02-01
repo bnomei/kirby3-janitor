@@ -36,7 +36,7 @@ return [
         $finder->files()
             ->in($root)
             ->name('/\.(?:avif|gif|jpeg|jpg|png|webp)$/');
-        defined('STDOUT') && $cli->blue(iterator_count($finder) . ' existing thumbs');
+        $cli->blue(iterator_count($finder) . ' existing thumbs');
 
         // job files
         $finder = new Finder();
@@ -45,13 +45,13 @@ return [
             ->ignoreDotFiles(false)
             ->name('/\.json$/');
         $countJobs = iterator_count($finder);
-        defined('STDOUT') && $cli->blue($countJobs . ' thumb job files found');
+        $cli->blue($countJobs . ' thumb job files found');
 
         // generate
         $jobs = 0;
         $created = 0;
         $jobsFailed = [];
-        defined('STDOUT') && $countJobs > 0 && $cli->out('Generating Thumbs...');
+        $countJobs > 0 && $cli->out('Generating Thumbs...');
 
         foreach ($finder as $file) {
             $jobs++;
@@ -66,7 +66,7 @@ return [
             if (!$page) {
                 $skip = '𐄂 ' . $parentID . ' => Page not found, removed job file';
                 $jobsFailed[] = $skip;
-                defined('STDOUT') && $cli->red($skip);
+                $cli->red($skip);
                 unlink($file->getPath() . '/' . $file->getFilename());
                 continue;
             }
@@ -80,27 +80,27 @@ return [
             if (!$pageFile) {
                 $skip = '𐄂 ' . $parentID . '/' . $filename . ' => File not found, removed job file';
                 $jobsFailed[] = $skip;
-                defined('STDOUT') && $cli->red($skip);
+                $cli->red($skip);
                 unlink($file->getPath() . '/' . $file->getFilename());
                 continue;
             }
 
             $hash = basename(str_replace('/.jobs', '', $file->getPath()));
             if (Media::link($page, $hash, $jobFilename) !== false) {
-                defined('STDOUT') &&  $cli->out('✔ ' . $file->getPath() . '/' . $file->getFilename());
+                 $cli->out('✔ ' . $file->getPath() . '/' . $file->getFilename());
                 $created++;
             }
         }
 
         $duration = time() - $time;
 
-        defined('STDOUT') && $cli->blue($duration . ' sec');
-        defined('STDOUT') && (
+        $cli->blue($duration . ' sec');
+        (
             count($jobsFailed) > 0 ?
             $cli->red(count($jobsFailed) . ' jobs failed') :
             $cli->blue(count($jobsFailed) . ' jobs failed')
         );
-        defined('STDOUT') && $cli->success($created . ' thumbs created');
+        $cli->success($created . ' thumbs created');
 
         janitor()->data($cli->arg('command'), [
             'status' => $created > 0 ? 200 : 204,

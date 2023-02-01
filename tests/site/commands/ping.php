@@ -9,7 +9,7 @@ return [
     'command' => static function (CLI $cli): void {
         sleep(1);
         $success = rand(0, 10) > 0; // 10% chance to fail
-        defined('STDOUT') && (
+        (
             $success ? $cli->success('Pong') : $cli->error('BAMM')
         );
 

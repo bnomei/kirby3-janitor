@@ -21,7 +21,7 @@ return [
         ],
     ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
-        defined('STDOUT') && $cli->success('download => ' . $cli->arg('data'));
+        $cli->success('download => ' . $cli->arg('data'));
 
         if (defined('STDOUT')) {
             $command = 'wget';

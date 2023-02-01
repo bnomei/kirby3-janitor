@@ -52,7 +52,7 @@ return [
 
         $zip = new ZipArchive();
         if ($zip->open($output, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) !== true) {
-            defined('STDOUT') && $cli->error('Failed to create: ' . $output);
+            $cli->error('Failed to create: ' . $output);
             janitor()->data($cli->arg('command'), [
                 'status' => 500,
             ]);
@@ -102,16 +102,15 @@ return [
                 }
 
                 $zipped++;
-                defined('STDOUT') && $cli->out("[$zipped/$count] " . $filePath);
+                $cli->out("[$zipped/$count] " . $filePath);
 
                 if ($zipped % $ulimit === 0) {
                     $zip->close();
                     if ($zip->open($output) === false) {
                         @unlink($output);
                         $errorMessage = 'Hit ulimit but failed to reopen zip: ' . $output;
-                        if (defined('STDOUT')) {
-                            $cli->error($errorMessage);
-                        }
+                        $cli->error($errorMessage);
+
                         janitor()->data($cli->arg('command'), [
                             'status' => 500,
                             'error' => $errorMessage,
@@ -134,9 +133,9 @@ return [
         ];
         $data['message'] = $data['filename'] . '.zip [' .$data['nicesize'] .']';
 
-        defined('STDOUT') && $cli->blue($data['duration'] . ' sec');
-        defined('STDOUT') && $cli->blue($data['nicesize']);
-        defined('STDOUT') && $cli->success($output);
+        $cli->blue($data['duration'] . ' sec');
+        $cli->blue($data['nicesize']);
+        $cli->success($output);
 
         janitor()->data($cli->arg('command'), $data);
     }

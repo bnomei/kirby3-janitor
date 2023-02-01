@@ -20,7 +20,7 @@ return [
     ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $pipe = $cli->arg('to');
-        defined('STDOUT') && $cli->success($pipe . ' => ' . $cli->arg('data'));
+        $cli->success($pipe . ' => ' . $cli->arg('data'));
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,

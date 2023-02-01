@@ -9,7 +9,7 @@ return [
     'command' => static function (CLI $cli): void {
         $file = site()->file($cli->arg('file'));
         touch($file->root());
-        defined('STDOUT') && $cli->success($file->id() . ' => ' . $file->modified('c'));
+        $cli->success($file->id() . ' => ' . $file->modified('c'));
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,

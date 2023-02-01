@@ -46,9 +46,9 @@ class JanitorRenderCommand
             rtrim($cli->arg('remote'), '/') : '';
         // rtrim((php_sapi_name() === 'cli' ? site()->url() : ''), '/')
 
-        defined('STDOUT') && $cli->blue($this->countLanguages . ' languages');
-        defined('STDOUT') && $cli->blue($this->countPages . ' pages');
-        defined('STDOUT') && $this->countPages > 0 && $cli->out('Rendering Pages...');
+        $cli->blue($this->countLanguages . ' languages');
+        $cli->blue($this->countPages . ' pages');
+        $this->countPages > 0 && $cli->out('Rendering Pages...');
 
         foreach ($allPages as $pageId) {
             try {
@@ -65,7 +65,7 @@ class JanitorRenderCommand
                         $thumbs
                     );
                 }
-                defined('STDOUT') && $cli->out('[' . count($thumbs) . '] ' . $pageId);
+                $cli->out('[' . count($thumbs) . '] ' . $pageId);
             } catch (Exception $ex) {
                 $this->renderFailed[] = $pageId . ' => ' . $ex->getMessage();
             }
@@ -92,17 +92,17 @@ class JanitorRenderCommand
             )
         );
 
-        defined('STDOUT') && $cli->blue($data['duration'] . ' sec');
-        defined('STDOUT') && $cli->blue($data['foundThumbs'] . ' images found in rendered content');
-        defined('STDOUT') && (
+        $cli->blue($data['duration'] . ' sec');
+        $cli->blue($data['foundThumbs'] . ' images found in rendered content');
+        (
             $data['renderFailed'] > 0 ?
                 $cli->error($data['renderFailed'] . ' pages failed rendering') :
                 $cli->blue($data['renderFailed'] . ' pages failed rendering')
         );
         foreach ($this->renderFailed as $fail) {
-            defined('STDOUT') && defined('STDOUT') && $cli->red($fail);
+            $cli->red($fail);
         }
-        defined('STDOUT') && $cli->success(
+        $cli->success(
             $data['count'] . ' pages rendered'
         );
 

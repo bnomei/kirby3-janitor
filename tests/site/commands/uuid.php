@@ -27,7 +27,7 @@ return [
             $uuid = $cli->arg('data');
         }
 
-        defined('STDOUT') && $cli->success($uuid);
+        $cli->success($uuid);
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,

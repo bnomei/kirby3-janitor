@@ -49,12 +49,12 @@ class JanitorCleanContentCommand
                 try {
                     $item->update($data, $lang);
                     $updated++;
-                    defined('STDOUT') && $cli->green('+++ ' . ($lang ? '[' . $lang . '] ' : '') . $item->id());
+                    $cli->green('+++ ' . ($lang ? '[' . $lang . '] ' : '') . $item->id());
                 } catch (\Exception $e) {
-                    defined('STDOUT') && $cli->red('ERR ' . ($lang ? '[' . $lang . '] ' : '') . $item->id() . ': ' .$e->getMessage());
+                    $cli->red('ERR ' . ($lang ? '[' . $lang . '] ' : '') . $item->id() . ': ' .$e->getMessage());
                 }
             } else {
-                defined('STDOUT') && $cli->white('=== ' . ($lang ? '[' . $lang . '] ' : '') . $item->id());
+                $cli->white('=== ' . ($lang ? '[' . $lang . '] ' : '') . $item->id());
             }
         }
 
@@ -123,9 +123,9 @@ return [
             )
         );
 
-        defined('STDOUT') && $cli->blue($data['duration'] . ' sec');
-        defined('STDOUT') && $cli->blue($data['count'] . ' checked');
-        defined('STDOUT') && $cli->success($data['updated'] . ' needed cleaning');
+        $cli->blue($data['duration'] . ' sec');
+        $cli->blue($data['count'] . ' checked');
+        $cli->success($data['updated'] . ' needed cleaning');
 
         janitor()->data($cli->arg('command'), $data);
     }

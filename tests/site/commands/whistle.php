@@ -7,7 +7,7 @@ return [
     'description' => 'Whistle',
     'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
-        defined('STDOUT') && $cli->success(' ♫ ');
+        $cli->success(' ♫ ');
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,

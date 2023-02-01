@@ -13,7 +13,7 @@ return [
     'description' => 'Pipe `data` to `open` arg in Janitor',
     'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
-        defined('STDOUT') && $cli->success('open => ' . $cli->arg('data'));
+        $cli->success('open => ' . $cli->arg('data'));
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,
