@@ -10,7 +10,7 @@
     >
       {{ button.label || label }}
     </k-button>
-    <k-text v-if="help" theme="help" class="k-field-help" :html="help" />
+    <k-text v-if="button.help || help" theme="help" class="k-field-help" :html="button.help || help" />
     <a
       v-show="downloadRequest"
       ref="downloadAnchor"
@@ -54,6 +54,7 @@ export default {
       button: {
         label: null,
         state: null,
+        help: null,
       },
       clipboardRequest: null,
       downloadRequest: null,
@@ -152,7 +153,7 @@ export default {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
-      const { label, message, status, reload, open, download, clipboard, success, error, icon } =
+      const { label, message, status, reload, open, download, clipboard, success, error, icon, help } =
         await this.$api.post(path, data);
 
       if (status === 200) {
@@ -167,6 +168,10 @@ export default {
 
       if (message) {
         this.button.label = message;
+      }
+
+      if (help) {
+        this.button.help = help;
       }
 
       if (icon) {

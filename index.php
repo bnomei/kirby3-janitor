@@ -51,6 +51,9 @@ Kirby::plugin('bnomei/janitor', [
                     }
                     $command .= ' --model '. $this->model()->uuid()->toString() ??
                         ($this->model() instanceof \Kirby\Cms\Site ? 'site://' : $this->model()->id());
+
+                    $command .= ' --quiet'; // no STDOUT on frontend PHP
+
                     return $command;
                 },
                 'confirm' => function ($confirm = '') {

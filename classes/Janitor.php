@@ -50,7 +50,7 @@ final class Janitor
         ],
     ];
 
-    private static array $data;
+    private static array $data = [];
 
     public function data(string $command, ?array $data = null): ?array
     {

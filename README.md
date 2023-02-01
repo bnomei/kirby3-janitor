@@ -154,6 +154,7 @@ The button you create with the `field: janitor` in your blueprint can be configu
 - `command`, command like you would enter it in terminal, with [query language support](https://getkirby.com/docs/guide/blueprints/query-language) and page/file/user/site/data arguments
 - `cooldown`, time in milliseconds the message is flashed on the button (default: 2000)
 - `error`, set message to show on all **non-200**-status returns with query language support
+- `help`, set help of the button
 - `icon`, set the [icon](https://getkirby.com/docs/reference/panel/icons) of the button
 - `intab`, if `true` then use in combination with the `open`-option to open an URL in a new tab
 - `label`, set label of the button
@@ -168,6 +169,7 @@ In either the command or the callback you will be setting/returning data to the 
 - `clipboard`, string to copy to clipboard
 - `download`, URL to start downloading
 - `error`, see `error`-field option
+- `help`, see `help`-field option
 - `icon`, see `icon`-field option
 - `label`, see `label`-field option
 - `message`, see `message`-field option
@@ -231,6 +233,8 @@ janitor_thumbssite:
 ```
 
 If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
+
+Keep in mind that the Janitor panel button will append the `--quiet` option on all commands automatically to silence outputs to the non-existing CLI.
 
 ### Smartly delaying resolution of a command argument
 
