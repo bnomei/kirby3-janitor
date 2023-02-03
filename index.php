@@ -39,14 +39,17 @@ Kirby::plugin('bnomei/janitor', [
                 'command' => function ($command = null) {
                     // resolve queries
                     $command = \Bnomei\Janitor::query($command, $this->model());
-                    $uuid = 'page://'.$this->model()->content()->uuid()?->toString();
+
+                    // Temporary fix for https://github.com/getkirby/kirby/issues/4955
+                    $uuid = $this->model()->content()->uuid()?->toString();
+
                     // append model
                     if ($this->model() instanceof \Kirby\Cms\Page) {
-                        $command .= ' --page ' . $uuid ?? $this->model()->id();
+                        $command .= ' --page page://' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\File) {
-                        $command .= ' --file ' . $uuid ?? $this->model()->id();
+                        $command .= ' --file file://' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\User) {
-                        $command .= ' --user ' . $uuid ?? $this->model()->id();
+                        $command .= ' --user user://' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\Site) {
                         $command .= ' --site'; // boolean argument
                     }
