@@ -45,14 +45,11 @@ Kirby::plugin('bnomei/janitor', [
 
                     // append model
                     if ($this->model() instanceof \Kirby\Cms\Page) {
-                        $uuid ??= 'page://'. $uuid;
-                        $command .= ' --page ' . $uuid ?? $this->model()->id();
+                        $command .= ' --page page://' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\File) {
-                        $uuid ??= 'file://'. $uuid;
-                        $command .= ' --file ' . $uuid ?? $this->model()->id();
+                        $command .= ' --file file://' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\User) {
-                        $uuid ??= 'user://'. $uuid;
-                        $command .= ' --user ' . $uuid ?? $this->model()->id();
+                        $command .= ' --user user://' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\Site) {
                         $command .= ' --site'; // boolean argument
                     }
