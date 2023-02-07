@@ -39,17 +39,24 @@ Kirby::plugin('bnomei/janitor', [
                 'command' => function ($command = null) {
                     // resolve queries
                     $command = \Bnomei\Janitor::query($command, $this->model());
+
+                    // Temporary fix for https://github.com/getkirby/kirby/issues/4955
+                    $uuid = $this->model()->content()->uuid()?->toString();
+
                     // append model
                     if ($this->model() instanceof \Kirby\Cms\Page) {
-                        $command .= ' --page ' . $this->model()->uuid()?->toString() ?? $this->model()->id();
+                        $uuid = !empty($uuid) ? 'page://'. $uuid : null;
+                        $command .= ' --page ' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\File) {
-                        $command .= ' --file ' . $this->model()->uuid()?->toString() ?? $this->model()->id();
+                        $uuid = !empty($uuid) ? 'file://'. $uuid : null;
+                        $command .= ' --file ' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\User) {
-                        $command .= ' --user ' . $this->model()->uuid()?->toString() ?? $this->model()->id();
+                        $uuid = !empty($uuid) ? 'user://'. $uuid : null;
+                        $command .= ' --user ' . $uuid ?? $this->model()->id();
                     } elseif ($this->model() instanceof \Kirby\Cms\Site) {
                         $command .= ' --site'; // boolean argument
                     }
-                    $command .= ' --model '. $this->model()->uuid()?->toString() ??
+                    $command .= ' --model '. $uuid ??
                         ($this->model() instanceof \Kirby\Cms\Site ? 'site://' : $this->model()->id());
 
                     $command .= ' --quiet'; // no STDOUT on frontend PHP
