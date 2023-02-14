@@ -12,4 +12,8 @@ return [
             'help' => 'new help from api'
         ];
     },
+
+//    'bnomei.janitor.maintenance.check' => function() {
+//        return kirby()->users()->current()?->role()->isAdmin() !== true;
+//    },
 ];

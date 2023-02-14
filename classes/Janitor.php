@@ -179,7 +179,13 @@ final class Janitor
                 return false;
             }
         }
-        return true;
+
+        $isBlocked = option('bnomei.janitor.maintenance.check', true);
+        if ($isBlocked && !is_string($isBlocked) && is_callable($isBlocked)) {
+            $isBlocked = $isBlocked();
+        }
+
+        return boolval($isBlocked);
     }
 
     public static function resolveModel(string $uuid): mixed

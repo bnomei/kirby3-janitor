@@ -358,6 +358,37 @@ in your cron scheduler add the following command
 cd /path/to/my/kirby/project/root && vendor/bin/kirby janitor:backupzip
 ```
 
+## Maintenance Mode
+
+You can toggle maintenance mode with a janitor button like this:
+
+```yml
+  janitor_maintenance:
+    type: janitor
+    command: 'janitor:maintenance --user {{ user.uuid }}'
+    cooldown: 5000
+    label: 'Maintenance: {{ site.isUnderMaintenance.ecco("DOWN","UP") }}'
+    icon: '{{ site.isUnderMaintenance.ecco("cancel","circle") }}'
+```
+
+If you need to add a custom check when maintenance mode is enforced you can do this by providing a callback for the `bnomei.janitor.maintenance.check` option.
+
+**site/config/config.php**
+```php
+<?php
+
+return [
+    // return `true` for maintenance and `false` to skip maintenance
+    'bnomei.janitor.maintenance.check' => function(): bool {
+        // example: block unless it is a logged-in user and it has the admin role
+        return kirby()->users()->current()?->role()->isAdmin() !== true;
+    },
+    // other options...
+];
+```
+
+You can also overwrite the maintenance snippet if you create your own and store it as `site/snippets/maintenance.php`.
+
 ## Dependencies
 
 - [Kirby CLI](https://github.com/getkirby/cli)
