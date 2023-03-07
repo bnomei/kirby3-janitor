@@ -163,7 +163,7 @@ export default {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
-      const { label, message, status, reload, open, download, clipboard, success, error, icon, help, color, backgroundColor } =
+      const { label, message, status, reload, open, download, clipboard, success, error, icon, help, color, backgroundColor, resetStyle } =
         await this.$api.post(path, data);
 
       if (status === 200) {
@@ -184,29 +184,34 @@ export default {
         this.button.help = help;
       }
 
-
-
       if (icon) {
         this.icon = icon;
       }
 
-      this.button.style = {}
+      this.button.style = {
+        color: 'white',
+        reset: true,
+      }
       if (status) {
         this.button.state = status === 200 ? "is-success" : "has-error";
-        this.button.style.color = 'white';
         this.button.style.backgroundColor = status === 200 ? 'var(--color-positive)' : 'var(--color-negative-light)';
       } else {
         this.button.state = "has-response";
-        this.button.style.color = 'white';
         this.button.style.backgroundColor = 'var(--color-text)'
       }
 
       if (color) {
+        this.button.style.reset = false;
         this.button.style.color = color;
       }
 
       if (backgroundColor) {
+        this.button.style.reset = false;
         this.button.style.backgroundColor = backgroundColor;
+      }
+
+      if (resetStyle) {
+        this.button.style.reset = resetStyle;
       }
 
       if (reload) {
@@ -250,6 +255,7 @@ export default {
     resetButton() {
       this.button.label = null;
       this.button.state = null;
+      this.button.style = this.button.style.reset ? null : this.button.style;
     },
 
     simulateClick(element) {
