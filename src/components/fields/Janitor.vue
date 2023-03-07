@@ -6,6 +6,7 @@
       :icon="currentIcon"
       :command="command"
       :disabled="!unsaved && !isUnsaved && hasChanges"
+      :style="buttonStyle"
       @click="runJanitor"
     >
       {{ button.label || label }}
@@ -34,7 +35,9 @@ const STORAGE_ID = "janitor.runAfterAutosave";
 export default {
   props: {
     autosave: Boolean,
+    backgroundColor: String,
     clipboard: Boolean,
+    color: String,
     confirm: String,
     command: String,
     cooldown: Number,
@@ -55,6 +58,7 @@ export default {
         label: null,
         state: null,
         help: null,
+        style: null,
       },
       clipboardRequest: null,
       downloadRequest: null,
@@ -69,6 +73,12 @@ export default {
   },
 
   computed: {
+    buttonStyle() {
+      return this.button.style || {
+        color: this.color,
+        backgroundColor: this.backgroundColor,
+      }
+    },
     currentIcon() {
       return this.icons[this.status] ?? this.icon;
     },
@@ -153,7 +163,7 @@ export default {
       this.button.label = this.progress ?? `${this.label} …`;
       this.button.state = "is-running";
 
-      const { label, message, status, reload, open, download, clipboard, success, error, icon, help } =
+      const { label, message, status, reload, open, download, clipboard, success, error, icon, help, color, backgroundColor } =
         await this.$api.post(path, data);
 
       if (status === 200) {
@@ -174,14 +184,29 @@ export default {
         this.button.help = help;
       }
 
+
+
       if (icon) {
         this.icon = icon;
       }
 
+      this.button.style = {}
       if (status) {
         this.button.state = status === 200 ? "is-success" : "has-error";
+        this.button.style.color = 'white';
+        this.button.style.backgroundColor = status === 200 ? 'var(--color-positive)' : 'var(--color-negative-light)';
       } else {
         this.button.state = "has-response";
+        this.button.style.color = 'white';
+        this.button.style.backgroundColor = 'var(--color-text)'
+      }
+
+      if (color) {
+        this.button.style.color = color;
+      }
+
+      if (backgroundColor) {
+        this.button.style.backgroundColor = backgroundColor;
       }
 
       if (reload) {
@@ -272,18 +297,6 @@ export default {
 
 .janitor.is-running .k-button-text {
   color: var(--color-text);
-}
-
-.janitor.has-response {
-  background-color: var(--color-text);
-}
-
-.janitor.is-success {
-  background-color: var(--color-positive);
-}
-
-.janitor.has-error {
-  background-color: var(--color-negative-light);
 }
 
 .visually-hidden {

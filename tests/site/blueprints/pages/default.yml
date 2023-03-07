@@ -158,3 +158,10 @@ fields:
     type: janitor
     command: 'janitor:pipe --data {( model.text.kirbytext )} --to message'
     # pipe will show lazy/smart resolved data on button (aka the message)
+
+  janitor_color:
+    label: Janitor buttons can now be colorful
+    type: janitor
+    command: 'janitor:job --key random.colors'
+    color: 'var(--color-blue-600)'
+    backgroundColor: 'var(--color-blue-200)'
