@@ -350,6 +350,8 @@ wget https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip
 curl -s https://dev.bnomei.com/plugin-janitor/e9fe51f94eadabf54/janitor%3Abackupzip > /dev/null
 ```
 
+Are you having issues with PHP bin and cron? [read this](https://github.com/bnomei/kirby3-janitor/issues/105).
+
 #### Kirby CLI (installed with composer)
 
 in your cron scheduler add the following command
