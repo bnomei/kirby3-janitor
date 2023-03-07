@@ -151,6 +151,8 @@ The plugin will register these commands starting with `janitor:*` automatically 
 The button you create with the `field: janitor` in your blueprint can be configured to do various things. Checkout the [example default.yml blueprint](https://github.com/bnomei/kirby3-janitor/blob/master/tests/site/blueprints/pages/default.yml) to familiarize yourself with how to use it.
 
 - `autosave`, if `true` then save before pressing the button
+- `backgroundColor`, sets backgroundColor of button
+- `color`, sets text color of button
 - `command`, command like you would enter it in terminal, with [query language support](https://getkirby.com/docs/guide/blueprints/query-language) and page/file/user/site/data arguments
 - `cooldown`, time in milliseconds the message is flashed on the button (default: 2000)
 - `error`, set message to show on all **non-200**-status returns with query language support
@@ -166,7 +168,9 @@ The button you create with the `field: janitor` in your blueprint can be configu
 
 In either the command or the callback you will be setting/returning data to the Janitor button via its api. Depending on what you return you can trigger various things to happen in the panel.
 
+- `backgroundColor`, see `backgroundColor`-field option
 - `clipboard`, string to copy to clipboard
+- `color`, see `color`-field option
 - `download`, URL to start downloading
 - `error`, see `error`-field option
 - `help`, see `help`-field option
