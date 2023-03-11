@@ -299,9 +299,7 @@ export default {
 
 .janitor.is-running {
   background-color: var(--color-border);
-}
-
-.janitor.is-running .k-button-text {
+  color: white;
   cursor: wait;
 }
 
