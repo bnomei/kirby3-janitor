@@ -302,7 +302,7 @@ export default {
 }
 
 .janitor.is-running .k-button-text {
-  color: var(--color-text);
+  cursor: wait;
 }
 
 .visually-hidden {
