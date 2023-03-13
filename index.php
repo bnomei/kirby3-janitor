@@ -150,7 +150,11 @@ Kirby::plugin('bnomei/janitor', [
             'action' => function (string $secret, string $command) {
                 $janitor = \Bnomei\Janitor::singleton();
                 if ($secret == $janitor->option('secret')) {
-                    return $janitor->command(urldecode($command));
+                    $command = urldecode($command);
+                    if (!Str::contains($command, ' --quiet')) {
+                        $command .= ' --quiet';
+                    }
+                    return $janitor->command($command);
                 }
                 return [
                     'status' => 401,
@@ -163,7 +167,11 @@ Kirby::plugin('bnomei/janitor', [
             'action' => function (string $secret) {
                 $janitor = \Bnomei\Janitor::singleton();
                 if ($secret == $janitor->option('secret')) {
-                    return $janitor->command(get('command'));
+                    $command = get('command');
+                    if (!Str::contains($command, ' --quiet')) {
+                        $command .= ' --quiet';
+                    }
+                    return $janitor->command($command);
                 }
                 return [
                     'status' => 401,

@@ -298,7 +298,7 @@ export default {
 }
 
 .janitor.is-running {
-  background-color: var(--color-border);
+  background-color: var(--color-border) !important;
   color: white;
   cursor: wait;
 }

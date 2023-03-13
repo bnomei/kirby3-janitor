@@ -25,3 +25,7 @@ sections:
         help:
           de: 'DE Test help'
           en: 'EN Test help'
+      janitor_webhookWithSecret:
+        type: janitor
+        command: 'janitor:pipe --data {{ kirby.urls.index }}/plugin-janitor/e9fe51f94eadabf54/whistle --to open'
+

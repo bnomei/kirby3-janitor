@@ -4,6 +4,8 @@ return [
     'debug' => true,
     'languages' => true,
 
+    'bnomei.janitor.secret' => 'e9fe51f94eadabf54',
+
     // janitor v2 job callback
     'some.key.to.task' => function ($model, $data = null) {
         return [
