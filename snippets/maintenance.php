@@ -6,7 +6,7 @@
     maintenance of the server. The implication is that this is
     a temporary condition which will be alleviated after some delay.
     */
-?><!DOCTYPE html>
+    ?><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">

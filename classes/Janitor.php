@@ -190,18 +190,18 @@ final class Janitor
 
     public static function resolveModel(string $uuid): mixed
     {
-        if(Str::startsWith($uuid, 'page://')) {
+        if (Str::startsWith($uuid, 'page://')) {
             return kirby()->page($uuid);
-        } elseif(Str::startsWith($uuid, 'file://')) {
+        } elseif (Str::startsWith($uuid, 'file://')) {
             return kirby()->file($uuid);
-        } elseif(Str::startsWith($uuid, 'user://') || Str::contains($uuid, '@')) {
+        } elseif (Str::startsWith($uuid, 'user://') || Str::contains($uuid, '@')) {
             return kirby()->user($uuid);
-        } elseif(Str::startsWith($uuid, 'site://') || $uuid === '$') {
+        } elseif (Str::startsWith($uuid, 'site://') || $uuid === '$') {
             return kirby()->site();
         }
 
-        foreach(['page', 'file', 'user'] as $finder) {
-            if($model = kirby()->{$finder}($uuid)) {
+        foreach (['page', 'file', 'user'] as $finder) {
+            if ($model = kirby()->{$finder}($uuid)) {
                 return $model;
             }
         }
@@ -218,7 +218,7 @@ final class Janitor
         }
         $model = Janitor::resolveModel($model);
 
-        $args = array_map(function($value) use ($model) {
+        $args = array_map(function ($value) use ($model) {
             // allows for html even without {< since it is not a blueprint query
             // but just a string inside the command
             $value = str_replace(['{(',')}'], ['{{', '}}'], $value, $count);

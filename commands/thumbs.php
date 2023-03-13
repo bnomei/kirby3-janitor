@@ -87,7 +87,7 @@ return [
 
             $hash = basename(str_replace('/.jobs', '', $file->getPath()));
             if (Media::link($page, $hash, $jobFilename) !== false) {
-                 $cli->out('✔ ' . $file->getPath() . '/' . $file->getFilename());
+                $cli->out('✔ ' . $file->getPath() . '/' . $file->getFilename());
                 $created++;
             }
         }
