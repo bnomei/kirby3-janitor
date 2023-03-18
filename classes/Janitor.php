@@ -109,7 +109,7 @@ final class Janitor
 
 	public static function singleton(array $options = []): Janitor
 	{
-		if (self::$singleton) {
+		if (isset(self::$singleton)) {
 			return self::$singleton;
 		}
 
