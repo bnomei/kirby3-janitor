@@ -25,4 +25,29 @@ return [
 	//    'bnomei.janitor.maintenance.check' => function() {
 	//        return kirby()->users()->current()?->role()->isAdmin() !== true;
 	//    },
+
+	'routes' => [
+		[
+			'pattern' => 'webhook/(:any)/(:any)',
+			'action' => function($secret, $command) {
+				if ($secret != janitor()->option('secret')) {
+					\Kirby\Http\Header::status(401);
+					die();
+				}
+
+				if ($command === 'backup') {
+					janitor()->command('janitor:backupzip --quiet');
+					$backup = janitor()->data('janitor:backupzip')['path'];
+					if (F::exists($backup)) {
+						\Kirby\Http\Header::download([
+							'mime' => F::mime($backup),
+							'name' => F::filename($backup),
+						]);
+						readfile($backup);
+						die(); // needed to make content type work
+					}
+				}
+			}
+		],
+	],
 ];
