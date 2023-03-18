@@ -278,7 +278,7 @@ export default {
 		resetButton() {
 			this.button.label = null;
 			this.button.state = null;
-			this.button.style = this.button.style.reset ? null : this.button.style;
+			this.button.style = this.button.style?.reset ? null : this.button.style;
 		},
 
 		simulateClick(element) {
