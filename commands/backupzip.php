@@ -34,7 +34,7 @@ return [
             'castTo' => 'string',
         ],
         'output' => [
-            'shortPrefix' => 'o',
+            'prefix' => 'o',
             'longPrefix' => 'output',
             'description' => 'absolute output folder and file. defaults to: site/backups/{{ timestamp }}.zip',
             'defaultValue' => '',

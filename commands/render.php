@@ -182,14 +182,14 @@ return [
     'description' => 'Render all pages',
     'args' => [
         'query' => [
-            'shortPrefix' => 'q',
+            'prefix' => 'q',
             'longPrefix' => 'query',
             'description' => 'Query what pages to render. like `site.index()` (default), `site.index(true)` or `page.children()`',
             'defaultValue' => 'site.index', // `site.index`, `site.index(true)` for with drafts
             'castTo' => 'string',
         ],
         'remote' => [
-            'shortPrefix' => 'r',
+            'prefix' => 'r',
             'longPrefix' => 'remote',
             'description' => 'provide URL to render using Remote::get instead of `$page->render()`',
             'castTo' => 'string',

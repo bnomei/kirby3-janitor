@@ -13,7 +13,7 @@ return [
     'description' => 'Pipe `data` to `download` arg in Janitor or download on CLI via wget',
     'args' => [
         'output' => [
-            'shortPrefix' => 'o',
+            'prefix' => 'o',
             'longPrefix' => 'output',
             'description' => 'output filename',
             'defaultValue' => '',
