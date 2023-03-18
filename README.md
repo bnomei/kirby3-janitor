@@ -272,34 +272,34 @@ var_dump(janitor()->data('whistle'));
 <?php
 
 return [
-	// ATTENTION: choose a different secret!
-	'bnomei.janitor.secret' => 'e9fe51f94eadabf54',
+    // ATTENTION: choose a different secret!
+    'bnomei.janitor.secret' => 'e9fe51f94eadabf54',
 
-	'routes' => [
-		// custom webhook endpoint reusing janitors secret
-		[
-			'pattern' => 'webhook/(:any)/(:any)',
-			'action' => function($secret, $command) {
-				if ($secret != janitor()->option('secret')) {
-					\Kirby\Http\Header::status(401);
-					die();
-				}
+    'routes' => [
+        // custom webhook endpoint reusing janitors secret
+        [
+            'pattern' => 'webhook/(:any)/(:any)',
+            'action' => function($secret, $command) {
+                if ($secret != janitor()->option('secret')) {
+                    \Kirby\Http\Header::status(401);
+                    die();
+                }
 
-				if ($command === 'backup') {
-					janitor()->command('janitor:backupzip --quiet');
-					$backup = janitor()->data('janitor:backupzip')['path'];
-					if (F::exists($backup)) {
-						\Kirby\Http\Header::download([
-							'mime' => F::mime($backup),
-							'name' => F::filename($backup),
-						]);
-						readfile($backup);
-						die(); // needed to make content type work
-					}
-				}
-			}
-		],
-	],
+                if ($command === 'backup') {
+                    janitor()->command('janitor:backupzip --quiet');
+                    $backup = janitor()->data('janitor:backupzip')['path'];
+                    if (F::exists($backup)) {
+                        \Kirby\Http\Header::download([
+                            'mime' => F::mime($backup),
+                            'name' => F::filename($backup),
+                        ]);
+                        readfile($backup);
+                        die(); // needed to make content type work
+                    }
+                }
+            }
+        ],
+    ],
 ];
 ```
 
