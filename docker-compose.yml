@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   webserver:
-    image: webdevops/php-apache:7.4
+    image: webdevops/php-apache:8.0
     ports:
       - 8000:80
     environment:

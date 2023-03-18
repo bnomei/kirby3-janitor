@@ -1,7 +1,7 @@
 {
     "name": "bnomei/kirby3-janitor",
     "type": "kirby-plugin",
-    "version": "3.5.4",
+    "version": "3.6.0",
     "license": "MIT",
     "homepage": "https://github.com/bnomei/kirby3-janitor",
     "description": "Kirby 3 Plugin for running commands like cleaning the cache from within the Panel, PHP code or a cronjob",
@@ -47,7 +47,7 @@
         "getkirby/composer-installer": "^1.2",
         "symfony/deprecation-contracts": "^3.0.1",
         "symfony/finder": "^6.0"
-    },
+		},
     "require-dev": {
         "getkirby/cli": "dev-develop",
         "getkirby/cms": "^3.8.2",
@@ -55,11 +55,7 @@
         "phpunit/phpunit": "^9.5"
     },
     "scripts": {
-        "build": [
-            "yarn",
-            "yarn run build"
-        ],
-        "analyze": "phpstan analyse classes",
+        "analyze": "psalm",
         "fix": "php-cs-fixer fix",
         "test": [
             "mkdir -p tests/logs",
@@ -67,10 +63,13 @@
             "phpunit --configuration ./phpunit.xml"
         ],
         "dist": [
-            "composer install --no-dev --optimize-autoloader",
+						"npm run format",
+						"composer fix",
+						"composer install --no-dev --optimize-autoloader",
             "git rm -rf --cached .; git add .;"
         ],
         "kirby": [
+            "npm install",
             "composer install",
             "composer update",
             "composer install --working-dir=tests/kirby --no-dev --optimize-autoloader",
