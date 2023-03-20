@@ -54,4 +54,18 @@ final class JanitorTest extends TestCase
 			$janitor->command('janitor:job  --key some.key.to.task --site --data "some data"')['message']
 		);
 	}
+
+	public function testMethod()
+	{
+		$janitor = new Janitor();
+		$this->assertEquals(
+			200,
+			$janitor->command('janitor:call --method whoAmI --page page://vf0xqIlpU0ZlSorI')['status']
+		);
+
+		$this->assertEquals(
+			'Repeat after me: hello',
+			$janitor->command('janitor:call --method repeatAfterMe --data hello --page page://vf0xqIlpU0ZlSorI')['message']
+		);
+	}
 }

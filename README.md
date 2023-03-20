@@ -132,6 +132,7 @@ The `$model` will match the model of whatever page, file, user or site object yo
 This plugin comes with a [few commands](https://github.com/bnomei/kirby3-janitor/tree/master/commands) you might like to use yourself and some [example commands](https://github.com/bnomei/kirby3-janitor/tree/master/tests/site/commands) used to showcase the various options the button has (like how to change the icon or open a URL in a new tab). Some commands can be used in both panel and terminal. Others are limited in their use to either one of them. In the terminal you can use `--help` argument to view the help for each command.
 
 - `janitor:backupzip`, creates a backup zip
+- `janitor:call`, calls a method on the current model with optional data parameter
 - `janitor:cleancontent`, removes fields from content file that are not defined in your blueprints
 - `janitor:clipboard`, copies a defined value to your clipboard
 - `janitor:download`, triggers a download of an URL
@@ -234,11 +235,16 @@ janitor_thumbssite:
   type: janitor
   command: 'janitor:thumbs --site'
   label: Generate thumbs from existing thumb jobs (full site)
+
+janitor_callWithData:
+	label: Call method on model with Data
+	type: janitor
+	command: 'janitor:call --method repeatAfterMe --data {{ user.id }}'
 ```
 
 If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
 
-Keep in mind that the Janitor panel button will append the `--quiet` option on all commands automatically to silence outputs to the non-existing CLI.
+Keep in mind that the Janitor panel button and webhooks will append the `--quiet` option on all commands automatically to silence outputs to the non-existing CLI. But if you use `janitor()->command()` you will have to append `--quiet` to your command yourself.
 
 ### Smartly delaying resolution of a command argument
 
