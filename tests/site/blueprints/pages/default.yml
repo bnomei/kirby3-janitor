@@ -165,3 +165,13 @@ fields:
     command: 'janitor:job --key random.colors'
     color: 'var(--color-blue-600)'
     backgroundColor: 'var(--color-blue-200)'
+
+  janitor_callNoData:
+    label: Call method on model
+    type: janitor
+    command: 'janitor:call --method whoAmI'
+
+  janitor_callWithData:
+    label: Call method on model with Data
+    type: janitor
+    command: 'janitor:call --method repeatAfterMe --data {{ user.id }}'

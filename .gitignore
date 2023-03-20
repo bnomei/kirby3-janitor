@@ -34,3 +34,4 @@ node_modules
 /vendor/**/php4/*
 /vendor/getkirby/composer-installer
 
+/tests/site/backups/

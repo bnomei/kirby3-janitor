@@ -23,6 +23,7 @@ Kirby::plugin('bnomei/janitor', [
 	],
 	'commands' => [ // https://github.com/getkirby/cli
 		'janitor:backupzip' => require __DIR__ . '/commands/backupzip.php',
+		'janitor:call' => require __DIR__ . '/commands/call.php',
 		'janitor:cleancontent' => require __DIR__ . '/commands/cleancontent.php',
 		'janitor:clipboard' => require __DIR__ . '/commands/clipboard.php',
 		'janitor:download' => require __DIR__ . '/commands/download.php',

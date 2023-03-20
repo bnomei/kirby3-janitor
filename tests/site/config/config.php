@@ -29,7 +29,7 @@ return [
 	'routes' => [
 		[
 			'pattern' => 'webhook/(:any)/(:any)',
-			'action' => function($secret, $command) {
+			'action' => function ($secret, $command) {
 				if ($secret != janitor()->option('secret')) {
 					\Kirby\Http\Header::status(401);
 					die();
