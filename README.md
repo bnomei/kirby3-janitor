@@ -237,9 +237,9 @@ janitor_thumbssite:
   label: Generate thumbs from existing thumb jobs (full site)
 
 janitor_callWithData:
-	label: Call method on model with Data
-	type: janitor
-	command: 'janitor:call --method repeatAfterMe --data {{ user.id }}'
+  label: Call method on model with Data
+  type: janitor
+  command: 'janitor:call --method repeatAfterMe --data {{ user.id }}'
 ```
 
 If you want you can also call any of [the core shipping with the CLI](https://github.com/getkirby/cli#available-core-commands) like `clear:cache`.
