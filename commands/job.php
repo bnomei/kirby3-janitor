@@ -43,6 +43,19 @@ return [
 				} else {
 					$result = $job($model, $cli->arg('data'));
 				}
+				if (is_null($result)) {
+					$result = [];
+					$result['status'] = 200;
+				} elseif (is_bool($result)) {
+					$result = [];
+					$result['status'] = $result ? 200 : 204;
+				} elseif (is_string($result)) {
+					$result = [];
+					$result = [
+						'status' => 200,
+						'message' => $result,
+					];
+				}
 			} else {
 				$result['message'] = t('janitor.job-not-found', 'Job "' . $key . '" could not be found.');
 			}

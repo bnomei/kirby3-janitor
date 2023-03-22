@@ -67,5 +67,15 @@ final class JanitorTest extends TestCase
 			'Repeat after me: hello',
 			$janitor->command('janitor:call --method repeatAfterMe --data hello --page page://vf0xqIlpU0ZlSorI')['message']
 		);
+
+		$this->assertEquals(
+			200,
+			$janitor->command('janitor:call --method nullberry --page page://vf0xqIlpU0ZlSorI')['status']
+		);
+
+		$this->assertEquals(
+			204,
+			$janitor->command('janitor:call --method boolberry --page page://vf0xqIlpU0ZlSorI')['status']
+		);
 	}
 }

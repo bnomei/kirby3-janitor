@@ -43,6 +43,19 @@ return [
 				} else {
 					$result = $model->$method($cli->arg('data'));
 				}
+				if (is_null($result)) {
+					$result = [];
+					$result['status'] = 200;
+				} elseif (is_bool($result)) {
+					$result = [];
+					$result['status'] = $result ? 200 : 204;
+				} elseif (is_string($result)) {
+					$result = [];
+					$result = [
+						'status' => 200,
+						'message' => $result,
+					];
+				}
 			} else {
 				$result['message'] = t('janitor.method-not-found', 'Method "' . $method . '" could not be called on model of class <' . $model::class . '>.');
 			}
