@@ -35,3 +35,4 @@ node_modules
 /vendor/getkirby/composer-installer
 
 /tests/site/backups/
+/tests/site/graveyard/

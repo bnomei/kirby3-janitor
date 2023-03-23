@@ -26,6 +26,13 @@ return [
 	//        return kirby()->users()->current()?->role()->isAdmin() !== true;
 	//    },
 
+	'hooks' => [
+		'page.delete:before' => function (\Kirby\Cms\Page $page, bool $force) {
+			// do something before a page gets deleted
+			undertaker($page);
+		},
+	],
+
 	'routes' => [
 		[
 			'pattern' => 'webhook/(:any)/(:any)',

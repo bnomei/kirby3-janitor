@@ -35,6 +35,7 @@ Kirby::plugin('bnomei/janitor', [
 		'janitor:render' => require __DIR__ . '/commands/render.php',
 		'janitor:thumbs' => require __DIR__ . '/commands/thumbs.php',
 		'janitor:tinker' => require __DIR__ . '/commands/tinker.php',
+		'janitor:undertaker' => require __DIR__ . '/commands/undertaker.php',
 	],
 	'fields' => [
 		'janitor' => [
@@ -224,5 +225,17 @@ if (!function_exists('janitor')) {
 	function janitor(): Janitor
 	{
 		return Janitor::singleton();
+	}
+}
+
+if (!function_exists('undertaker')) {
+	function undertaker(\Kirby\Cms\Page $page): array
+	{
+		return janitor()->command(implode(' ', [
+			'janitor:undertaker',
+			'--page ' . ($page->uuid()?->toString() ?? $page->id()),
+			'--user ' . kirby()->user()?->id(),
+			'--quiet'
+		]));
 	}
 }
