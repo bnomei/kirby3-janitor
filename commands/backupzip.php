@@ -68,7 +68,7 @@ return [
 			$roots = explode(',', $roots);
 		}
 		$finder = new Finder();
-		$finder->files()->in($roots);
+		$finder->files()->ignoreDotFiles(false)->in($roots);
 		if (!empty($cli->arg('date'))) {
 			$finder->date($cli->arg('date'));
 		}
