@@ -50,6 +50,12 @@ Kirby::plugin('bnomei/janitor', [
 					return Janitor::isTrue($clipboard);
 				},
 				'command' => function ($command = null) {
+					// make lazy by default
+					$command = str_replace(['{{', '}}'], ['{(', ')}'], $command);
+
+					// allow non-lazy
+					$command = str_replace(['{<', '>}'], ['{{', '}}'], $command);
+
 					// resolve queries
 					$command = Janitor::query($command, $this->model());
 

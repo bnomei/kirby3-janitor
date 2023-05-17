@@ -158,6 +158,7 @@ fields:
     type: janitor
     command: 'janitor:pipe --data {( model.text.kirbytext )} --to message'
     # pipe will show lazy/smart resolved data on button (aka the message)
+    help: THIS IS NEW AUTOMATIC DEFAULT IN v3.10
 
   janitor_color:
     label: Janitor buttons can now be colorful
@@ -186,5 +187,5 @@ fields:
   janitor_savedData:
     label: 'Saved Data'
     type: janitor
-    command: 'janitor:pipe --data {( page.sele )} --to message'
+    command: 'janitor:pipe --data {{ page.sele }} --to message'
     # autosave: true
