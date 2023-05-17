@@ -262,6 +262,37 @@ test_sendmail:
 
 > Note: This only works inside the Janitor fields `command`-property.
 
+### Dynamic values in commands aka "Wrong value even after saving"
+
+In the example above the `user.email` will resolve to the email of the user when the button is first rendered in the panel. But let's assume you want to pick a **value from the same page**. The example below will echo back the selected email as a message. But because of the complexity involved janitor commands (and other props) are NOT dynamic - they do NOT change if you change a value in the panel but only on reload of the page. So if you change the value and hit the button you will not get the new value but the old one!
+
+```yaml
+  selectEmail:
+    type: select
+    options:
+      - ape@example.com 			# <--- SET VALUE
+      - bunny@example.com
+      - crocodile@example.com
+  janitor_savedData:
+    label: 'Saved Data'
+    type: janitor
+    # will use ape@example.com until you reload the page manually
+    command: 'janitor:pipe --data {{ page.selectEmail }} --to message'
+```
+
+There are two ways to fix this.
+
+1. One is to enforce a page reload with the `autosave: true` property. 
+2. The other and recommended solution is to use the lazy resolved queries with the `{( )}` instead of `{{ }}` inside the command. This will resolve the query language of the data **every time** the button is clicked.
+
+```yaml
+  janitor_savedData:
+    label: 'Saved Data'
+    type: janitor
+    command: 'janitor:pipe --data {( page.selectEmail )} --to message'
+    # autosave: true
+```
+
 ### Running commands in your code
 
 You can run any command in you own code as well like in a model, template, controller or hook. Since commands do not return data directly you need to retrieve data stored for Janitor using a helper `janitor()->data($commandName)`.

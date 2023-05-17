@@ -175,3 +175,16 @@ fields:
     label: Call method on model with Data
     type: janitor
     command: 'janitor:call --method repeatAfterMe --data {{ user.id }}'
+
+  sele:
+    type: select
+    options:
+      - a
+      - b
+      - c
+
+  janitor_savedData:
+    label: 'Saved Data'
+    type: janitor
+    command: 'janitor:pipe --data {( page.sele )} --to message'
+    # autosave: true
