@@ -65,18 +65,19 @@ Kirby::plugin('bnomei/janitor', [
 					// append model
 					if ($this->model() instanceof Page) {
 						$uuid = !empty($uuid) ? 'page://' . $uuid : null;
-						$command .= ' --page ' . $uuid ?? $this->model()->id();
+						$command .= ' --page ' . ($uuid ?? $this->model()->id());
 					} elseif ($this->model() instanceof File) {
 						$uuid = !empty($uuid) ? 'file://' . $uuid : null;
-						$command .= ' --file ' . $uuid ?? $this->model()->id();
+						$command .= ' --file ' . ($uuid ?? $this->model()->id());
 					} elseif ($this->model() instanceof User) {
 						$uuid = !empty($uuid) ? 'user://' . $uuid : null;
-						$command .= ' --user ' . $uuid ?? $this->model()->id();
+						$command .= ' --user ' . ($uuid ?? $this->model()->id());
 					} elseif ($this->model() instanceof Site) {
 						$command .= ' --site'; // boolean argument
 					}
-					$command .= ' --model ' . $uuid ??
-						($this->model() instanceof Site ? 'site://' : $this->model()->id());
+					$command .= ' --model ' . (
+						$uuid ?? ($this->model() instanceof Site ? 'site://' : $this->model()->id())
+					);
 
 					$command .= ' --quiet'; // no STDOUT on frontend PHP
 
