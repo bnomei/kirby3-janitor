@@ -44,7 +44,7 @@ Kirby::plugin('bnomei/janitor', [
 					return Janitor::isTrue($doAutosave);
 				},
 				'backgroundColor' => function ($style = 'var(--color-text)') {
-					return $style;
+					return Janitor::query($style, $this->model());
 				},
 				'clipboard' => function ($clipboard = null) {
 					return Janitor::isTrue($clipboard);
@@ -87,7 +87,7 @@ Kirby::plugin('bnomei/janitor', [
 					return $confirm;
 				},
 				'color' => function ($style = 'white') {
-					return $style;
+					return Janitor::query($style, $this->model());
 				},
 				'cooldown' => function ($cooldownMilliseconds = null) {
 					return (int)($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));

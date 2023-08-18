@@ -28,4 +28,12 @@ sections:
       janitor_webhookWithSecret:
         type: janitor
         command: 'janitor:pipe --data {{ kirby.urls.index }}/plugin-janitor/e9fe51f94eadabf54/whistle --to open'
+      jantansl:
+        type: janitor
+        command: 'janitor:pipe --data "t()" --to message'
+        label: 'versionInformation'
+        help: 'versionInformation'
+        success: 'versionInformation'
+        error: 'versionInformation'
+        progress: 'versionInformation'
 
