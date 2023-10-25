@@ -1,12 +1,12 @@
 <?php
-	http_response_code(503); // Service Unavailable
-	/*
-	The Web server (running the Web site) is currently unable
-	to handle the HTTP request due to a temporary overloading or
-	maintenance of the server. The implication is that this is
-	a temporary condition which will be alleviated after some delay.
-	*/
-	?><!DOCTYPE html>
+http_response_code(503); // Service Unavailable
+/*
+The Web server (running the Web site) is currently unable
+to handle the HTTP request due to a temporary overloading or
+maintenance of the server. The implication is that this is
+a temporary condition which will be alleviated after some delay.
+*/
+?><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">

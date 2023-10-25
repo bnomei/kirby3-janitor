@@ -155,6 +155,7 @@ The button you create with the `field: janitor` in your blueprint can be configu
 - `autosave`, if `true` then save before pressing the button
 - `backgroundColor`, sets backgroundColor of button
 - `color`, sets text color of button
+- `confirm`, sets text for confirmation after clicking the button and before executing the command, can prevent the execution of the command if the user clicks `cancel` in the OS dialog
 - `command`, command like you would enter it in terminal, with [query language support](https://getkirby.com/docs/guide/blueprints/query-language) and page/file/user/site/data arguments
 - `cooldown`, time in milliseconds the message is flashed on the button (default: 2000)
 - `error`, set message to show on all **non-200**-status returns with query language support

@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'bnomei/kirby3-janitor',
-        'pretty_version' => '3.11.0',
-        'version' => '3.11.0.0',
+        'pretty_version' => '3.12.0',
+        'version' => '3.12.0.0',
         'reference' => NULL,
         'type' => 'kirby-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'bnomei/kirby3-janitor' => array(
-            'pretty_version' => '3.11.0',
-            'version' => '3.11.0.0',
+            'pretty_version' => '3.12.0',
+            'version' => '3.12.0.0',
             'reference' => NULL,
             'type' => 'kirby-plugin',
             'install_path' => __DIR__ . '/../../',
@@ -29,18 +29,18 @@
             'dev_requirement' => false,
         ),
         'symfony/deprecation-contracts' => array(
-            'pretty_version' => 'v3.0.2',
-            'version' => '3.0.2.0',
-            'reference' => '26954b3d62a6c5fd0ea8a2a00c0353a14978d05c',
+            'pretty_version' => 'v3.3.0',
+            'version' => '3.3.0.0',
+            'reference' => '7c3aff79d10325257a001fcf92d991f24fc967cf',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/deprecation-contracts',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'symfony/finder' => array(
-            'pretty_version' => 'v6.0.19',
-            'version' => '6.0.19.0',
-            'reference' => '5cc9cac6586fc0c28cd173780ca696e419fefa11',
+            'pretty_version' => 'v6.3.5',
+            'version' => '6.3.5.0',
+            'reference' => 'a1b31d88c0e998168ca7792f222cbecee47428c4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/finder',
             'aliases' => array(),
