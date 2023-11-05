@@ -1,81 +1,50 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 use Bnomei\Janitor;
-use PHPUnit\Framework\TestCase;
 
-final class JanitorTest extends TestCase
-{
-	public function testSingleton()
-	{
-		// create
-		$janitor = Janitor::singleton();
-		$this->assertInstanceOf(Janitor::class, $janitor);
+test('singleton', function () {
+    // create
+    $janitor = Janitor::singleton();
+    expect($janitor)->toBeInstanceOf(Janitor::class);
 
-		// from static cached
-		$janitor = Janitor::singleton();
-		$this->assertInstanceOf(Janitor::class, $janitor);
-	}
+    // from static cached
+    $janitor = Janitor::singleton();
+    expect($janitor)->toBeInstanceOf(Janitor::class);
+});
+test('option', function () {
+    $janitor = new Janitor([
+        'debug' => true,
+        'secret' => function () {
+            return 'secret';
+        },
+    ]);
 
-	public function testOption()
-	{
-		$janitor = new Janitor([
-			'debug' => true,
-			'secret' => function () {
-				return 'secret';
-			},
-		]);
+    expect($janitor->option('debug'))->toBeTrue();
+    expect($janitor->option('secret') === 'secret')->toBeTrue();
 
-		$this->assertTrue($janitor->option('debug'));
-		$this->assertTrue($janitor->option('secret') === 'secret');
+    expect($janitor->option())->toBeArray();
+});
+test('construct', function () {
+    $janitor = new Janitor();
+    expect($janitor)->toBeInstanceOf(Janitor::class);
+});
+test('job', function () {
+    $janitor = new Janitor();
+    expect($janitor->command('janitor:job  --key some.key.to.task --site')['status'])->toEqual(200);
 
-		$this->assertIsArray($janitor->option());
-	}
+    expect($janitor->command('janitor:job  --key some.key.to.task --site --data "some data"')['message'])->toEqual('site:// some data');
+});
+test('method', function () {
+    $janitor = new Janitor();
+    expect($janitor->command('janitor:call --method whoAmI --page page://vf0xqIlpU0ZlSorI')['status'])->toEqual(200);
 
-	public function test__construct()
-	{
-		$janitor = new Janitor();
-		$this->assertInstanceOf(Janitor::class, $janitor);
-	}
+    expect($janitor->command('janitor:call --method repeatAfterMe --data hello --page page://vf0xqIlpU0ZlSorI')['message'])->toEqual('Repeat after me: hello');
 
-	public function testJob()
-	{
-		$janitor = new Janitor();
-		$this->assertEquals(
-			200,
-			$janitor->command('janitor:job  --key some.key.to.task --site')['status']
-		);
+    expect($janitor->command('janitor:call --method nullberry --page page://vf0xqIlpU0ZlSorI')['status'])->toEqual(200);
 
-		$this->assertEquals(
-			'site:// some data',
-			$janitor->command('janitor:job  --key some.key.to.task --site --data "some data"')['message']
-		);
-	}
-
-	public function testMethod()
-	{
-		$janitor = new Janitor();
-		$this->assertEquals(
-			200,
-			$janitor->command('janitor:call --method whoAmI --page page://vf0xqIlpU0ZlSorI')['status']
-		);
-
-		$this->assertEquals(
-			'Repeat after me: hello',
-			$janitor->command('janitor:call --method repeatAfterMe --data hello --page page://vf0xqIlpU0ZlSorI')['message']
-		);
-
-		$this->assertEquals(
-			200,
-			$janitor->command('janitor:call --method nullberry --page page://vf0xqIlpU0ZlSorI')['status']
-		);
-
-		$this->assertEquals(
-			204,
-			$janitor->command('janitor:call --method boolberry --page page://vf0xqIlpU0ZlSorI')['status']
-		);
-	}
-}
+    expect($janitor->command('janitor:call --method boolberry --page page://vf0xqIlpU0ZlSorI')['status'])->toEqual(204);
+});

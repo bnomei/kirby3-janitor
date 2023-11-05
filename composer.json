@@ -1,7 +1,7 @@
 {
     "name": "bnomei/kirby3-janitor",
     "type": "kirby-plugin",
-    "version": "3.12.0",
+    "version": "4.0.0",
     "license": "MIT",
     "homepage": "https://github.com/bnomei/kirby3-janitor",
     "description": "Kirby 3 Plugin for running commands like cleaning the cache from within the Panel, PHP code or a cronjob",
@@ -12,9 +12,9 @@
         }
     ],
     "keywords": [
-        "kirby3",
-        "kirby3-cms",
-        "kirby3-plugin",
+        "kirby",
+        "kirby-cms",
+        "kirby-plugin",
         "cache",
         "clean",
         "backup",
@@ -39,33 +39,37 @@
         "optimize-autoloader": true,
         "sort-packages": true,
         "allow-plugins": {
-            "getkirby/composer-installer": true
+            "getkirby/composer-installer": true,
+            "pestphp/pest-plugin": true
         }
     },
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.1",
         "getkirby/composer-installer": "^1.2",
         "symfony/deprecation-contracts": "^3.0.1",
         "symfony/finder": "^6.0"
-		},
+    },
     "require-dev": {
         "getkirby/cli": "dev-develop",
-        "getkirby/cms": "^3.8.2",
-        "php-coveralls/php-coveralls": "^2.4",
-        "phpunit/phpunit": "^9.5"
+        "getkirby/cms": "^4.0.0-beta.3",
+        "laravel/pint": "^1.13",
+        "nunomaduro/larastan": "^2.6",
+        "pestphp/pest": "^2.24",
+        "pestphp/pest-plugin-type-coverage": "^2.4",
+        "spatie/ray": "^1.39"
     },
     "scripts": {
-        "analyze": "psalm",
-        "fix": "php-cs-fixer fix",
+        "analyze": "./vendor/bin/phpstan",
+        "fix": "./vendor/bin/pint",
         "test": [
             "mkdir -p tests/logs",
             "@putenv XDEBUG_MODE=coverage",
             "phpunit --configuration ./phpunit.xml"
         ],
         "dist": [
-						"npm run format",
-						"composer fix",
-						"composer install --no-dev --optimize-autoloader",
+            "npm run format",
+            "composer fix",
+            "composer install --no-dev --optimize-autoloader",
             "git rm -rf --cached .; git add .;"
         ],
         "kirby": [

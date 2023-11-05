@@ -13,9 +13,13 @@ sections:
         # no data
       jansite:
         type: janitor
-        command: 'janitor:clipboard --data {{ site.title }}'
+        command: 'janitor:clipboard --data "{< site.title >}"'
         label: 'Clip'
         help: 'Copy'
+      jansiteecho:
+        type: janitor
+        command: 'janitor:pipe --data "{{ site.title }}" --to message'
+        label: 'Echo Site Title'
       janitor_job_v3:
         type: janitor
         command: 'janitor:job --key some.key.to.task --data "some data"'

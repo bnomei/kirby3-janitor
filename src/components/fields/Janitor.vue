@@ -92,7 +92,9 @@ export default {
 		id() {
 			return (
 				"janitor-" +
-				this.hashCode(this.command + (this.button.label ?? "") + this.label)
+				this.hashCode(
+					this.command + (this.button.label ?? "") + this.label
+				)
 			);
 		},
 		hasChanges() {
@@ -278,7 +280,9 @@ export default {
 		resetButton() {
 			this.button.label = null;
 			this.button.state = null;
-			this.button.style = this.button.style?.reset ? null : this.button.style;
+			this.button.style = this.button.style?.reset
+				? null
+				: this.button.style;
 		},
 
 		simulateClick(element) {
@@ -324,6 +328,10 @@ export default {
 	background-color: var(--color-border) !important;
 	color: white;
 	cursor: wait;
+}
+
+.janitor[aria-disabled="true"] {
+	background-color: var(--color-border) !important;
 }
 
 .visually-hidden {
