@@ -19,7 +19,7 @@ class JanitorCleanContentCommand
      *
      * @psalm-param list{string, string,...}|null $ignore
      */
-    public static function cleanUp(CLI $cli, Kirby\Cms\Pages $collection, array $ignore = null, string $lang = null): int
+    public static function cleanUp(CLI $cli, Kirby\Cms\Pages $collection, ?array $ignore = null, ?string $lang = null): int
     {
         $updated = 0;
         foreach ($collection as $item) {

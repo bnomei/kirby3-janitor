@@ -53,7 +53,7 @@ final class Janitor
 
     private static array $data = [];
 
-    public function data(string $command, array $data = null): ?array
+    public function data(string $command, ?array $data = null): ?array
     {
         if ($data) {
             Janitor::$data[$command] = $data;
@@ -79,7 +79,7 @@ final class Janitor
         }
     }
 
-    public function option(string $key = null): mixed
+    public function option(?string $key = null): mixed
     {
         if ($key) {
             return A::get($this->options, $key);
@@ -150,7 +150,7 @@ final class Janitor
         return [$name, $args];
     }
 
-    public static function query(string $template = null, mixed $model = null): string
+    public static function query(?string $template = null, mixed $model = null): string
     {
         $page = null;
         $file = null;

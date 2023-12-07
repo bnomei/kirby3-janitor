@@ -227,7 +227,11 @@ Kirby::plugin('bnomei/janitor', [
     ],
     'fieldMethods' => [
         'ecco' => function ($field, string $a, string $b = ''): string {
-            return $field->bool() ? $a : $b;
+            if ($field->isEmpty()) {
+                return $b;
+            }
+
+            return empty($field->value()) || strtolower($field->value()) === 'false' ? $b : $a;
         },
     ],
     'siteMethods' => [
