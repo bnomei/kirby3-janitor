@@ -90,9 +90,7 @@ Kirby::plugin('bnomei/janitor', [
                     return $command;
                 },
                 'confirm' => function ($confirm = '') {
-                    if (kirby()->multilang()) {
-                        $confirm = I18n::translate($confirm, $confirm, kirby()->language()->code());
-                    }
+                    $confirm = I18n::translate($confirm, $confirm, kirby()->user()->language());
 
                     return Janitor::query($confirm, $this->model());
                 },
@@ -103,9 +101,7 @@ Kirby::plugin('bnomei/janitor', [
                     return (int) ($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));
                 },
                 'error' => function ($label = null) {
-                    if (kirby()->multilang()) {
-                        $label = I18n::translate($label, $label, kirby()->language()->code());
-                    }
+                    $label = I18n::translate($label, $label, kirby()->user()->language());
 
                     return Janitor::query($label, $this->model());
                 },
@@ -116,30 +112,22 @@ Kirby::plugin('bnomei/janitor', [
                     return Janitor::isTrue($intab);
                 },
                 'help' => function ($label = null) {
-                    if (kirby()->multilang()) {
-                        $label = I18n::translate($label, $label, kirby()->language()->code());
-                    }
+                    $label = I18n::translate($label, $label, kirby()->user()->language());
 
                     return Janitor::query($label, $this->model());
                 },
                 'label' => function ($label = null) {
-                    if (kirby()->multilang()) {
-                        $label = I18n::translate($label, $label, kirby()->language()->code());
-                    }
+                    $label = I18n::translate($label, $label, kirby()->user()->language());
 
                     return Janitor::query($label, $this->model());
                 },
                 'progress' => function ($label = null) {
-                    if (kirby()->multilang()) {
-                        $label = I18n::translate($label, $label, kirby()->language()->code());
-                    }
+                    $label = I18n::translate($label, $label, kirby()->user()->language());
 
                     return Janitor::query($label, $this->model());
                 },
                 'success' => function ($label = null) {
-                    if (kirby()->multilang()) {
-                        $label = I18n::translate($label, $label, kirby()->language()->code());
-                    }
+                    $label = I18n::translate($label, $label, kirby()->user()->language());
 
                     return Janitor::query($label, $this->model());
                 },
