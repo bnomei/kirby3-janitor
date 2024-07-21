@@ -26,11 +26,16 @@ jobs:
       - name: Install
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Run Pest Tests
+        run: |
+          php tests/patch.php
+          php ./vendor/bin/pest --coverage --coverage-clover=${{github.workspace}}/tests/clover.xml
+
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v8.0.0
         with:
-          coverageCommand: composer coverage
-          coverageLocations: ${{github.workspace}}/build/logs/clover.xml:clover
+          #coverageCommand: composer coverage
+          coverageLocations: ${{github.workspace}}/tests/clover.xml:clover
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
 
