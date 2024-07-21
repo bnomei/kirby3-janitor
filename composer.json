@@ -64,7 +64,7 @@
         "test": "./vendor/bin/pest",
         "coverage": [
             "php tests/patch.php",
-            "./vendor/bin/pest --coverage"
+            "php ./vendor/bin/pest --coverage --coverage-clover=tests/clover.xml"
         ],
         "dist": [
             "npm run format",
