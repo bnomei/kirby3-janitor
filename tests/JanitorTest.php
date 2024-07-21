@@ -132,7 +132,7 @@ it('resolve queries in commands without proving a model when executing', functio
             '--to',
             'message',
             '--quiet',
-            ''
+            '',
         ]);
 
     $result = (new Janitor)->command($command);
