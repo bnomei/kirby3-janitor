@@ -31,7 +31,6 @@ jobs:
         with:
           debug: true
           coverageCommand: composer coverage
-          workingDirectory: ${{github.workspace}}
           coverageLocations: ${{github.workspace}}/tests/clover.xml:clover
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
