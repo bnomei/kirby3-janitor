@@ -121,7 +121,7 @@ it('resolve queries in commands with a model', function () {
 });
 
 it('resolve queries in commands without proving a model when executing', function () {
-    $command = 'janitor:pipe --data "{( site.title )}" --to "message"';
+    $command = 'janitor:pipe --data "{( site.title )}" --to "message" --quiet';
     [$name, $args] = Janitor::parseCommand($command);
     $args = Janitor::resolveQueriesInCommand($args);
 
@@ -131,6 +131,8 @@ it('resolve queries in commands without proving a model when executing', functio
             'Janitor Tests',
             '--to',
             'message',
+            '--quiet',
+            ''
         ]);
 
     $result = (new Janitor)->command($command);
