@@ -37,9 +37,9 @@ test('construct', function () {
 
 test('job', function () {
     $janitor = new Janitor();
-    expect($janitor->command('janitor:job  --key some.key.to.task --site')['status'])->toEqual(200);
+    expect($janitor->command('janitor:job  --key some.key.to.task --site --quiet')['status'])->toEqual(200);
 
-    expect($janitor->command('janitor:job  --key some.key.to.task --site --data "some data"')['message'])->toEqual('site:// some data');
+    expect($janitor->command('janitor:job  --key some.key.to.task --site --data "some data" --quiet')['message'])->toEqual('site:// some data');
 });
 
 test('method', function () {
