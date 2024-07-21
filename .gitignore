@@ -37,3 +37,4 @@ node_modules
 
 /tests/site/backups/
 /tests/site/graveyard/
+/tests/clover.xml
