@@ -17,7 +17,7 @@
     </php>
     <coverage>
         <report>
-            <clover outputFile="tests/clover.xml"/>
+            <clover outputFile="build/logs/clover.xml"/>
         </report>
     </coverage>
     <source>
