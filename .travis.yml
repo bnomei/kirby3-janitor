@@ -1,6 +1,0 @@
-language: php
-php: 8.2
-matrix:
-  fast_finish: true
-install: composer install --no-interaction --prefer-dist --optimize-autoloader
-script: ./vendor/bin/pest

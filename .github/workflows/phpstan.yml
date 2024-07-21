@@ -26,4 +26,6 @@ jobs:
           composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan --error-format=github
+        run: |
+          php tests/patch.php
+          ./vendor/bin/phpstan --error-format=github

@@ -1,13 +1,12 @@
-# Kirby 3 Janitor
+# Kirby Janitor
 
 ![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-janitor?color=ae81ff)
 ![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-janitor?color=272822)
-[![Build Status](https://flat.badgen.net/travis/bnomei/kirby3-janitor)](https://travis-ci.com/bnomei/kirby3-janitor)
-[![Coverage Status](https://flat.badgen.net/coveralls/c/github/bnomei/kirby3-janitor)](https://coveralls.io/github/bnomei/kirby3-janitor)
+[![Coverage Status](https://flat.badgen.net/codeclimate/coverage/github/bnomei/kirby3-janitor)](https://coveralls.io/github/bnomei/kirby3-janitor)
 [![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor)](https://codeclimate.com/github/bnomei/kirby3-janitor)
-[![Twitter](https://flat.badgen.net/badge/twitter/bnomei?color=66d9ef)](https://twitter.com/bnomei)
+[![Discord](https://flat.badgen.net/badge/discord/bnomei?color=7289da)](https://discordapp.com/users/bnomei)
 
-Kirby 3 Plugin for running commands.
+Kirby Plugin for running commands.
 
 - It is a Panel Button!
 - It has commands built-in for cleaning the cache, sessions, create zip-backup, pre-generate thumbs, open URLs, refresh the current Panel page and more.
@@ -16,13 +15,14 @@ Kirby 3 Plugin for running commands.
 
 ## Install
 
-Using composer:
+You have to use composer to install both the plugin and the CLI locally into your project:
 
 ```bash
 composer require getkirby/cli bnomei/kirby3-janitor
 ```
 
-You need to install the CLI with composer. Since Janitor depends on the CLI to be available installing only the janitor plugin via submodules or via ZIP do not make much sense. Please stick to composer for now.
+> [!WARNING]
+> You need to install the CLI with composer into your project and not use the global version. Since Janitor depends on the CLI to be available, installing only the janitor plugin via submodules or via ZIP is NOT supported.
 
 ## Commercial Usage
 
@@ -125,6 +125,7 @@ fields:
 
 The `$model` will match the model of whatever page, file, user or site object you pressed the button at.
 
+> [!NOTE]
 > Why just a single model variable instead of one each for page, file, user and site? For one reason to make it work directly with any existing version 2 callbacks you might have already created and secondly because this why it is very easy to get the model that triggered the callback.
 
 ### Built in commands and examples

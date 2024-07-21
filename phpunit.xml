@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
-         backupStaticAttributes="false"
          bootstrap="./tests/index.php"
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
@@ -19,12 +15,14 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
     </php>
+    <coverage>
+        <report>
+            <clover outputFile="tests/clover.xml"/>
+        </report>
+    </coverage>
     <source>
         <include>
             <directory suffix=".php">classes</directory>
         </include>
-        <report>
-            <clover outputFile="tests/logs/clover.xml"/>
-        </report>
-    </coverage>
+    </source>
 </phpunit>

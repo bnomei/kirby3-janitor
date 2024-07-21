@@ -90,7 +90,7 @@ Kirby::plugin('bnomei/janitor', [
                     return $command;
                 },
                 'confirm' => function ($confirm = '') {
-                    $confirm = I18n::translate($confirm, $confirm, kirby()->user()->language());
+                    $confirm = I18n::translate($confirm, $confirm, kirby()->user()?->language());
 
                     return Janitor::query($confirm, $this->model());
                 },
@@ -101,7 +101,7 @@ Kirby::plugin('bnomei/janitor', [
                     return (int) ($cooldownMilliseconds ?? option('bnomei.janitor.label.cooldown'));
                 },
                 'error' => function ($label = null) {
-                    $label = I18n::translate($label, $label, kirby()->user()->language());
+                    $label = I18n::translate($label, $label, kirby()->user()?->language());
 
                     return Janitor::query($label, $this->model());
                 },
@@ -112,22 +112,22 @@ Kirby::plugin('bnomei/janitor', [
                     return Janitor::isTrue($intab);
                 },
                 'help' => function ($label = null) {
-                    $label = I18n::translate($label, $label, kirby()->user()->language());
+                    $label = I18n::translate($label, $label, kirby()->user()?->language());
 
                     return Janitor::query($label, $this->model());
                 },
                 'label' => function ($label = null) {
-                    $label = I18n::translate($label, $label, kirby()->user()->language());
+                    $label = I18n::translate($label, $label, kirby()->user()?->language());
 
                     return Janitor::query($label, $this->model());
                 },
                 'progress' => function ($label = null) {
-                    $label = I18n::translate($label, $label, kirby()->user()->language());
+                    $label = I18n::translate($label, $label, kirby()->user()?->language());
 
                     return Janitor::query($label, $this->model());
                 },
                 'success' => function ($label = null) {
-                    $label = I18n::translate($label, $label, kirby()->user()->language());
+                    $label = I18n::translate($label, $label, kirby()->user()?->language());
 
                     return Janitor::query($label, $this->model());
                 },
@@ -159,7 +159,15 @@ Kirby::plugin('bnomei/janitor', [
                 'pattern' => 'plugin-janitor',
                 'method' => 'POST',
                 'action' => function () {
-                    return Janitor::singleton()->command(get('command'));
+                    $command = get('command');
+                    if (! is_string($command)) {
+                        return [
+                            'status' => 200,
+                            'info' => 'no command given',
+                        ];
+                    }
+
+                    return Janitor::singleton()->command($command);
                 },
             ],
             [
@@ -200,6 +208,13 @@ Kirby::plugin('bnomei/janitor', [
                 $janitor = Janitor::singleton();
                 if ($secret == $janitor->option('secret')) {
                     $command = get('command');
+                    if (! is_string($command)) {
+                        return [
+                            'status' => 200,
+                            'info' => 'no command given',
+                        ];
+                    }
+
                     if (! Str::contains($command, ' --quiet')) {
                         $command .= ' --quiet';
                     }

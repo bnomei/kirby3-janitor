@@ -119,7 +119,7 @@ final class Janitor
         return self::$singleton;
     }
 
-    public static function isTrue($val, bool $return_null = false): bool
+    public static function isTrue(mixed $val, bool $return_null = false): bool
     {
         $boolval = (is_string($val) ? filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : (bool) $val);
 
@@ -150,8 +150,13 @@ final class Janitor
         return [$name, $args];
     }
 
-    public static function query(?string $template = null, mixed $model = null): string
+    public static function query(mixed $template = null, mixed $model = null): string
     {
+        // array|Closure|string|null could be passed from I18n::translate
+        if (! is_string($template)) {
+            return '';
+        }
+
         $page = null;
         $file = null;
         $site = kirby()->site();
@@ -159,9 +164,9 @@ final class Janitor
         if ($model instanceof Page) {
             $page = $model;
         } elseif ($model instanceof File) {
-            $site = $model;
-        } elseif ($model instanceof Site) {
             $file = $model;
+        } elseif ($model instanceof Site || $model === $site) {
+            $site = $model;
         } elseif ($model instanceof User) {
             $user = $model;
         }
@@ -176,9 +181,9 @@ final class Janitor
         ]);
     }
 
-    public static function requestBlockedByMaintenance(): bool
+    public static function requestBlockedByMaintenance(?string $request = null): bool
     {
-        $request = kirby()->request()->url()->toString();
+        $request ??= kirby()->request()->url()->toString();
         foreach ([
             kirby()->urls()->panel(),
             kirby()->urls()->api(),
@@ -191,7 +196,7 @@ final class Janitor
 
         $isBlocked = option('bnomei.janitor.maintenance.check', true);
         if ($isBlocked && ! is_string($isBlocked) && is_callable($isBlocked)) {
-            $isBlocked = $isBlocked();
+            $isBlocked = $isBlocked(); // @codeCoverageIgnore
         }
 
         return (bool) $isBlocked;
@@ -220,12 +225,16 @@ final class Janitor
 
     public static function resolveQueriesInCommand(array $args): array
     {
+        $model = null;
         $modelKey = array_search('--model', $args);
-        $model = $modelKey !== false && $modelKey + 1 < count($args) ? $args[$modelKey + 1] : null;
-        if (! $model) {
-            return $args;
+
+        if ($modelKey !== false && is_int($modelKey)) {
+            $model = $modelKey + 1 < count($args) ? $args[$modelKey + 1] : null;
+            if (! $model) {
+                return $args; // @codeCoverageIgnore
+            }
+            $model = Janitor::resolveModel($model);
         }
-        $model = Janitor::resolveModel($model);
 
         $args = array_map(function ($value) use ($model) {
             // allows for html even without {< since it is not a blueprint query

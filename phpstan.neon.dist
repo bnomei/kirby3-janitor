@@ -1,13 +1,14 @@
 parameters:
-    level: 5
+    level: 9
     paths:
         - classes
-        - collections
         - index.php
     excludePaths:
         - tests
         - collections/example_*.php
-    checkMissingIterableValueType: false
 
     ignoreErrors:
         - '#Undefined variable: \$this#'
+        - '#Call to an undefined method Kirby\\Cms\\Ingredients::#'
+        -
+            identifier: missingType.iterableValue
