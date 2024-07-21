@@ -44,13 +44,13 @@ test('job', function () {
 
 test('method', function () {
     $janitor = new Janitor();
-    expect($janitor->command('janitor:call --method whoAmI --page page://vf0xqIlpU0ZlSorI')['status'])->toEqual(200);
+    expect($janitor->command('janitor:call --method whoAmI --page page://vf0xqIlpU0ZlSorI --quiet')['status'])->toEqual(200);
 
-    expect($janitor->command('janitor:call --method repeatAfterMe --data hello --page page://vf0xqIlpU0ZlSorI')['message'])->toEqual('Repeat after me: hello');
+    expect($janitor->command('janitor:call --method repeatAfterMe --data hello --page page://vf0xqIlpU0ZlSorI --quiet')['message'])->toEqual('Repeat after me: hello');
 
-    expect($janitor->command('janitor:call --method nullberry --page page://vf0xqIlpU0ZlSorI')['status'])->toEqual(200);
+    expect($janitor->command('janitor:call --method nullberry --page page://vf0xqIlpU0ZlSorI --quiet')['status'])->toEqual(200);
 
-    expect($janitor->command('janitor:call --method boolberry --page page://vf0xqIlpU0ZlSorI')['status'])->toEqual(204);
+    expect($janitor->command('janitor:call --method boolberry --page page://vf0xqIlpU0ZlSorI --quiet')['status'])->toEqual(204);
 });
 
 it('can resolve models', function () {
