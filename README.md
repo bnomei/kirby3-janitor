@@ -2,7 +2,7 @@
 
 ![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-janitor?color=ae81ff)
 ![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-janitor?color=272822)
-[![Coverage](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor)](https://coveralls.io/github/bnomei/kirby3-janitor)
+[![Coverage](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor)](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor)
 [![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor)](https://codeclimate.com/github/bnomei/kirby3-janitor)
 [![Discord](https://flat.badgen.net/badge/discord/bnomei?color=7289da)](https://discordapp.com/users/bnomei)
 
