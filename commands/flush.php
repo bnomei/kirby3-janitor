@@ -12,11 +12,14 @@ return [
     'description' => 'Flush a cache',
     'args' => [
         'name' => [
+            'prefix' => 'n',
+            'longPrefix' => 'name',
             'description' => 'Name of the cache',
+            'defaultValue' => 'pages',
         ],
     ],
     'command' => static function (CLI $cli): void {
-        $name = $cli->argOrPrompt('name', 'Which cache should be emptied? (press <Enter> to clear the pages cache)', false);
+        $name = $cli->arg('name');
         $name = empty($name) ? 'pages' : $name;
 
         $cli->kirby()->cache($name)->flush();

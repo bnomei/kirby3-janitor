@@ -90,6 +90,10 @@ final class Janitor
 
     public function command(string $command): array
     {
+        if (php_sapi_name() !== 'cli' && ! Str::contains($command, ' --quiet')) {
+            $command .= ' --quiet';
+        }
+
         [$name, $args] = Janitor::parseCommand($command);
         $args = Janitor::resolveQueriesInCommand($args); // like a "lazy/smart" `{( page.callme )}`
 

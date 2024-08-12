@@ -35,6 +35,7 @@ Kirby::plugin('bnomei/janitor', [
         'janitor:job' => require __DIR__.'/commands/job.php',
         'janitor:maintenance' => require __DIR__.'/commands/maintenance.php',
         'janitor:open' => require __DIR__.'/commands/open.php',
+        'janitor:out' => require __DIR__.'/commands/out.php',
         'janitor:pipe' => require __DIR__.'/commands/pipe.php',
         'janitor:render' => require __DIR__.'/commands/render.php',
         'janitor:thumbs' => require __DIR__.'/commands/thumbs.php',

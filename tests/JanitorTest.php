@@ -31,19 +31,19 @@ test('option', function () {
 });
 
 test('construct', function () {
-    $janitor = new Janitor();
+    $janitor = new Janitor;
     expect($janitor)->toBeInstanceOf(Janitor::class);
 });
 
 test('job', function () {
-    $janitor = new Janitor();
+    $janitor = new Janitor;
     expect($janitor->command('janitor:job  --key some.key.to.task --site --quiet')['status'])->toEqual(200);
 
     expect($janitor->command('janitor:job  --key some.key.to.task --site --data "some data" --quiet')['message'])->toEqual('site:// some data');
 });
 
 test('method', function () {
-    $janitor = new Janitor();
+    $janitor = new Janitor;
     expect($janitor->command('janitor:call --method whoAmI --page page://vf0xqIlpU0ZlSorI --quiet')['status'])->toEqual(200);
 
     expect($janitor->command('janitor:call --method repeatAfterMe --data hello --page page://vf0xqIlpU0ZlSorI --quiet')['message'])->toEqual('Repeat after me: hello');
@@ -58,7 +58,7 @@ it('can resolve models', function () {
     $user = kirby()->users()->create([
         'email' => 'test@bnomei.com',
     ]);
-    $janitor = new Janitor();
+    $janitor = new Janitor;
 
     expect($janitor->model('page://vf0xqIlpU0ZlSorI'))->toBeInstanceOf(Kirby\Cms\Page::class)
         ->and($janitor->model('site://'))->toBeInstanceOf(Kirby\Cms\Site::class)

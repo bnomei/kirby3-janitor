@@ -32,14 +32,14 @@ return [
         Dir::make($root); // make sure folder exists
 
         // find existing thumbs
-        $finder = new Finder();
+        $finder = new Finder;
         $finder->files()
             ->in($root)
             ->name('/\.(?:avif|gif|jpeg|jpg|png|webp)$/');
         $cli->blue(iterator_count($finder).' existing thumbs');
 
         // job files
-        $finder = new Finder();
+        $finder = new Finder;
         $finder->files()
             ->in($root)
             ->ignoreDotFiles(false)

@@ -133,7 +133,7 @@ class JanitorRenderCommand
                 $ids[] = $page->id(); // this should not fully load the page yet
             }
         } else { // performance optimized way to get ids for `site.index`
-            $finder = new Finder();
+            $finder = new Finder;
             $finder->directories()
                 ->in($cli->kirby()->roots()->content());
             foreach ($finder as $folder) {
@@ -203,6 +203,6 @@ return [
         ],
     ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
-        (new JanitorRenderCommand())->run($cli);
+        (new JanitorRenderCommand)->run($cli);
     },
 ];

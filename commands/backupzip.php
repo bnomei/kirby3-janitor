@@ -50,7 +50,7 @@ return [
         $output = str_replace('{{ timestamp }}', (string) (time()), $output);
         Dir::make(dirname($output));
 
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         if ($zip->open($output, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) !== true) {
             $cli->error('Failed to create: '.$output);
             janitor()->data($cli->arg('command'), [
@@ -68,7 +68,7 @@ return [
         } else {
             $roots = explode(',', $roots);
         }
-        $finder = new Finder();
+        $finder = new Finder;
         $finder->files()->ignoreDotFiles(false)->in($roots);
         if (! empty($cli->arg('date'))) {
             $finder->date($cli->arg('date'));

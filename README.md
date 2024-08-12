@@ -141,6 +141,7 @@ This plugin comes with a [few commands](https://github.com/bnomei/kirby3-janitor
 - `janitor:job`, run a callback
 - `janitor:maintenance`, toggle maintenance mode
 - `janitor:open`, triggers opening of an URL in panel
+- `janitor:out`, sends a message to the CLI output stream
 - `janitor:pipe`, map input argument to output argument
 - `janitor:render`, render a certain page or all pages (to create thumb jobs)
 - `janitor:thumbs`, process thumb jobs of a certain page or all pages
