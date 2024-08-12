@@ -13,24 +13,24 @@ use Kirby\Cms\User;
 return [
     'description' => 'Prints text to the terminal',
     'args' => [
-            'msg' => [
-                'longPrefix' => 'msg',
-                'description' => 'Message',
-                'defaultValue' => '',
-            ],
-            'level' => [
-                'prefix' => 'l',
-                'longPrefix' => 'level',
-                'description' => 'Message level like out/success/error',
-                'defaultValue' => 'out',
-            ],
-            'time' => [
-                'prefix' => 't',
-                'longPrefix' => 'time',
-                'description' => 'Prefix message with timestamp',
-                'noValue' => true,
-            ],
-        ] + Janitor::ARGS, // page, file, user, site, data, model
+        'msg' => [
+            'longPrefix' => 'msg',
+            'description' => 'Message',
+            'defaultValue' => '',
+        ],
+        'level' => [
+            'prefix' => 'l',
+            'longPrefix' => 'level',
+            'description' => 'Message level like out/success/error',
+            'defaultValue' => 'out',
+        ],
+        'time' => [
+            'prefix' => 't',
+            'longPrefix' => 'time',
+            'description' => 'Prefix message with timestamp',
+            'noValue' => true,
+        ],
+    ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $time = $cli->arg('time') ? '['.date('Y-m-d H:i:s').'] ' : '';
         $level = match ($cli->arg('level')) {
