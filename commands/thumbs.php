@@ -27,7 +27,7 @@ return [
         }
         // full site
         if (! $root || $cli->arg('site')) {
-            $root = realpath(kirby()->roots()->index().'/media/').'/pages';
+            $root = kirby()->roots()->media().'/pages';
         }
         Dir::make($root); // make sure folder exists
 
