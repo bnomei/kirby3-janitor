@@ -137,7 +137,7 @@ This plugin comes with a [few commands](https://github.com/bnomei/kirby3-janitor
 - `janitor:cleancontent`, removes fields from content file that are not defined in your blueprints
 - `janitor:clipboard`, copies a defined value to your clipboard
 - `janitor:download`, triggers a download of an URL
-- `janitor:flush`, flush a cache by providing its name
+- `janitor:flush`, flush a cache by providing its name (default: pages cache)
 - `janitor:job`, run a callback
 - `janitor:maintenance`, toggle maintenance mode
 - `janitor:open`, triggers opening of an URL in panel
@@ -146,6 +146,7 @@ This plugin comes with a [few commands](https://github.com/bnomei/kirby3-janitor
 - `janitor:render`, render a certain page or all pages (to create thumb jobs)
 - `janitor:thumbs`, process thumb jobs of a certain page or all pages
 - `janitor:tinker`, run a REPL session in terminal
+- `janitor:trash`, removes an entry from given cache by key or page (default: pages cache)
 - `janitor:undertaker`, backups a page and its subpages to a zip. You need to manually trigger it with a [hook](https://github.com/bnomei/kirby3-janitor/blob/master/tests/site/config/config.php).
 
 The plugin will register these commands starting with `janitor:*` automatically - no copying required.<br>But if you want to re-use any of the other example provided you need to copy them to your `site/commands`-folder

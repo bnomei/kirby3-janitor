@@ -40,6 +40,7 @@ Kirby::plugin('bnomei/janitor', [
         'janitor:render' => require __DIR__.'/commands/render.php',
         'janitor:thumbs' => require __DIR__.'/commands/thumbs.php',
         'janitor:tinker' => require __DIR__.'/commands/tinker.php',
+        'janitor:trash' => require __DIR__.'/commands/trash.php',
         'janitor:undertaker' => require __DIR__.'/commands/undertaker.php',
     ],
     'fields' => [

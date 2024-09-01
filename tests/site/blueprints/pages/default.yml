@@ -25,6 +25,12 @@ fields:
     success: Pong
     error: BAMM
 
+  janitor_trash:
+    type: janitor
+    command: 'janitor:trash'
+    label: Removes Pages Cache for this page
+    icon: trash
+
   janitor_flushpages:
     type: janitor
     command: 'janitor:flush --name pages'

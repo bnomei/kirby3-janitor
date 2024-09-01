@@ -4,6 +4,12 @@ return [
     'debug' => true,
     'languages' => true,
 
+    'cache' => [
+        'pages' => [
+            'active' => true,
+        ],
+    ],
+
     'bnomei.janitor.secret' => 'e9fe51f94eadabf54',
 
     // janitor v2 job callback
