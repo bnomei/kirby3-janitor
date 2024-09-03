@@ -1,4 +1,3 @@
-
 <?php
 
 use Bnomei\Janitor;
@@ -9,8 +8,6 @@ return [
     'args' => [] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $cli->error('No reload in CLI.');
-
-        ray('reload', $cli->args());
 
         janitor()->data($cli->arg('command'), [
             'status' => 200,

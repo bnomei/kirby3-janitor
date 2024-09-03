@@ -10,6 +10,13 @@ return [
         ],
     ],
 
+    // DO NOT USE BASIC AUTH IN PRODUCTION
+    // I only use this in my dev env to test the janitor commands
+    'api' => [
+        'basicAuth' => true,
+        'allowInsecure' => true,
+    ],
+
     'bnomei.janitor.secret' => 'e9fe51f94eadabf54',
 
     // janitor v2 job callback

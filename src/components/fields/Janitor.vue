@@ -165,7 +165,7 @@ export default {
 				return;
 			}
 
-			this.postRequest("plugin-janitor", { command: this.command });
+			await this.postRequest("plugin-janitor", { command: this.command });
 		},
 
 		async postRequest(path, data) {
