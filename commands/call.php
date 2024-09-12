@@ -18,6 +18,12 @@ return [
             'castTo' => 'string',
             'required' => true,
         ],
+        'force' => [
+            'longPrefix' => 'force',
+            'description' => 'Force the call of the method on the mode (like when calling Kirby pageMethods)',
+            'castTo' => 'bool',
+            'defaultValue' => false,
+        ],
     ] + Janitor::ARGS, // page, file, user, site, data, model
     'command' => static function (CLI $cli): void {
         $method = $cli->arg('method');
@@ -37,7 +43,7 @@ return [
         }
 
         if ($model) {
-            if (method_exists($model, $method)) {
+            if ($cli->arg('force') || method_exists($model, $method)) {
                 if (empty($cli->arg('data'))) {
                     $result = $model->$method();
                 } else {
