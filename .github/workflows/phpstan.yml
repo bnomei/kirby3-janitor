@@ -28,10 +28,7 @@ jobs:
           key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Install
-        run: |
-          composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: composer kirby
 
       - name: Run PHPStan
-        run: |
-          php tests/patch.php
-          ./vendor/bin/phpstan --error-format=github
+        run: vendor/bin/phpstan --error-format=github

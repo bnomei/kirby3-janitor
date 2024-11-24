@@ -23,7 +23,7 @@ jobs:
         with:
           php-version: 8.2
           tools: composer:v2
-          coverage: xdebug
+          coverage: none
 
       - name: Cache composer dependencies
         uses: actions/cache@v4
