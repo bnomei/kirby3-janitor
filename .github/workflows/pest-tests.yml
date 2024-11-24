@@ -27,4 +27,4 @@ jobs:
         run: composer kirby
 
       - name: PEST
-        run: vendor/bin/pest
+        run: vendor/bin/pest --profile
