@@ -59,12 +59,12 @@
         "spatie/ray": "^1.39"
     },
     "scripts": {
-        "analyze": "./vendor/bin/phpstan",
+        "stan": "./vendor/bin/phpstan",
         "fix": "./vendor/bin/pint",
-        "test": "./vendor/bin/pest",
-        "coverage": [
-            "php tests/patch.php",
-            "php ./vendor/bin/pest --coverage --coverage-clover=tests/clover.xml"
+        "test": [
+            "sed -i '' 's/function dump(/function xdump(/g' tests/kirby/config/helpers.php",
+            "sed -i '' 's/function e(/function xe(/g' tests/kirby/config/helpers.php",
+            "./vendor/bin/pest"
         ],
         "dist": [
             "npm run format",
