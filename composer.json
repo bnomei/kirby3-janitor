@@ -50,20 +50,19 @@
         "symfony/finder": "^7.0"
     },
     "require-dev": {
-        "getkirby/cli": "dev-develop",
+        "getkirby/cli": "^1.5.0",
         "getkirby/cms": "^5.0.0-alpha.4",
-        "larastan/larastan": "^2.9",
+        "larastan/larastan": "^v3.0.0",
         "laravel/pint": "^1.13",
-        "pestphp/pest": "^2.24",
-        "pestphp/pest-plugin-type-coverage": "^2.4",
+        "pestphp/pest": "^v3.5.1",
         "spatie/ray": "^1.39"
     },
     "scripts": {
         "stan": "./vendor/bin/phpstan",
         "fix": "./vendor/bin/pint",
         "test": [
-            "sed -i '' 's/function dump(/function xdump(/g' ./tests/kirby/config/helpers.php",
-            "sed -i '' 's/function e(/function xe(/g' ./tests/kirby/config/helpers.php",
+            "sed -i.bak 's/function dump(/function xdump(/g' tests/kirby/config/helpers.php",
+            "sed -i.bak 's/function e(/function xe(/g' tests/kirby/config/helpers.php",
             "./vendor/bin/pest"
         ],
         "dist": [
