@@ -1,6 +1,14 @@
 name: Pest Tests
 
-on: [ 'push', 'pull_request' ]
+on:
+  push:
+    paths:
+      - "**.php"
+      - "composer.lock"
+  pull_request:
+    paths:
+      - "**.php"
+      - "composer.lock"
 
 jobs:
   test:
