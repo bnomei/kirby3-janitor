@@ -60,7 +60,7 @@
     "scripts": {
         "stan": "./vendor/bin/phpstan",
         "fix": "./vendor/bin/pint",
-        "test": "./vendor/bin/pest --ci",
+        "test": "./vendor/bin/pest --profile",
         "dist": [
             "npm run format",
             "composer fix",
