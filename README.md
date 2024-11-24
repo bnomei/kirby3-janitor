@@ -42,7 +42,7 @@ fields:
 
 Janitor will automatically fill in the current model.
 
-- The `--model` argument will have the UUID or ID of the current model. You can use `janitor()->model($cli->arg('model))` to get the object.
+- The `--model` argument will have the UUID or ID of the current model. You can use `janitor()->model($cli->arg('model'))` to get the object.
 - But if for example you press the panel button on a page you will have `--page` argument set to the UUID or ID of that page. Use `$cli->kirby()->page($cli->arg('page'))` to get the object.
 - If you call it on a file view then `--file` arg will be set. Use `$cli->kirby()->file($cli->arg('file'))` to get the object.
 - On a panel user view... `--user`. Use `$cli->kirby()->user($cli->arg('user'))` to get the object.
