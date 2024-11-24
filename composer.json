@@ -60,11 +60,7 @@
     "scripts": {
         "stan": "./vendor/bin/phpstan",
         "fix": "./vendor/bin/pint",
-        "test": [
-            "sed -i.bak 's/function dump(/function xdump(/g' tests/kirby/config/helpers.php",
-            "sed -i.bak 's/function e(/function xe(/g' tests/kirby/config/helpers.php",
-            "./vendor/bin/pest"
-        ],
+        "test": "./vendor/bin/pest --ci",
         "dist": [
             "npm run format",
             "composer fix",
@@ -76,7 +72,9 @@
             "composer install",
             "composer update",
             "composer install --working-dir=tests/kirby --no-dev --optimize-autoloader",
-            "composer update --working-dir=tests/kirby"
+            "composer update --working-dir=tests/kirby",
+            "sed -i.bak 's/function dump(/function xdump(/g' tests/kirby/config/helpers.php",
+            "sed -i.bak 's/function e(/function xe(/g' tests/kirby/config/helpers.php"
         ]
     },
     "extra": {
