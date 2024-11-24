@@ -24,7 +24,7 @@ jobs:
           key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Install
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: composer kirby
 
       - name: PEST
         run: composer test
