@@ -401,6 +401,10 @@ return [
 
 You can also overwrite the maintenance snippet if you create your own and store it as `site/snippets/maintenance.php`.
 
+## Tinker(well), REPL and Debugging
+
+You can use the `kirby janitor:tinker` command to start a REPL session in the terminal. This is a great way to test code snippets, debug and explore your Kirby installation. Another alternative would be using the [Tinkerwell App](https://tinkerwell.app/) which has built-in support for Kirby as long as it can find the `./kirby/bootstrap.php` file via the matching [driver](https://github.com/beyondcode/tinkerwell/blob/58254e11a6aad428eefd63b1ae624b0568414227/src/Drivers/KirbyTinkerwellDriver.php#L14). 
+
 ## Dependencies
 
 - [Kirby CLI](https://github.com/getkirby/cli)
