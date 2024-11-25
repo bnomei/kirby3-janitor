@@ -1,12 +1,16 @@
 # Kirby Janitor
 
-![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-janitor?color=ae81ff)
-![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-janitor?color=272822)
-[![Coverage](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor)](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor)
-[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor)](https://codeclimate.com/github/bnomei/kirby3-janitor)
-[![Discord](https://flat.badgen.net/badge/discord/bnomei?color=7289da)](https://discordapp.com/users/bnomei)
+[![Kirby 5](https://flat.badgen.net/badge/Kirby/5?color=ECC748)](https://getkirby.com)
+![PHP 8.2](https://flat.badgen.net/badge/PHP/8.2?color=4E5B93&icon=php&label)
+![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-janitor?color=ae81ff&icon=github&label)
+![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-janitor?color=272822&icon=github&label)
+[![Coverage](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor?icon=codeclimate&label)](https://codeclimate.com/github/bnomei/kirby3-janitor)
+[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor?icon=codeclimate&label)](https://codeclimate.com/github/bnomei/kirby3-janitor/issues)
+[![Discord](https://flat.badgen.net/badge/discord/bnomei?color=7289da&icon=discord&label)](https://discordapp.com/users/bnomei)
+[![Buymecoffee](https://flat.badgen.net/badge/icon/donate?icon=buymeacoffee&color=FF813F&label)](https://www.buymeacoffee.com/bnomei)
 
-Kirby Plugin for running commands.
+
+Janitor is a Kirby CMS Plugin for running commands.
 
 - It is a Panel Button!
 - It has commands built-in for cleaning the cache, sessions, create zip-backup, pre-generate thumbs, open URLs, refresh the current Panel page and more.
