@@ -54,7 +54,8 @@ fields:
     type: janitor
     command: whistle
     autosave: true
-    label: 'Safe on Click [Text = {{ page.text }}]'
+    label: 'Safe on Click'
+    help: '[Text = {{ page.text }}]'
 
   test_reload:
     type: janitor

@@ -104,16 +104,18 @@ export default {
 	},
 
 	created() {
-		// TODO
-		this.$events.$on(
-			"model.update",
-			() => sessionStorage.getItem(STORAGE_ID) && location.reload()
-		);
+		this.eventHandler = () =>
+			sessionStorage.getItem(STORAGE_ID) && location.reload();
+		this.$panel.events.on("model.update", this.eventHandler);
 
 		if (sessionStorage.getItem(STORAGE_ID) === this.id) {
 			sessionStorage.removeItem(STORAGE_ID);
 			this.runJanitor();
 		}
+	},
+
+	unmounted() {
+		this.$panel.events.off("model.update", this.eventHandler);
 	},
 
 	methods: {
