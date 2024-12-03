@@ -1,17 +1,16 @@
 {
-  "private": true,
-  "scripts": {
-    "dev": "kirbyup src/index.js --watch",
-    "build": "kirbyup src/index.js",
-    "lint": "eslint \"src/**/*.{js,vue}\"",
-    "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --write \"src/**/*.{js,vue}\""
-  },
-  "devDependencies": {
-    "eslint": "^8.0.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-vue": "^7.19.1",
-    "kirbyup": "^0.18.0",
-		"prettier": "^2.8.1"
-	}
+    "private": true,
+    "scripts": {
+        "dev": "npx -y kirbyup src/index.js --watch",
+        "build": "npx -y kirbyup src/index.js",
+        "lint": "eslint \"src/**/*.{js,vue}\"",
+        "lint:fix": "npm run lint -- --fix",
+        "format": "prettier --write \"src/**/*.{js,vue}\""
+    },
+    "devDependencies": {
+        "eslint": "^8.0.1",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-vue": "^7.19.1",
+        "prettier": "^2.8.1"
+    }
 }

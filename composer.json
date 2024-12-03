@@ -63,6 +63,7 @@
         "test": "./vendor/bin/pest --profile",
         "dist": [
             "npm run format",
+            "npm run build",
             "composer fix",
             "composer install --no-dev --optimize-autoloader",
             "git rm -rf --cached .; git add .;"
