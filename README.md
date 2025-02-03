@@ -82,6 +82,21 @@ return [
 
 ```
 
+### View Buttons
+
+You can also use Janitor to create up to 10 custom [view buttons](https://getkirby.com/releases/5/view-buttons#custom-vue-component).
+
+**site/blueprints/page/default.yml**
+```yml
+buttons:
+  janitor: # or janitor_1, janitor_2, ... janitor_9
+    command: whistle
+    label: Whistle
+    icon: audio
+  preview: true
+  settings: true
+```
+
 ### Callback
 
 Instead of using a command you can also create a callback in a custom plugin options or any config file.
@@ -173,6 +188,7 @@ In either the command or the callback you will be setting/returning data to the 
 - `icon`, see `icon`-field option
 - `label`, see `label`-field option
 - `message`, see `message`-field option
+- `notification`, array of method and message, like `['success', 'Deployed!']`
 - `open`, URL to open, use with `intab`-field option to open in a new tab
 - `reload`, if `true` will reload panel view once api call is received
 - `success`, see `success`-field option

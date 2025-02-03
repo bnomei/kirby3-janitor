@@ -190,7 +190,8 @@ export default {
 				help,
 				color,
 				backgroundColor,
-				resetStyle
+				resetStyle,
+                notification
 			} = await this.$api.post(path, data);
 
 			if (status === 200) {
@@ -243,6 +244,11 @@ export default {
 				this.button.style.reset = resetStyle;
 			}
 
+            if (notification) {
+                let [f, m] = notification;
+                this.$panel.notification[f](m);
+            }
+
 			if (reload) {
 				location.reload();
 			}
@@ -276,7 +282,8 @@ export default {
 					this.copyToClipboard(this.clipboardRequest);
 				});
 			} else {
-				setTimeout(this.resetButton, this.cooldown);
+                console.log(this.cooldown);
+				setTimeout(this.resetButton, this.cooldown || 2000);
 			}
 		},
 

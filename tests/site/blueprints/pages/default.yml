@@ -1,5 +1,20 @@
 title: Default Page
 preset: page
+
+buttons:
+  janitor:
+    command: whistle
+    label: Whistle
+    icon: audio
+  janitor_2:
+    command: ping
+    label: Ping
+    progress: ....
+    success: Pong
+    error: BAMM
+  preview: true
+  settings: true
+
 fields:
 
   text:
@@ -196,3 +211,9 @@ fields:
     type: janitor
     command: 'janitor:pipe --data {{ page.sele }} --to message'
     # autosave: true
+
+  janitor_notify:
+    type: janitor
+    command: 'notify'
+    label: Show random Panel notification
+    icon: bell

@@ -51,7 +51,7 @@
     },
     "require-dev": {
         "getkirby/cli": "^1.5.0",
-        "getkirby/cms": "^5.0.0-alpha.4",
+        "getkirby/cms": "dev-v5/develop",
         "larastan/larastan": "^v3.0.0",
         "laravel/pint": "^1.13",
         "pestphp/pest": "^v3.5.1",
