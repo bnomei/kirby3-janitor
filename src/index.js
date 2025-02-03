@@ -6,15 +6,6 @@ window.panel.plugin("bnomei/janitor", {
 	},
 	viewButtons: {
 		janitor: Janitor,
-		janitor_1: Janitor,
-		janitor_2: Janitor,
-		janitor_3: Janitor,
-		janitor_4: Janitor,
-		janitor_5: Janitor,
-		janitor_6: Janitor,
-		janitor_7: Janitor,
-		janitor_8: Janitor,
-		janitor_9: Janitor
 	},
 	icons: {
 		janitorLoader:

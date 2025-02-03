@@ -84,15 +84,17 @@ return [
 
 ### View Buttons
 
-You can also use Janitor to create up to 10 custom [view buttons](https://getkirby.com/releases/5/view-buttons#custom-vue-component).
+You can also use Janitor to create custom [view buttons](https://getkirby.com/releases/5/view-buttons#custom-vue-component).
 
 **site/blueprints/page/default.yml**
 ```yml
 buttons:
-  janitor: # or janitor_1, janitor_2, ... janitor_9
-    command: whistle
-    label: Whistle
-    icon: audio
+  myCommand:
+    component: k-janitor-view-button
+    props:
+      command: whistle
+      label: Whistle
+      icon: audio
   preview: true
   settings: true
 ```
