@@ -10,5 +10,6 @@ parameters:
     ignoreErrors:
         - '#Undefined variable: \$this#'
         - '#Call to an undefined method Kirby\\Cms\\Ingredients::#'
+        - '#Static property Bnomei\\Janitor::\$singleton#'
         -
             identifier: missingType.iterableValue

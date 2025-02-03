@@ -2,11 +2,12 @@
 	<div class="janitor-wrapper">
 		<k-button
 			:id="id"
-			:class="['janitor', button.state]"
+			:class="['k-button janitor', button.state]"
 			:icon="currentIcon"
 			:command="command"
 			:disabled="!unsaved && !isUnsaved && hasChanges"
 			:style="buttonStyle"
+			variant="filled"
 			@click="runJanitor"
 		>
 			{{ button.label || label }}
@@ -98,20 +99,23 @@ export default {
 			);
 		},
 		hasChanges() {
-			return this.$store.getters["content/hasChanges"]();
+			return Object.keys(this.$panel.content.changes()).length > 0;
 		}
 	},
 
 	created() {
-		this.$events.$on(
-			"model.update",
-			() => sessionStorage.getItem(STORAGE_ID) && location.reload()
-		);
+		this.eventHandler = () =>
+			sessionStorage.getItem(STORAGE_ID) && location.reload();
+		this.$panel.events.on("model.update", this.eventHandler);
 
 		if (sessionStorage.getItem(STORAGE_ID) === this.id) {
 			sessionStorage.removeItem(STORAGE_ID);
 			this.runJanitor();
 		}
+	},
+
+	unmounted() {
+		this.$panel.events.off("model.update", this.eventHandler);
 	},
 
 	methods: {
@@ -142,8 +146,8 @@ export default {
 			if (this.autosave && this.hasChanges) {
 				// lock janitor button, press save and listen to `model.update` event
 				const saveButton = document.querySelector(
-					".k-panel .k-form-buttons .k-view"
-				).lastChild;
+					".k-panel .k-header-buttons .k-form-controls button:nth-child(2)"
+				);
 
 				// revert & save
 				if (saveButton) {
@@ -186,7 +190,8 @@ export default {
 				help,
 				color,
 				backgroundColor,
-				resetStyle
+				resetStyle,
+				notification
 			} = await this.$api.post(path, data);
 
 			if (status === 200) {
@@ -223,7 +228,6 @@ export default {
 						: "var(--color-negative-light)";
 			} else {
 				this.button.state = "has-response";
-				this.button.style.backgroundColor = "var(--color-text)";
 			}
 
 			if (color) {
@@ -238,6 +242,11 @@ export default {
 
 			if (resetStyle) {
 				this.button.style.reset = resetStyle;
+			}
+
+			if (notification) {
+				let [f, m] = notification;
+				this.$panel.notification[f](m);
 			}
 
 			if (reload) {
@@ -273,7 +282,8 @@ export default {
 					this.copyToClipboard(this.clipboardRequest);
 				});
 			} else {
-				setTimeout(this.resetButton, this.cooldown);
+				console.log(this.cooldown);
+				setTimeout(this.resetButton, this.cooldown || 2000);
 			}
 		},
 
@@ -307,31 +317,12 @@ export default {
 </script>
 
 <style>
-.janitor {
-	background-color: var(--color-text);
-	color: white;
-	border-radius: 3px;
-	padding: 0.5rem 1rem;
-	line-height: 1.25rem;
-	text-align: left;
-}
-
-.janitor:hover {
-	background-color: #222;
-}
-
-.janitor .k-button-text {
-	opacity: 1;
-}
-
 .janitor.is-running {
-	background-color: var(--color-border) !important;
-	color: white;
 	cursor: wait;
 }
 
 .janitor[aria-disabled="true"] {
-	background-color: var(--color-border) !important;
+	cursor: not-allowed;
 }
 
 .visually-hidden {

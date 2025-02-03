@@ -1,12 +1,16 @@
 # Kirby Janitor
 
-![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-janitor?color=ae81ff)
-![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-janitor?color=272822)
-[![Coverage](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor)](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor)
-[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor)](https://codeclimate.com/github/bnomei/kirby3-janitor)
-[![Discord](https://flat.badgen.net/badge/discord/bnomei?color=7289da)](https://discordapp.com/users/bnomei)
+[![Kirby 5](https://flat.badgen.net/badge/Kirby/5?color=ECC748)](https://getkirby.com)
+![PHP 8.2](https://flat.badgen.net/badge/PHP/8.2?color=4E5B93&icon=php&label)
+![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-janitor?color=ae81ff&icon=github&label)
+![Downloads](https://flat.badgen.net/packagist/dt/bnomei/kirby3-janitor?color=272822&icon=github&label)
+[![Coverage](https://flat.badgen.net/codeclimate/coverage/bnomei/kirby3-janitor?icon=codeclimate&label)](https://codeclimate.com/github/bnomei/kirby3-janitor)
+[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-janitor?icon=codeclimate&label)](https://codeclimate.com/github/bnomei/kirby3-janitor/issues)
+[![Discord](https://flat.badgen.net/badge/discord/bnomei?color=7289da&icon=discord&label)](https://discordapp.com/users/bnomei)
+[![Buymecoffee](https://flat.badgen.net/badge/icon/donate?icon=buymeacoffee&color=FF813F&label)](https://www.buymeacoffee.com/bnomei)
 
-Kirby Plugin for running commands.
+
+Janitor is a Kirby CMS Plugin for running commands.
 
 - It is a Panel Button!
 - It has commands built-in for cleaning the cache, sessions, create zip-backup, pre-generate thumbs, open URLs, refresh the current Panel page and more.
@@ -76,6 +80,21 @@ return [
     }
 ];
 
+```
+
+### View Buttons
+
+You can also use Janitor to create up to 10 custom [view buttons](https://getkirby.com/releases/5/view-buttons#custom-vue-component).
+
+**site/blueprints/page/default.yml**
+```yml
+buttons:
+  janitor: # or janitor_1, janitor_2, ... janitor_9
+    command: whistle
+    label: Whistle
+    icon: audio
+  preview: true
+  settings: true
 ```
 
 ### Callback
@@ -169,6 +188,7 @@ In either the command or the callback you will be setting/returning data to the 
 - `icon`, see `icon`-field option
 - `label`, see `label`-field option
 - `message`, see `message`-field option
+- `notification`, array of method and message, like `['success', 'Deployed!']`
 - `open`, URL to open, use with `intab`-field option to open in a new tab
 - `reload`, if `true` will reload panel view once api call is received
 - `success`, see `success`-field option
@@ -400,6 +420,10 @@ return [
 ```
 
 You can also overwrite the maintenance snippet if you create your own and store it as `site/snippets/maintenance.php`.
+
+## Tinker(well), REPL and Debugging
+
+You can use the `kirby janitor:tinker` command to start a REPL session in the terminal. This is a great way to test code snippets, debug and explore your Kirby installation. Another alternative would be using the [Tinkerwell App](https://tinkerwell.app/) which has built-in support for Kirby as long as it can find the `./kirby/bootstrap.php` file via the matching [driver](https://github.com/beyondcode/tinkerwell/blob/58254e11a6aad428eefd63b1ae624b0568414227/src/Drivers/KirbyTinkerwellDriver.php#L14). 
 
 ## Dependencies
 
