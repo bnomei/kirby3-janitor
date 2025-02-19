@@ -185,13 +185,15 @@ export default {
 				download,
 				clipboard,
 				success,
-				error,
 				icon,
 				help,
 				color,
 				backgroundColor,
 				resetStyle,
-				notification
+				notification,
+				error,
+				warn,
+				log
 			} = await this.$api.post(path, data);
 
 			if (status === 200) {
@@ -247,6 +249,18 @@ export default {
 			if (notification) {
 				let [f, m] = notification;
 				this.$panel.notification[f](m);
+			}
+
+			if (error) {
+				console.error(error);
+			}
+
+			if (warn) {
+				console.warn(warn);
+			}
+
+			if (log) {
+				console.log(log);
 			}
 
 			if (reload) {

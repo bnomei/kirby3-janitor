@@ -5,7 +5,7 @@ window.panel.plugin("bnomei/janitor", {
 		janitor: Janitor
 	},
 	viewButtons: {
-		janitor: Janitor,
+		janitor: Janitor
 	},
 	icons: {
 		janitorLoader:
