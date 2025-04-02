@@ -8,14 +8,18 @@ sections:
       title:
         type: text
       nodatajob:
+        headline: No Data
         type: janitor
         command: whistle
         # no data
+        width: 1/2
       jansite:
         type: janitor
         command: 'janitor:clipboard --data "{< site.title >}"'
         label: 'Clip'
+        headline: " "
         help: 'Copy'
+        width: 1/2
       jansiteecho:
         type: janitor
         command: 'janitor:pipe --data "{{ site.title }}" --to message'

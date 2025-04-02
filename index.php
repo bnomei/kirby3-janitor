@@ -123,6 +123,11 @@ Kirby::plugin('bnomei/janitor', [
 
                     return Janitor::query($label, $this->model());
                 },
+                'headline' => function ($label = null) {
+                    $label = I18n::translate($label, $label, kirby()->user()?->language());
+
+                    return Janitor::query($label, $this->model());
+                },
                 'progress' => function ($label = null) {
                     $label = I18n::translate($label, $label, kirby()->user()?->language());
 

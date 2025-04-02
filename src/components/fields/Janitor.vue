@@ -1,5 +1,9 @@
 <template>
-	<div class="janitor-wrapper">
+	<k-field
+		:label="button.headline || headline"
+		:help="button.help || help"
+		class="janitor-wrapper"
+	>
 		<k-button
 			:id="id"
 			:class="['k-button janitor', button.state]"
@@ -12,12 +16,6 @@
 		>
 			{{ button.label || label }}
 		</k-button>
-		<k-text
-			v-if="button.help || help"
-			theme="help"
-			class="k-field-help"
-			:html="button.help || help"
-		/>
 		<a
 			v-show="downloadRequest"
 			ref="downloadAnchor"
@@ -32,7 +30,7 @@
 			:href="urlRequest"
 			target="_blank"
 		/>
-	</div>
+	</k-field>
 </template>
 
 <script>
@@ -52,6 +50,7 @@ export default {
 		intab: Boolean,
 		help: String,
 		label: String,
+		headline: String,
 		progress: String,
 		success: String,
 		status: String,
@@ -63,6 +62,7 @@ export default {
 			button: {
 				label: null,
 				state: null,
+				headline: null,
 				help: null,
 				style: null
 			},
@@ -186,6 +186,7 @@ export default {
 				clipboard,
 				success,
 				icon,
+				headline,
 				help,
 				color,
 				backgroundColor,
@@ -212,6 +213,10 @@ export default {
 
 			if (help) {
 				this.button.help = help;
+			}
+
+			if (headline) {
+				this.button.headline = headline;
 			}
 
 			if (icon) {

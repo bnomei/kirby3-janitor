@@ -169,6 +169,7 @@ The button you create with the `field: janitor` in your blueprint can be configu
 - `command`, command like you would enter it in terminal, with [query language support](https://getkirby.com/docs/guide/blueprints/query-language) and page/file/user/site/data arguments
 - `cooldown`, time in milliseconds the message is flashed on the button (default: 2000)
 - `error`, set message on button to show on all **non-200**-status returns with query language support, also will print to `console.error()`
+- `headline`, set headline of the button, use `headline: " "` for better alignment with custom `width`s
 - `help`, set help of the button
 - `icon`, set the [icon](https://getkirby.com/docs/reference/panel/icons) of the button
 - `intab`, if `true` then use in combination with the `open`-option to open an URL in a new tab
@@ -188,6 +189,7 @@ In either the command or the callback you will be setting/returning data to the 
 - `error`, see `error`-field option, print to `console.error()`
 - `warn`, print to `console.warn()`
 - `log`, print to `console.log()`
+- `headline`, see `help`-field option
 - `help`, see `help`-field option
 - `icon`, see `icon`-field option
 - `label`, see `label`-field option
